@@ -1,0 +1,31 @@
+# General
+*.log
+
+# IDE / Editors
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.trae/
+.cursor/
+
+# build
+out/
+build/
+dist/
+
+# other
+copilot/
+howtolearn/
+drafts/
+
+
+
+
