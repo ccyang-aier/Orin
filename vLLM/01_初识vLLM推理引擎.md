@@ -14,7 +14,7 @@ vLLM起源于2023年，它源于加州大学伯克利分校（UC Berkeley）Sky 
 
 论文的主要作者团队包括：Woosuk Kwon、Zhuohan Li、Simon Mo等人，指导教授为Ion Stoica（曾带领团队创建了Spark和Ray等知名开源项目）。
 
-![682](imgs/Pasted%20image%2020260329220653.png)
+![682|663x433](imgs/Pasted%20image%2020260329220653.png)
 
 vLLM发布后，GitHub Star数量便一路飙升，社区热度持续攀升。截至目前，vLLM的Github Star数已达到74K+，吸引了超过2000+名贡献者，支持上百种模型架构，涵盖几乎所有主流开源模型，在2026年初，核心创始团队还以vLLM为核心组建了商业公司**Inferact**，并完成了1.5亿美元种子轮融资，估值8亿美元。
 
