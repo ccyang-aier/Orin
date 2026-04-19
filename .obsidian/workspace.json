@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "LLM/01_从RNN到Attention.md",
+                "file": "LLM/01_从CNN、RNN到Attention.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "01_从RNN到Attention"
+              "title": "01_从CNN、RNN到Attention"
             }
           },
           {
@@ -184,13 +184,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "LLM/01_从RNN到Attention.md",
+                "file": "LLM/01_从CNN、RNN到Attention.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "01_从RNN到Attention 的大纲"
+              "title": "01_从CNN、RNN到Attention 的大纲"
             }
           },
           {
@@ -227,7 +227,7 @@
   "active": "5d8119b2727385a4",
   "lastOpenFiles": [
     "LLM/大纲.md",
-    "LLM/01_从RNN到Attention.md",
+    "LLM/01_从CNN、RNN到Attention.md",
     "vLLM/01_初识vLLM推理引擎.md",
     "LLM/imgs/Snipaste_2026-04-19_00-46-54.png",
     "LLM/imgs/Snipaste_2026-04-19_00-53-03.png",
