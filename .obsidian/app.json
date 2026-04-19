@@ -8,5 +8,6 @@
   "useMarkdownLinks": true,
   "deleteUnlinkedAttachments": "always",
   "readableLineLength": false,
-  "showIndentGuide": false
+  "showIndentGuide": false,
+  "autoConvertHtml": true
 }
