@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FOAI 易用性研讨：主竞争力构建</title>
+    <style>
+        :root {
+            /* 极简配色系统 */
+            --bg-color: #ffffff;
+            --surface-color: #fafafa;
+            --text-primary: #111111;
+            --text-secondary: #555555;
+            --text-tertiary: #888888;
+            --border-light: #eeeeee;
+            --border-medium: #dddddd;
+            --border-dark: #aaaaaa;
+            --accent-dark: #222222;
+            
+            /* 尺寸与间距 */
+            --slide-width: 1152px;
+            --slide-height: 648px; /* 16:9比例 */
+            --nav-height: 56px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
+            background-color: #e5e5e5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+            color: var(--text-primary);
+        }
+
+        /* 幻灯片容器 */
+        #presentation-container {
+            width: var(--slide-width);
+            height: var(--slide-height);
+            background-color: var(--bg-color);
+            position: relative;
+            box-shadow: 0 16px 40px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* 幻灯片页面基类 */
+        .slide {
+            flex: 1;
+            padding: 64px 80px 40px;
+            display: none;
+            flex-direction: column;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .slide.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        /* 层级文字样式 */
+        .module-tag {
+            font-size: 13px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--text-tertiary);
+            border: 1px solid var(--border-medium);
+            padding: 4px 10px;
+            border-radius: 4px;
+            align-self: flex-start;
+            margin-bottom: 24px;
+            font-weight: 500;
+        }
+
+        .page-title {
+            font-size: 36px;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+            color: var(--text-primary);
+            margin-bottom: 24px;
+            line-height: 1.3;
+        }
+
+        .core-statement {
+            font-size: 24px;
+            font-weight: 500;
+            color: var(--text-primary);
+            border-left: 4px solid var(--accent-dark);
+            padding-left: 20px;
+            margin-bottom: 40px;
+            line-height: 1.5;
+            background: linear-gradient(90deg, #f9f9f9 0%, transparent 100%);
+            padding-top: 12px;
+            padding-bottom: 12px;
+        }
+
+        /* 内容区容器 */
+        .content-body {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+        }
+
+        /* 原生图示绘制样式 */
+        .diagram-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            gap: 24px;
+        }
+
+        .box {
+            background: var(--surface-color);
+            border: 1px solid var(--border-medium);
+            border-radius: 6px;
+            padding: 20px 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+        }
+
+        .box-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        .box-desc {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        /* 箭头组件 */
+        .arrow-right {
+            width: 48px;
+            height: 1px;
+            background-color: var(--border-dark);
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        .arrow-right::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            border-top: 4px solid transparent;
+            border-bottom: 4px solid transparent;
+            border-left: 6px solid var(--border-dark);
+        }
+
+        .arrow-down {
+            height: 40px;
+            width: 1px;
+            background-color: var(--border-dark);
+            position: relative;
+            margin: 0 auto;
+        }
+        .arrow-down::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: -3px;
+            border-left: 4px solid transparent;
+            border-right: 4px solid transparent;
+            border-top: 6px solid var(--border-dark);
+        }
+
+        .dashed-border {
+            border: 1px dashed var(--border-dark);
+            background: transparent;
+        }
+
+        .highlight-border {
+            border: 2px solid var(--accent-dark);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+            background: #ffffff;
+        }
+
+        /* 网格布局 (P3 现状痛点) */
+        .grid-layout {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+            width: 100%;
+            margin-top: 10px;
+        }
+        .grid-layout .box {
+            align-items: flex-start;
+            text-align: left;
+            padding: 24px 20px;
+        }
+
+        /* 对比布局 (P5 观测易用) */
+        .vs-layout {
+            display: flex;
+            align-items: stretch;
+            width: 100%;
+            gap: 48px;
+            height: 100%;
+            padding-top: 10px;
+        }
+        .vs-side {
+            flex: 1;
+            border: 1px solid var(--border-light);
+            border-radius: 8px;
+            padding: 32px;
+            display: flex;
+            flex-direction: column;
+            background: var(--surface-color);
+        }
+        .vs-side.highlight {
+            background: #ffffff;
+            border: 2px solid var(--accent-dark);
+        }
+        .vs-title {
+            font-size: 20px;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 32px;
+            color: var(--text-secondary);
+        }
+        .highlight .vs-title {
+            color: var(--text-primary);
+        }
+        .node-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .node-item {
+            background: var(--bg-color);
+            border: 1px solid var(--border-medium);
+            padding: 14px 16px;
+            border-radius: 4px;
+            font-size: 15px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+        }
+
+        /* 环形布局组件 (P6 模型决策) */
+        .circle-layout {
+            position: relative;
+            width: 480px;
+            height: 240px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .circle-track {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border: 1px dashed var(--border-dark);
+            border-radius: 120px;
+        }
+        .circle-center {
+            position: relative;
+            z-index: 2;
+            background: #ffffff;
+            padding: 24px 32px;
+            border: 2px solid var(--accent-dark);
+            border-radius: 8px;
+            text-align: center;
+        }
+        .circle-node {
+            position: absolute;
+            background: #ffffff;
+            border: 1px solid var(--border-medium);
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        /* 注释文本 */
+        .annotation {
+            font-size: 13px;
+            color: var(--text-tertiary);
+            margin-top: auto;
+            border-top: 1px solid var(--border-light);
+            padding-top: 12px;
+        }
+
+        /* 底部导航栏 */
+        .nav-bar {
+            height: var(--nav-height);
+            border-top: 1px solid var(--border-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 32px;
+            background-color: var(--bg-color);
+        }
+
+        .nav-info {
+            font-size: 13px;
+            color: var(--text-tertiary);
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .nav-controls {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn-nav {
+            background: transparent;
+            border: 1px solid var(--border-medium);
+            color: var(--text-secondary);
+            width: 32px;
+            height: 32px;
+            border-radius: 4px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 16px;
+        }
+
+        .btn-nav:hover:not(:disabled) {
+            border-color: var(--accent-dark);
+            color: var(--accent-dark);
+        }
+
+        .btn-nav:disabled {
+            opacity: 0.2;
+            cursor: not-allowed;
+        }
+
+        .page-counter {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            min-width: 40px;
+            text-align: center;
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* 封面特化样式 */
+        .cover-slide {
+            justify-content: center;
+            padding-left: 100px;
+        }
+        .cover-title {
+            font-size: 54px;
+            font-weight: 600;
+            line-height: 1.15;
+            margin-bottom: 24px;
+            letter-spacing: -1px;
+        }
+        .cover-subtitle {
+            font-size: 20px;
+            color: var(--text-secondary);
+            font-weight: 400;
+            border-left: 3px solid var(--text-primary);
+            padding-left: 16px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div id="presentation-container">
+        
+        <!-- P1: 封面 -->
+        <div class="slide active cover-slide">
+            <div class="module-tag" style="margin-bottom: 32px;">FOAI Platform Strategy</div>
+            <div class="cover-title">FOAI 易用性演进：<br>构筑 Agent 时代的主竞争力</div>
+            <div class="cover-subtitle">从“功能优化清单”到“系统复杂性吸收”</div>
+            <div style="margin-top: 100px; font-size: 14px; color: var(--text-tertiary);">
+                2026-04-23 &nbsp;|&nbsp; 内部战略研讨材料
+            </div>
+        </div>
+
+        <!-- P2: 核心定义重构 -->
+        <div class="slide">
+            <div class="module-tag">01. Paradigm Shift</div>
+            <div class="page-title">易用的本质：不是页面做减法，而是吃掉复杂性</div>
+            <div class="core-statement">在 AI Infra 时代，易用性已从“UI 操作门槛”升级为“结果高确定性与可托付感”。</div>
+            
+            <div class="content-body">
+                <div class="diagram-container">
+                    <!-- 传统定义 -->
+                    <div class="box dashed-border" style="width: 260px;">
+                        <div class="box-title" style="color: var(--text-tertiary);">传统平台易用性</div>
+                        <div class="box-desc" style="margin-top: 8px;">表单简化<br>提示文案优化<br>样式规范统一</div>
+                        <div class="arrow-down" style="margin: 16px auto; height: 24px;"></div>
+                        <div style="font-size: 15px; font-weight: 500; color: var(--text-secondary);">目标：降低操作摩擦力</div>
+                    </div>
+                    
+                    <div style="font-size: 24px; font-weight: bold; color: var(--border-dark); margin: 0 16px;">→</div>
+
+                    <!-- 范式演进 -->
+                    <div class="box highlight-border" style="width: 400px; padding: 32px 24px;">
+                        <div class="box-title" style="font-size: 20px;">Agent 时代易用性</div>
+                        <div style="display: flex; gap: 12px; margin-top: 16px;">
+                            <span style="border: 1px solid var(--border-medium); padding: 4px 12px; border-radius: 4px; font-size: 13px;">低认知负担</span>
+                            <span style="border: 1px solid var(--border-medium); padding: 4px 12px; border-radius: 4px; font-size: 13px;">低试错成本</span>
+                            <span style="background: var(--text-primary); color: #fff; padding: 4px 12px; border-radius: 4px; font-size: 13px;">高确定性</span>
+                        </div>
+                        <div class="arrow-down" style="margin: 24px auto 16px; height: 32px;"></div>
+                        <div style="font-size: 16px; font-weight: 600;">目标：吸收系统底层复杂性</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="annotation">核心论断：从让用户“会用平台”，进化到让用户“敢把业务交给平台”。</div>
+        </div>
+
+        <!-- P3: 现状痛点抽象 -->
+        <div class="slide">
+            <div class="module-tag">02. Problem Abstraction</div>
+            <div class="page-title">FOAI 当前瓶颈：四个层面的“系统断裂”</div>
+            <div class="core-statement">大量真实的高频反馈（如报错不可读、性能调优难），本质是平台在认知与决策链条上的断层。</div>
+            
+            <div class="content-body">
+                <div class="grid-layout">
+                    <div class="box">
+                        <div class="box-title">1. 认知断裂</div>
+                        <div class="box-desc" style="margin-top: 12px; margin-bottom: 24px;">
+                            • 看不到为什么慢<br>
+                            • 看不到为什么报错<br>
+                            • 看不到底层状态变化
+                        </div>
+                        <div style="margin-top: auto; font-size: 13px; font-weight: 600; color: var(--text-tertiary);">结果：系统行为宛如黑盒</div>
+                    </div>
+                    <div class="box">
+                        <div class="box-title">2. 决策断裂</div>
+                        <div class="box-desc" style="margin-top: 12px; margin-bottom: 24px;">
+                            • 模型评估无法指导运行<br>
+                            • 体验与部署互相割裂<br>
+                            • 运行数据无法反哺配置
+                        </div>
+                        <div style="margin-top: auto; font-size: 13px; font-weight: 600; color: var(--text-tertiary);">结果：用户凭直觉做配置</div>
+                    </div>
+                    <div class="box">
+                        <div class="box-title">3. 处置断裂</div>
+                        <div class="box-desc" style="margin-top: 12px; margin-bottom: 24px;">
+                            • 告警信息无法解释根因<br>
+                            • 拓扑图无法直达处置动作<br>
+                            • 僵尸任务需人工清理
+                        </div>
+                        <div style="margin-top: auto; font-size: 13px; font-weight: 600; color: var(--text-tertiary);">结果：发现问题无法行动</div>
+                    </div>
+                    <div class="box">
+                        <div class="box-title">4. 进化断裂</div>
+                        <div class="box-desc" style="margin-top: 12px; margin-bottom: 24px;">
+                            • 最佳部署参数频繁丢失<br>
+                            • 历史排障经验无法复用<br>
+                            • 平台自身无法越用越聪明
+                        </div>
+                        <div style="margin-top: auto; font-size: 13px; font-weight: 600; color: var(--text-tertiary);">结果：缺乏平台级“经验记忆”</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- P4: 演进1 - 部署意图化 -->
+        <div class="slide">
+            <div class="module-tag">03. Evolution Strategy I</div>
+            <div class="page-title">部署易用：从“参数表单”到“意图编译器”</div>
+            <div class="core-statement">部署工具的下一阶段不是提供更多模板，而是让用户描述业务目标，平台负责编译。</div>
+            
+            <div class="content-body">
+                <div class="diagram-container">
+                    <div class="box" style="width: 220px;">
+                        <div class="box-title" style="margin-bottom: 12px;">业务意图 (Intent)</div>
+                        <div class="box-desc" style="text-align: left; background: #fff; padding: 12px; border: 1px solid var(--border-light); font-family: monospace;">
+                            模型: Llama3 70B<br>
+                            目标 QPS: >100<br>
+                            容忍延迟: <200ms
+                        </div>
+                    </div>
+                    
+                    <div class="arrow-right"></div>
+                    
+                    <div class="box highlight-border" style="width: 260px; padding: 24px;">
+                        <div class="box-title" style="margin-bottom: 16px;">意图编译器</div>
+                        <div class="node-list" style="width: 100%;">
+                            <div class="node-item" style="font-size: 13px; padding: 8px 12px; justify-content: center;">解析业务约束条件</div>
+                            <div class="node-item" style="font-size: 13px; padding: 8px 12px; justify-content: center;">检索成功经验 (Memory)</div>
+                            <div class="node-item" style="font-size: 13px; padding: 8px 12px; justify-content: center;">部署前置风险评分</div>
+                        </div>
+                    </div>
+
+                    <div class="arrow-right"></div>
+
+                    <div style="display: flex; flex-direction: column; gap: 12px; width: 220px;">
+                        <div class="box dashed-border" style="padding: 12px;">方案 A: 成本最优 (4卡)</div>
+                        <div class="box" style="padding: 12px; background: var(--text-primary); color: #fff; border:none; font-weight: 500;">方案 B: 延迟最优 (8卡)</div>
+                        <div class="box dashed-border" style="padding: 12px;">方案 C: 兜底稳妥方案</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- P5: 演进2 - 诊断副驾 -->
+        <div class="slide">
+            <div class="module-tag">04. Evolution Strategy II</div>
+            <div class="page-title">观测易用：从“指标看板”到“诊断副驾”</div>
+            <div class="core-statement">监控的终局不是图表，而是当出现异常时，系统直接提供因果链条并给出处置动作。</div>
+            
+            <div class="content-body" style="align-items: stretch;">
+                <div class="vs-layout">
+                    <!-- 现状 -->
+                    <div class="vs-side">
+                        <div class="vs-title">Observability 1.0 (看板模式)</div>
+                        <div class="node-list">
+                            <div class="node-item dashed-border">海量散乱的 Warning 告警与错误码</div>
+                            <div class="node-item dashed-border">孤立的 GPU 利用率、吞吐指标趋势图</div>
+                        </div>
+                        <div style="margin-top: auto; text-align: center; color: var(--text-secondary); font-size: 14px; border-top: 1px solid var(--border-medium); padding-top: 16px;">
+                            痛点：用户需要人工在大盘中寻找异常关联
+                        </div>
+                    </div>
+
+                    <!-- 演进 -->
+                    <div class="vs-side highlight">
+                        <div class="vs-title">Observability 2.0 (诊断副驾)</div>
+                        <div class="node-list">
+                            <div class="node-item" style="border-left: 3px solid var(--accent-dark); flex-direction: column; align-items: flex-start;">
+                                <div style="font-weight: 600; margin-bottom: 4px;">平台级故障语义层</div>
+                                <div style="font-size: 13px; color: var(--text-secondary); font-weight: normal;">将底层报错翻译为人类语言（例："显存碎片化导致 OOM"）</div>
+                            </div>
+                            <div class="node-item" style="border-left: 3px solid var(--accent-dark); flex-direction: column; align-items: flex-start;">
+                                <div style="font-weight: 600; margin-bottom: 4px;">语义化拆解“慢”</div>
+                                <div style="font-size: 13px; color: var(--text-secondary); font-weight: normal;">精准定位是 KV Cache 瓶颈还是网络延迟</div>
+                            </div>
+                            <div class="node-item" style="background: var(--text-primary); color: #fff; border: none; justify-content: center; font-weight: 600;">
+                                一键 Action (参数热调 / 扩容 / 重启)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- P6: 演进3 - 决策闭环 -->
+        <div class="slide">
+            <div class="module-tag">05. Evolution Strategy III</div>
+            <div class="page-title">模型生命周期易用：从“静态货架”到“决策系统”</div>
+            <div class="core-statement">打破“评估、体验、部署、运行”的孤岛，基于业务数据与在线运行反馈实现精准决策。</div>
+
+            <div class="content-body">
+                <div class="circle-layout">
+                    <!-- 虚线轨道 -->
+                    <div class="circle-track"></div>
+                    
+                    <!-- 中心节点 -->
+                    <div class="circle-center">
+                        <div style="font-size: 18px; font-weight: 600; margin-bottom: 8px;">模型决策中心</div>
+                        <div style="font-size: 13px; color: var(--text-secondary);">按业务场景精准匹配</div>
+                    </div>
+                    
+                    <!-- 环绕节点 -->
+                    <div class="circle-node" style="top: -16px; left: 50%; transform: translateX(-50%);">1. 离线评估结果打通</div>
+                    <div class="circle-node" style="right: -24px; top: 50%; transform: translateY(-50%);">2. 无缝一键部署</div>
+                    <div class="circle-node" style="bottom: -16px; left: 50%; transform: translateX(-50%);">3. 在线真实数据反哺</div>
+                    <div class="circle-node" style="left: -24px; top: 50%; transform: translateY(-50%);">4. 自动化边界说明书</div>
+                </div>
+            </div>
+            
+            <div class="annotation">核心理念：模型不是越多越好，能够为业务提供高确定性结果的模型，才是“好用”的。</div>
+        </div>
+
+        <!-- P7: 未来架构 - 统一操作面 -->
+        <div class="slide">
+            <div class="module-tag">06. Future Architecture</div>
+            <div class="page-title">交互终局：从“固定 WebUI”到“人机双轨操作面”</div>
+            <div class="core-statement">顺应 Agent 时代趋势，平台不仅是静态页面的集合，而是提供一套统一的“底层操作原子”。</div>
+
+            <div class="content-body">
+                <div class="diagram-container" style="gap: 64px; max-width: 800px;">
+                    <div style="display: flex; flex-direction: column; gap: 16px; flex: 1;">
+                        <div style="text-align: center; font-weight: 600; margin-bottom: 8px; color: var(--text-secondary);">过去：面向人的界面堆砌</div>
+                        <div class="box dashed-border">UI 交互：表单填写、层层点击</div>
+                        <div class="box dashed-border">操作者：单一的人类开发者</div>
+                        <div class="box dashed-border">形态：固定的功能页面组合</div>
+                    </div>
+                    
+                    <div style="font-size: 20px; font-weight: bold; color: var(--border-dark);">VS</div>
+                    
+                    <div style="display: flex; flex-direction: column; gap: 16px; flex: 1;">
+                        <div style="text-align: center; font-weight: 600; margin-bottom: 8px;">未来：面向意图的统一操作面</div>
+                        <div class="box highlight-border">交互：按任务意图动态生成界面</div>
+                        <div class="box highlight-border">操作者：人类 + AI Agent 双轨</div>
+                        <div class="box highlight-border" style="background: var(--text-primary); color: #fff;">底层：统一 API 与 操作原子</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="annotation">长远判断：泛管理软件的终极易用性，是系统能够理解高维意图并自主完成低维配置。</div>
+        </div>
+
+        <!-- 底部导航栏 -->
+        <div class="nav-bar">
+            <div class="nav-info">
+                <span style="font-weight: 600;">FOAI Usability Strategy</span>
+                <span style="color: var(--border-medium);">|</span>
+                <span>内部保密资料</span>
+            </div>
+            <div class="nav-controls">
+                <button class="btn-nav" id="btn-prev" onclick="prevSlide()" aria-label="上一页">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                </button>
+                <div class="page-counter">
+                    <span id="current-page">1</span> / <span id="total-pages">7</span>
+                </div>
+                <button class="btn-nav" id="btn-next" onclick="nextSlide()" aria-label="下一页">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        
+        const btnPrev = document.getElementById('btn-prev');
+        const btnNext = document.getElementById('btn-next');
+        const pageCounter = document.getElementById('current-page');
+        document.getElementById('total-pages').textContent = totalSlides;
+
+        function updateNav() {
+            btnPrev.disabled = currentSlide === 0;
+            btnNext.disabled = currentSlide === totalSlides - 1;
+            pageCounter.textContent = currentSlide + 1;
+            
+            slides.forEach((slide, index) => {
+                if (index === currentSlide) {
+                    slide.classList.add('active');
+                } else {
+                    slide.classList.remove('active');
+                }
+            });
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides - 1) {
+                currentSlide++;
+                updateNav();
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlide > 0) {
+                currentSlide--;
+                updateNav();
+            }
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === 'Space' || e.key === 'PageDown') {
+                nextSlide();
+                e.preventDefault();
+            } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+                prevSlide();
+                e.preventDefault();
+            }
+        });
+
+        // Initialize
+        updateNav();
+    </script>
+<script>window.parent.postMessage({ action: "ready" }, "*"); 
+ 
+window.console = new Proxy(console, {
+  get(target, prop) {
+    if (['log', 'warn', 'error'].includes(prop)) {
+      return new Proxy(target[prop], {
+        apply(fn, thisArg, args) {
+          fn.apply(thisArg, args);
+          window.parent.postMessage({ action: 'console', 
+            type: prop, 
+            args: args.map((arg) => {
+              try {
+                return JSON.stringify(arg).replace(/^["']|["']$/g, '');
+              } catch (e) {
+                return arg;
+              }
+            }) 
+          }, '*');
+        }
+      });
+    }
+    return target[prop];
+  }
+});
+</script></body>
+</html>

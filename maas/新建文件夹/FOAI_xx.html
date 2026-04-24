@@ -1,0 +1,1043 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FOAI 易用性竞争力研讨</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
+    background: #f0f0f0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    color: #1a1a1a;
+  }
+
+  .deck-wrapper {
+    position: relative;
+    width: 960px;
+    height: 580px;
+  }
+
+  .slide {
+    display: none;
+    width: 960px;
+    height: 580px;
+    background: #ffffff;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 32px rgba(0,0,0,0.12);
+  }
+
+  .slide.active { display: flex; flex-direction: column; }
+
+  /* 顶部装饰线 */
+  .slide::before {
+    content: '';
+    display: block;
+    width: 100%;
+    height: 3px;
+    background: #1a1a1a;
+    flex-shrink: 0;
+  }
+
+  .slide-inner {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 44px 60px 36px;
+    overflow: hidden;
+  }
+
+  /* 模块标签 */
+  .tag {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #888;
+    margin-bottom: 12px;
+  }
+
+  /* 页面标题 */
+  .slide-title {
+    font-size: 26px;
+    font-weight: 700;
+    color: #111;
+    line-height: 1.3;
+    margin-bottom: 10px;
+  }
+
+  /* 核心判断句 */
+  .insight {
+    font-size: 14px;
+    color: #555;
+    font-weight: 400;
+    margin-bottom: 28px;
+    line-height: 1.6;
+    border-left: 2px solid #ccc;
+    padding-left: 12px;
+  }
+
+  /* 正文 */
+  .body-text {
+    font-size: 13.5px;
+    color: #333;
+    line-height: 1.8;
+  }
+
+  /* 注释 */
+  .footnote {
+    font-size: 11px;
+    color: #aaa;
+    margin-top: auto;
+    padding-top: 12px;
+    border-top: 1px solid #eee;
+    line-height: 1.6;
+  }
+
+  /* 分隔线 */
+  .divider {
+    width: 100%;
+    height: 1px;
+    background: #eee;
+    margin: 16px 0;
+  }
+
+  /* ===== 图形系统 ===== */
+  .diagram { margin: 16px 0; }
+
+  /* 三列卡片 */
+  .cards-3 {
+    display: flex;
+    gap: 14px;
+    margin: 16px 0;
+  }
+
+  .card {
+    flex: 1;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    padding: 16px 14px;
+    position: relative;
+  }
+
+  .card .card-num {
+    font-size: 28px;
+    font-weight: 700;
+    color: #111;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .card .card-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 6px;
+  }
+
+  .card .card-desc {
+    font-size: 11.5px;
+    color: #666;
+    line-height: 1.6;
+  }
+
+  .card.accent {
+    border-color: #1a1a1a;
+    background: #fafafa;
+  }
+
+  /* 横向流程箭头 */
+  .flow-row {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    margin: 14px 0;
+  }
+
+  .flow-box {
+    flex: 1;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 12px 10px;
+    text-align: center;
+  }
+
+  .flow-box .fb-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: #111;
+    margin-bottom: 4px;
+  }
+
+  .flow-box .fb-desc {
+    font-size: 11px;
+    color: #666;
+    line-height: 1.5;
+  }
+
+  .flow-box.dark {
+    background: #111;
+    border-color: #111;
+  }
+  .flow-box.dark .fb-title,
+  .flow-box.dark .fb-desc { color: #fff; }
+
+  .arrow-right {
+    width: 28px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    color: #aaa;
+  }
+
+  /* 三层堆叠模型 */
+  .layer-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin: 12px 0;
+  }
+
+  .layer {
+    display: flex;
+    align-items: stretch;
+    border-radius: 4px;
+    overflow: hidden;
+    border: 1px solid #e0e0e0;
+    min-height: 56px;
+  }
+
+  .layer-badge {
+    width: 80px;
+    flex-shrink: 0;
+    background: #111;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 8px 6px;
+    text-align: center;
+    line-height: 1.3;
+  }
+
+  .layer-badge.mid { background: #444; }
+  .layer-badge.light { background: #888; }
+
+  .layer-content {
+    flex: 1;
+    padding: 10px 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .layer-content .lc-title {
+    font-size: 12.5px;
+    font-weight: 600;
+    color: #111;
+    margin-bottom: 3px;
+  }
+
+  .layer-content .lc-desc {
+    font-size: 11.5px;
+    color: #555;
+    line-height: 1.5;
+  }
+
+  .layer-meta {
+    width: 160px;
+    flex-shrink: 0;
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    font-size: 11px;
+    color: #888;
+    border-left: 1px solid #eee;
+    line-height: 1.5;
+  }
+
+  /* 两列布局 */
+  .two-col {
+    display: flex;
+    gap: 24px;
+    margin: 10px 0;
+  }
+
+  .col { flex: 1; }
+
+  /* 数据高亮行 */
+  .stat-row {
+    display: flex;
+    gap: 20px;
+    margin: 14px 0;
+  }
+
+  .stat-item {
+    flex: 1;
+    text-align: center;
+    padding: 14px 10px;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+  }
+
+  .stat-item .stat-num {
+    font-size: 30px;
+    font-weight: 700;
+    color: #111;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .stat-item .stat-label {
+    font-size: 11px;
+    color: #666;
+    line-height: 1.5;
+  }
+
+  /* 引用块 */
+  .quote-block {
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    padding: 16px 20px;
+    margin: 12px 0;
+    background: #fafafa;
+  }
+
+  .quote-block .quote-text {
+    font-size: 13px;
+    color: #333;
+    line-height: 1.7;
+    font-style: italic;
+  }
+
+  .quote-block .quote-source {
+    font-size: 11px;
+    color: #aaa;
+    margin-top: 8px;
+  }
+
+  /* 飞轮图 */
+  .flywheel {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    margin: 12px 0;
+  }
+
+  .fw-item {
+    width: 130px;
+    text-align: center;
+    padding: 14px 10px;
+    border: 1px solid #ccc;
+    border-radius: 50%;
+    aspect-ratio: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .fw-item .fw-label {
+    font-size: 11.5px;
+    font-weight: 600;
+    color: #111;
+    line-height: 1.4;
+  }
+
+  .fw-item .fw-sub {
+    font-size: 10px;
+    color: #888;
+    margin-top: 3px;
+    line-height: 1.4;
+  }
+
+  .fw-arrow {
+    font-size: 18px;
+    color: #bbb;
+    padding: 0 6px;
+  }
+
+  /* 路线图 */
+  .roadmap {
+    display: flex;
+    gap: 14px;
+    margin: 12px 0;
+  }
+
+  .rm-phase {
+    flex: 1;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .rm-header {
+    background: #111;
+    color: #fff;
+    padding: 7px 12px;
+    font-size: 11.5px;
+    font-weight: 600;
+  }
+
+  .rm-header.mid { background: #555; }
+  .rm-header.light { background: #999; }
+
+  .rm-body {
+    padding: 10px 12px;
+  }
+
+  .rm-item {
+    font-size: 11.5px;
+    color: #444;
+    padding: 4px 0;
+    border-bottom: 1px solid #f0f0f0;
+    line-height: 1.5;
+  }
+
+  .rm-item:last-child { border-bottom: none; }
+
+  /* 封面特殊 */
+  .cover-inner {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 44px 60px 36px;
+  }
+
+  .cover-eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: #aaa;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-bottom: 20px;
+  }
+
+  .cover-title {
+    font-size: 36px;
+    font-weight: 700;
+    color: #111;
+    line-height: 1.25;
+    margin-bottom: 16px;
+    letter-spacing: -0.01em;
+  }
+
+  .cover-subtitle {
+    font-size: 15px;
+    color: #666;
+    line-height: 1.7;
+    max-width: 580px;
+    margin-bottom: 32px;
+  }
+
+  .cover-meta {
+    display: flex;
+    gap: 32px;
+    padding-top: 24px;
+    border-top: 1px solid #eee;
+  }
+
+  .cover-meta-item .cmi-label {
+    font-size: 10px;
+    color: #aaa;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin-bottom: 3px;
+  }
+
+  .cover-meta-item .cmi-value {
+    font-size: 13px;
+    color: #333;
+    font-weight: 500;
+  }
+
+  /* 总结页 */
+  .summary-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin: 12px 0;
+  }
+
+  .sg-item {
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    padding: 14px 16px;
+  }
+
+  .sg-item .sg-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: #111;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .sg-item .sg-title .sg-num {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    background: #111;
+    color: #fff;
+    border-radius: 2px;
+    font-size: 10px;
+    text-align: center;
+    line-height: 18px;
+    flex-shrink: 0;
+  }
+
+  .sg-item .sg-desc {
+    font-size: 11.5px;
+    color: #555;
+    line-height: 1.6;
+  }
+
+  /* ===== 导航栏 ===== */
+  .nav-bar {
+    width: 960px;
+    height: 44px;
+    background: #fff;
+    border-top: 1px solid #e0e0e0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+
+  .nav-btn {
+    background: none;
+    border: 1px solid #d0d0d0;
+    border-radius: 3px;
+    padding: 5px 16px;
+    font-size: 12px;
+    color: #333;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: inherit;
+  }
+
+  .nav-btn:hover { background: #f5f5f5; border-color: #aaa; }
+  .nav-btn:disabled { color: #ccc; border-color: #e8e8e8; cursor: default; background: none; }
+
+  .page-indicator {
+    font-size: 12px;
+    color: #888;
+    letter-spacing: 0.05em;
+  }
+
+  .page-dots {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+  }
+
+  .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #ddd;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+
+  .dot.active { background: #111; width: 18px; border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<div class="deck-wrapper">
+
+  <!-- ========== SLIDE 1: 封面 ========== -->
+  <div class="slide active">
+    <div style="height:3px;background:#1a1a1a;flex-shrink:0;"></div>
+    <div class="cover-inner">
+      <div class="cover-eyebrow">FusionOne AI · MaaS 推理平台 · 内部研讨</div>
+      <div class="cover-title">易用性竞争力<br>落地进展与持续演进</div>
+      <div class="cover-subtitle">
+        从特性罗列到范式跃迁——<br>重新定义 MaaS 平台"易用性"的边界与深度
+      </div>
+      <div class="cover-meta">
+        <div class="cover-meta-item">
+          <div class="cmi-label">专题</div>
+          <div class="cmi-value">3+1 竞争力体系 · 易用性维度</div>
+        </div>
+        <div class="cover-meta-item">
+          <div class="cmi-label">时间</div>
+          <div class="cmi-value">2026</div>
+        </div>
+        <div class="cover-meta-item">
+          <div class="cmi-label">平台</div>
+          <div class="cmi-value">FOAI</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== SLIDE 2: 重新定义问题 ========== -->
+  <div class="slide">
+    <div style="height:3px;background:#1a1a1a;flex-shrink:0;"></div>
+    <div class="slide-inner">
+      <div class="tag">01 · 问题定位</div>
+      <div class="slide-title">易用性不是功能，是认知负荷管理</div>
+      <div class="insight">
+        "门槛低"只是结果。真正的问题是：用户在完成一个目标前，需要在脑中维持多少概念、做多少决策、承受多少不确定性？
+      </div>
+
+      <div class="two-col">
+        <div class="col">
+          <div style="font-size:12px;font-weight:600;color:#111;margin-bottom:10px;">传统视角（特性清单）</div>
+          <div class="flow-box" style="margin-bottom:8px;text-align:left;padding:10px 14px;">
+            <div class="fb-desc">✓ 提供 GUI 界面<br>✓ 接入 API Key 管理<br>✓ 内置监控看板<br>✓ 集成 AI Copilot 对话框</div>
+          </div>
+          <div style="font-size:11px;color:#aaa;margin-top:6px;">→ 人人都能罗列，缺乏区分度</div>
+        </div>
+        <div class="col">
+          <div style="font-size:12px;font-weight:600;color:#111;margin-bottom:10px;">认知负荷视角（本质洞察）</div>
+          <div class="flow-box accent" style="margin-bottom:8px;text-align:left;padding:10px 14px;border:1px solid #111;background:#fafafa;">
+            <div class="fb-desc" style="color:#333;">
+              <strong>外在负荷</strong>：交互设计造成的无谓复杂<br>
+              <strong>内在负荷</strong>：任务本身固有的复杂度<br>
+              <strong>关联负荷</strong>：理解概念间关系的成本
+            </div>
+          </div>
+          <div style="font-size:11px;color:#555;margin-top:6px;">→ 不同负荷需要不同策略应对</div>
+        </div>
+      </div>
+
+      <div class="footnote">
+        认知负荷理论（Cognitive Load Theory）源自 Sweller 1988，被广泛应用于 UX 设计评估框架
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== SLIDE 3: 业界三范式 ========== -->
+  <div class="slide">
+    <div style="height:3px;background:#1a1a1a;flex-shrink:0;"></div>
+    <div class="slide-inner">
+      <div class="tag">02 · 业界洞察</div>
+      <div class="slide-title">平台易用性的三次范式跃迁</div>
+      <div class="insight">
+        2026 年业界共识：AI 平台正从"AI 功能叠加"向"AI 原生架构"演进，中间存在一道难以用迭代跨越的鸿沟。
+      </div>
+
+      <div class="flow-row">
+        <div class="flow-box">
+          <div class="fb-title">范式一<br>GUI 自助化</div>
+          <div class="fb-desc">图形化操作替代命令行，降低操作门槛</div>
+        </div>
+        <div class="arrow-right">→</div>
+        <div class="flow-box">
+          <div class="fb-title">范式二<br>AI 辅助化</div>
+          <div class="fb-desc">AI 嵌入工作流，作为「加速器」辅助决策</div>
+        </div>
+        <div class="arrow-right">→</div>
+        <div class="flow-box dark">
+          <div class="fb-title">范式三<br>AI 原生化</div>
+          <div class="fb-desc">移除 AI 后平台功能塌陷，AI 是核心骨架</div>
+        </div>
+      </div>
+
+      <div class="quote-block">
+        <div class="quote-text">
+          "The shift from AI-bolted-on to AI-native is not incremental — it requires a different architectural decision from the start. Products that pass the 'AI removal test' reveal how deeply intelligence is woven into their core value."
+        </div>
+        <div class="quote-source">— Taskade, AI-Native vs AI-Bolted On, 2025</div>
+      </div>
+
+      <div class="footnote">当前 FOAI 正处于范式二向范式三过渡的关键节点</div>
+    </div>
+  </div>
+
+  <!-- ========== SLIDE 4: 现状评估 ========== -->
+  <div class="slide">
+    <div style="height:3px;background:#1a1a1a;flex-shrink:0;"></div>
+    <div class="slide-inner">
+      <div class="tag">03 · 现状评估</div>
+      <div class="slide-title">FOAI 易用性当前坐标</div>
+      <div class="insight">诚实评估：我们在哪里做得扎实，在哪里仍有结构性缺口。</div>
+
+      <div class="stat-row">
+        <div class="stat-item">
+          <div class="stat-num">7</div>
+          <div class="stat-label">核心功能模块<br>已完成 GUI 自助化</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">~</div>
+          <div class="stat-label">自然语言交互<br>探索阶段，未系统化</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">0</div>
+          <div class="stat-label">平台自我认知<br>尚未利用推理能力反哺平台</div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div style="font-size:12px;font-weight:600;color:#111;margin-bottom:10px;">关键能力差距</div>
+      <div class="cards-3">
+        <div class="card">
+          <div class="card-label">✓ 已有</div>
+          <div class="card-desc">推理服务生命周期管理 · APIKey 管理 · 监控看板 · 模型评估 · 资源拓扑</div>
+        </div>
+        <div class="card accent">
+          <div class="card-label">⚡ 进行中</div>
+          <div class="card-desc">双轨交互（GUI + 自然语言）· SmartModelHub · Hermes Agent 架构</div>
+        </div>
+        <div class="card">
+          <div class="card-label">○ 待突破</div>
+          <div class="card-desc">平台自举优势落地 · 跨模块上下文感知 · AI-Native 架构闭环</div>
+        </div>
+      </div>
+
+      <div class="footnote">评估维度参考 Thoughtworks AIOps 研究 2025 · NNGroup State of UX 2026</div>
+    </div>
+  </div>
+
+  <!-- ========== SLIDE 5: 三层模型 ========== -->
+  <div class="slide">
+    <div style="height:3px;background:#1a1a1a;flex-shrink:0;"></div>
+    <div class="slide-inner">
+      <div class="tag">04 · 演进框架</div>
+      <div class="slide-title">易用性三层递进模型</div>
+      <div class="insight">不同层次对应不同的用户认知负荷类型，需要差异化的设计策略与技术投入。</div>
+
+      <div class="layer-stack">
+        <div class="layer">
+          <div class="layer-badge">L1<br>操作<br>流畅</div>
+          <div class="layer-content">
+            <div class="lc-title">减少外在认知负荷 — 界面即服务</div>
+            <div class="lc-desc">GUI 全覆盖 · 操作路径最短化 · 错误防御设计 · 响应反馈及时</div>
+          </div>
+          <div class="layer-meta">当前完成度较高<br>持续精细化打磨</div>
+        </div>
+
+        <div class="layer">
+          <div class="layer-badge mid">L2<br>意图<br>理解</div>
+          <div class="layer-content">
+            <div class="lc-title">降低内在认知负荷 — 让平台理解你在做什么</div>
+            <div class="lc-desc">自然语言交互 · 上下文感知推荐 · 智能异常诊断 · 操作意图预测</div>
+          </div>
+          <div class="layer-meta">当前重点攻坚层<br>Hermes / 双轨交互</div>
+        </div>
+
+        <div class="layer">
+          <div class="layer-badge light">L3<br>平台<br>自举</div>
+          <div class="layer-content">
+            <div class="lc-title">消除关联认知负荷 — 推理能力反哺平台自身</div>
+            <div class="lc-desc">LLM Wiki 知识自生成 · 故障根因自动归纳 · 运维经验沉淀为 Agent 记忆</div>
+          </div>
+          <div class="layer-meta">架构跃迁目标<br>FOAI 独有优势</div>
+        </div>
+      </div>
+
+      <div class="footnote">L3 是 FOAI 区别于纯 IaaS/PaaS 平台的本质性差异，也是本次演进的战略重心</div>
+    </div>
+  </div>
+
+  <!-- ========== SLIDE 6: L2 重点攻坚 ========== -->
+  <div class="slide">
+    <div style="height:3px;background:#1a1a1a;flex-shrink:0;"></div>
+    <div class="slide-inner">
+      <div class="tag">05 · L2 进展</div>
+      <div class="slide-title">意图理解层：当前重点攻坚</div>
+      <div class="insight">
+        业界数据印证方向正确：Thoughtworks 2025 调研发现，AIOps 最高 ROI 用例是知识检索与异常诊断，而非自主操作——这与 FOAI L2 设计取向高度吻合。
+      </div>
+
+      <div class="stat-row">
+        <div class="stat-item">
+          <div class="stat-num">35<span style="font-size:16px;">%</span></div>
+          <div class="stat-label">L1/L2 工单降低<br>知识检索 AI 化后</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">40<span style="font-size:16px;">%</span></div>
+          <div class="stat-label">故障定位时间缩短<br>AI 辅助根因分析</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">↑</div>
+          <div class="stat-label">用户信任度提升<br>来自可解释的 AI 建议</div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div style="font-size:12px;font-weight:600;color:#111;margin-bottom:10px;">FOAI 对应落地路径</div>
+      <div class="flow-row">
+        <div class="flow-box">
+          <div class="fb-title">双轨交互</div>
+          <div class="fb-desc">GUI + 自然语言，用户按能力选择路径</div>
+        </div>
+        <div class="arrow-right">→</div>
+        <div class="flow-box">
+          <div class="fb-title">Hermes Agent</div>
+          <div class="fb-desc">意图解析 + 工具调用，跨模块操作代理</div>
+        </div>
+        <div class="arrow-right">→</div>
+        <div class="flow-box">
+          <div class="fb-title">MCP 统一接口</div>
+          <div class="fb-desc">标准化工具描述，Agent 可发现、可调用</div>
+        </div>
+        <div class="arrow-right">→</div>
+        <div class="flow-box dark">
+          <div class="fb-title">可解释反馈</div>
+          <div class="fb-desc">操作结果与推理过程同步呈现</div>
+        </div>
+      </div>
+
+      <div class="footnote">数据来源：Thoughtworks "AIOps: What We Learned in 2025"</div>
+    </div>
+  </div>
+
+  <!-- ========== SLIDE 7: L3 自举优势 ========== -->
+  <div class="slide">
+    <div style="height:3px;background:#1a1a1a;flex-shrink:0;"></div>
+    <div class="slide-inner">
+      <div class="tag">06 · L3 洞察（核心）</div>
+      <div class="slide-title">平台自举：FOAI 的结构性差异优势</div>
+      <div class="insight">
+        FOAI 本身运行 LLM 推理服务——这意味着平台可以将推理能力内化为自身的"元能力"，实现自我优化、自我认知、自我进化。纯 IaaS/PaaS 不具备这一先天条件。
+      </div>
+
+      <div class="two-col">
+        <div class="col">
+          <div style="font-size:12px;font-weight:600;color:#111;margin-bottom:10px;">自举能力的三个表现</div>
+
+          <div style="border:1px solid #e0e0e0;border-radius:4px;margin-bottom:8px;overflow:hidden;">
+            <div style="background:#111;color:#fff;font-size:11px;font-weight:600;padding:6px 12px;">知识自生成</div>
+            <div style="padding:8px 12px;font-size:11.5px;color:#444;line-height:1.6;">
+              LLM Wiki：用模型生成关于模型的文档，运维知识库实时更新，无需人工维护
+            </div>
+          </div>
+
+          <div style="border:1px solid #e0e0e0;border-radius:4px;margin-bottom:8px;overflow:hidden;">
+            <div style="background:#444;color:#fff;font-size:11px;font-weight:600;padding:6px 12px;">经验持久化</div>
+            <div style="padding:8px 12px;font-size:11.5px;color:#444;line-height:1.6;">
+              tCache → Agent 多级记忆：异常处理经验、用户偏好、操作模式沉淀为可复用知识
+            </div>
+          </div>
+
+          <div style="border:1px solid #e0e0e0;border-radius:4px;overflow:hidden;">
+            <div style="background:#888;color:#fff;font-size:11px;font-weight:600;padding:6px 12px;">路由自优化</div>
+            <div style="padding:8px 12px;font-size:11.5px;color:#444;line-height:1.6;">
+              SmartModelHub：根据任务语义和历史效果自动匹配最优模型，形成闭环反馈
+            </div>
+          </div>
+        </div>
+
+        <div class="col">
+          <div style="font-size:12px;font-weight:600;color:#111;margin-bottom:10px;">为何竞争对手难以复制</div>
+          <div class="quote-block" style="margin-top:0;">
+            <div class="quote-text" style="font-style:normal;font-size:12px;line-height:1.8;">
+              纯云厂商 IaaS：提供算力，无推理语义<br>
+              纯 API 网关：转发请求，无上下文积累<br>
+              通用 MLOps：管理模型，不运行推理<br>
+              <br>
+              <strong style="color:#111;">FOAI：既是推理服务的提供者，也是推理能力的使用者</strong>
+            </div>
+            <div class="quote-source">这是一种飞轮效应的起点，而非单纯的功能叠加</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="footnote">自举（Bootstrapping）概念：系统用自身能力提升自身能力，形成正反馈</div>
+    </div>
+  </div>
+
+  <!-- ========== SLIDE 8: 飞轮效应 ========== -->
+  <div class="slide">
+    <div style="height:3px;background:#1a1a1a;flex-shrink:0;"></div>
+    <div class="slide-inner">
+      <div class="tag">07 · 战略视图</div>
+      <div class="slide-title">易用性飞轮：数据、体验与能力的正向循环</div>
+      <div class="insight">
+        单点功能可被模仿，飞轮不可复制。FOAI 易用性的终极目标是构建一个自我强化的闭环系统。
+      </div>
+
+      <div style="display:flex;align-items:center;justify-content:center;padding:16px 0;">
+        <div style="display:grid;grid-template-columns:1fr 60px 1fr;grid-template-rows:auto 50px auto;gap:0;align-items:center;justify-items:center;width:100%;">
+
+          <div style="border:1px solid #ccc;border-radius:6px;padding:14px 18px;text-align:center;width:200px;">
+            <div style="font-size:12px;font-weight:700;color:#111;margin-bottom:4px;">用户使用平台</div>
+            <div style="font-size:11px;color:#666;">操作行为 · 问题模式<br>偏好数据沉淀</div>
+          </div>
+
+          <div style="font-size:20px;color:#bbb;">→</div>
+
+          <div style="border:1px solid #ccc;border-radius:6px;padding:14px 18px;text-align:center;width:200px;">
+            <div style="font-size:12px;font-weight:700;color:#111;margin-bottom:4px;">平台积累认知</div>
+            <div style="font-size:11px;color:#666;">Agent 记忆 · LLM Wiki<br>异常知识库更新</div>
+          </div>
+
+          <div style="font-size:20px;color:#bbb;transform:rotate(90deg);">→</div>
+          <div></div>
+          <div style="font-size:20px;color:#bbb;transform:rotate(90deg);">→</div>
+
+          <div style="border:1px solid #ccc;border-radius:6px;padding:14px 18px;text-align:center;width:200px;">
+            <div style="font-size:12px;font-weight:700;color:#111;margin-bottom:4px;">体验持续提升</div>
+            <div style="font-size:11px;color:#666;">更准确的推荐<br>更低的认知负荷</div>
+          </div>
+
+          <div style="font-size:20px;color:#bbb;">←</div>
+
+          <div style="border:1px solid #111;border-radius:6px;padding:14px 18px;text-align:center;width:200px;background:#fafafa;">
+            <div style="font-size:12px;font-weight:700;color:#111;margin-bottom:4px;">推理能力反哺</div>
+            <div style="font-size:11px;color:#555;">SmartModelHub 优化<br>自举形成差异化护城河</div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="footnote">飞轮的价值不在于单个环节，而在于正循环一旦启动，速度随时间持续加快</div>
+    </div>
+  </div>
+
+  <!-- ========== SLIDE 9: 路线图与度量 ========== -->
+  <div class="slide">
+    <div style="height:3px;background:#1a1a1a;flex-shrink:0;"></div>
+    <div class="slide-inner">
+      <div class="tag">08 · 执行路径</div>
+      <div class="slide-title">演进路线图与关键度量</div>
+      <div class="insight">路线图服务于三层模型：L1 持续精修，L2 今年重点突破，L3 完成架构设计与首个自举闭环验证。</div>
+
+      <div class="roadmap">
+        <div class="rm-phase">
+          <div class="rm-header">阶段一 · H1 2026</div>
+          <div class="rm-body">
+            <div class="rm-item">双轨交互 MVP 上线</div>
+            <div class="rm-item">MCP Server 标准接口完成</div>
+            <div class="rm-item">Hermes Agent 工具链打通</div>
+            <div class="rm-item">LLM Wiki v1 自动生成验证</div>
+          </div>
+        </div>
+        <div class="rm-phase">
+          <div class="rm-header mid">阶段二 · H2 2026</div>
+          <div class="rm-body">
+            <div class="rm-item">SmartModelHub 智能路由上线</div>
+            <div class="rm-item">tCache → Agent 多级记忆迁移</div>
+            <div class="rm-item">异常诊断 Agent 试运行</div>
+            <div class="rm-item">易用性 NPS 基线建立</div>
+          </div>
+        </div>
+        <div class="rm-phase">
+          <div class="rm-header light">阶段三 · 2027 目标</div>
+          <div class="rm-body">
+            <div class="rm-item">自举飞轮首个闭环验证</div>
+            <div class="rm-item">L3 平台自举能力正式化</div>
+            <div class="rm-item">AI Removal Test 通过</div>
+            <div class="rm-item">易用性成为对外差异化标签</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div style="font-size:12px;font-weight:600;color:#111;margin-bottom:8px;">关键度量指标</div>
+      <div style="display:flex;gap:20px;">
+        <div style="flex:1;font-size:11.5px;color:#444;line-height:1.8;"><strong>效率类：</strong>首次操作成功率 · 任务完成时长 · 支持工单量变化</div>
+        <div style="flex:1;font-size:11.5px;color:#444;line-height:1.8;"><strong>感知类：</strong>易用性 NPS · 自然语言交互采用率</div>
+        <div style="flex:1;font-size:11.5px;color:#444;line-height:1.8;"><strong>自举类：</strong>LLM Wiki 覆盖率 · Agent 记忆命中率</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== SLIDE 10: 总结 ========== -->
+  <div class="slide">
+    <div style="height:3px;background:#1a1a1a;flex-shrink:0;"></div>
+    <div class="slide-inner">
+      <div class="tag">09 · 总结</div>
+      <div class="slide-title">四个核心判断</div>
+      <div class="insight">
+        如果只记住一件事：易用性不是功能的堆叠，是推理平台独有的自我进化路径。
+      </div>
+
+      <div class="summary-grid">
+        <div class="sg-item">
+          <div class="sg-title"><span class="sg-num">1</span> 重新定义问题域</div>
+          <div class="sg-desc">易用性 = 认知负荷管理，而非功能完备性。三类负荷对应三种截然不同的设计策略。</div>
+        </div>
+        <div class="sg-item">
+          <div class="sg-title"><span class="sg-num">2</span> 业界正发生范式转移</div>
+          <div class="sg-desc">AI-Bolted 到 AI-Native 不是渐进演化，是架构决策的分叉点。现在是 FOAI 卡位的窗口期。</div>
+        </div>
+        <div class="sg-item" style="border-color:#111;">
+          <div class="sg-title"><span class="sg-num">3</span> 自举优势是真正的护城河</div>
+          <div class="sg-desc">FOAI 运行推理服务 + 消费推理服务的双重身份，构成竞争对手无法轻易复制的结构性壁垒。</div>
+        </div>
+        <div class="sg-item">
+          <div class="sg-title"><span class="sg-num">4</span> 飞轮而非里程碑</div>
+          <div class="sg-desc">路线图的终点不是"完成易用性改造"，而是启动一个数据 → 认知 → 体验 → 能力的自强化循环。</div>
+        </div>
+      </div>
+
+      <div style="margin-top:16px;padding:12px 16px;border:1px solid #111;border-radius:4px;font-size:12.5px;color:#111;line-height:1.7;background:#fafafa;">
+        <strong>一句话定位：</strong>FOAI 易用性竞争力的终极形态，是一个用自身推理能力持续降低自身使用门槛的自进化系统。
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- 导航栏 -->
+<div class="nav-bar">
+  <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)" disabled>← 上一页</button>
+  <div style="display:flex;align-items:center;gap:16px;">
+    <div class="page-dots" id="pageDots"></div>
+    <div class="page-indicator" id="pageIndicator">1 / 10</div>
+  </div>
+  <button class="nav-btn" id="nextBtn" onclick="changeSlide(1)">下一页 →</button>
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+  let current = 0;
+
+  const dotsContainer = document.getElementById('pageDots');
+  slides.forEach((_, i) => {
+    const dot = document.createElement('div');
+    dot.className = 'dot' + (i === 0 ? ' active' : '');
+    dot.onclick = () => goTo(i);
+    dotsContainer.appendChild(dot);
+  });
+
+  function goTo(n) {
+    slides[current].classList.remove('active');
+    dotsContainer.children[current].classList.remove('active');
+    current = n;
+    slides[current].classList.add('active');
+    dotsContainer.children[current].classList.add('active');
+    document.getElementById('pageIndicator').textContent = (current + 1) + ' / ' + total;
+    document.getElementById('prevBtn').disabled = current === 0;
+    document.getElementById('nextBtn').disabled = current === total - 1;
+  }
+
+  function changeSlide(dir) {
+    const next = current + dir;
+    if (next >= 0 && next < total) goTo(next);
+  }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') changeSlide(1);
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') changeSlide(-1);
+  });
+</script>
+
+</body>
+</html>

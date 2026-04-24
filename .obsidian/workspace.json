@@ -6,6 +6,7 @@
       {
         "id": "1c65f50aad3bbd4f",
         "type": "tabs",
+        "dimension": 47.74964838255977,
         "children": [
           {
             "id": "ba15315a001d921f",
@@ -13,50 +14,16 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "maas/未命名.md",
+                "file": "maas/易用性设计2.0.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "未命名"
+              "title": "易用性设计2.0"
             }
           },
           {
             "id": "e838edafd1b1cbd9",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "maas/易用性设计.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "易用性设计"
-            }
-          }
-        ]
-      },
-      {
-        "id": "b038fad166d3c3a4",
-        "type": "tabs",
-        "children": [
-          {
-            "id": "bde5e8dda91cf852",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "maas/未命名 1.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "未命名 1"
-            }
-          },
-          {
-            "id": "e203670e545c1b87",
             "type": "leaf",
             "state": {
               "type": "markdown",
@@ -68,9 +35,115 @@
               "icon": "lucide-file",
               "title": "未命名 2"
             }
+          },
+          {
+            "id": "65650da6c044a06c",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "maas/未命名 9.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "未命名 9"
+            }
           }
         ],
-        "currentTab": 1
+        "currentTab": 2
+      },
+      {
+        "id": "221b82745856469b",
+        "type": "tabs",
+        "dimension": 52.25035161744023,
+        "children": [
+          {
+            "id": "24dddc1482727dff",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "maas/未命名 3.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "未命名 3"
+            }
+          },
+          {
+            "id": "370d4dc169c7cd07",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "maas/未命名 4.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "未命名 4"
+            }
+          },
+          {
+            "id": "b66445aa7333b4e9",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "maas/未命名 5.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "未命名 5"
+            }
+          },
+          {
+            "id": "d326657d78ca98d4",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "maas/未命名 6.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "未命名 6"
+            }
+          },
+          {
+            "id": "f3d8f0c5d56d1192",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "maas/未命名 7.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "未命名 7"
+            }
+          },
+          {
+            "id": "229aecd065fc398a",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "maas/未命名 8.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "未命名 8"
+            }
+          }
+        ],
+        "currentTab": 5
       }
     ],
     "direction": "vertical"
@@ -246,14 +319,30 @@
       "copilot:Open Copilot Chat": false
     }
   },
-  "active": "ba15315a001d921f",
+  "active": "65650da6c044a06c",
   "lastOpenFiles": [
+    "maas/新建文件夹/FOAI易用性竞争力演进.html",
+    "maas/新建文件夹/FOAI_易用性研讨_高级版.html",
+    "maas/新建文件夹/FOAI_xx.html",
+    "maas/新建文件夹/foai.pptx",
+    "maas/新建文件夹/FOAI 易用性研讨 PPT.html",
+    "maas/新建文件夹",
+    "maas/未命名 8.md",
+    "maas/未命名 9.md",
+    "maas/易用性设计2.0.md",
+    "maas/未命名 4.md",
+    "maas/未命名 3.md",
     "maas/未命名 2.md",
+    "maas/未命名 7.md",
+    "maas/未命名 5.md",
+    "maas/未命名 6.md",
+    "maas/imgs/易用性设计2.0-1776987157573.webp",
+    "maas/未命名 1.md",
+    "maas/易用性设计.md",
+    "未命名.md",
     "maas/未命名.md",
     "maas/imgs/未命名-1776895668692.webp",
     "maas/imgs",
-    "maas/易用性设计.md",
-    "maas/未命名 1.md",
     "maas",
     "LLM/01_从CNN、RNN到Attention.md",
     "LLM/imgs/Snipaste_2026-04-20_00-29-57.png",
@@ -266,33 +355,18 @@
     "LLM/imgs/Snipaste_2026-04-19_23-13-07.png",
     "LLM/imgs/Snipaste_2026-04-19_23-12-20.png",
     "LLM/imgs/Snipaste_2026-04-19_23-11-33.png",
-    "LLM/imgs/Snipaste_2026-04-19_23-10-56.png",
     "third_documents/DeepLearning-500-questions-master/ch19_软件专利申请及权利保护/img/1.doc",
     "third_documents/DeepLearning-500-questions-master/ch19_软件专利申请及权利保护/第十九章_软件专利申请及权利保护.md",
     "third_documents/DeepLearning-500-questions-master/ch19_软件专利申请及权利保护/readme.md",
     "third_documents/DeepLearning-500-questions-master/ch19_软件专利申请及权利保护/modify_log.txt",
     "third_documents/DeepLearning-500-questions-master/ch19_软件专利申请及权利保护/img",
-    "third_documents/DeepLearning-500-questions-master/ch19_软件专利申请及权利保护",
-    "third_documents/DeepLearning-500-questions-master/ch18_后端架构选型及应用场景/img/新建文件夹/emnlp2018.pdf",
-    "third_documents/DeepLearning-500-questions-master/ch18_后端架构选型及应用场景/img/新建文件夹",
-    "third_documents/DeepLearning-500-questions-master/ch18_后端架构选型及应用场景/img",
     "third_documents/DeepLearning-500-questions-master/ch18_后端架构选型及应用场景/第十八章_后端架构选型及应用场景.md",
     "third_documents/DeepLearning-500-questions-master/ch18_后端架构选型及应用场景/readme.md",
-    "third_documents/DeepLearning-500-questions-master/ch18_后端架构选型及应用场景/modify_log.txt",
     "third_documents/DeepLearning-500-questions-master/ch15_GPU和框架选型/第十五章_异构运算、GPU及框架选型.md",
     "third_documents/DeepLearning-500-questions-master/ch15_GPU和框架选型/readme.md",
     "third_documents/DeepLearning-500-questions-master/ch14_超参数调整/第十四章_超参数调整.md",
     "third_documents/DeepLearning-500-questions-master/ch14_超参数调整/readme.md",
     "third_documents/DeepLearning-500-questions-master/ch13_优化算法/第十三章_优化算法.md",
-    "third_documents/DeepLearning-500-questions-master/ch13_优化算法/readme.md",
-    "third_documents/DeepLearning-500-questions-master/ch12_网络搭建及训练/第十二章_网络搭建及训练.md",
-    "third_documents/DeepLearning-500-questions-master/ch12_网络搭建及训练/readme.md",
-    "third_documents/DeepLearning-500-questions-master/ch11_迁移学习/第十一章_迁移学习.md",
-    "third_documents/DeepLearning-500-questions-master/ch11_迁移学习/readme.md",
-    "third_documents/DeepLearning-500-questions-master/ch10_强化学习/第十章_强化学习.md",
-    "third_documents/DeepLearning-500-questions-master/ch10_强化学习/readme.md",
-    "third_documents/DeepLearning-500-questions-master/ch09_图像分割/第九章_图像分割.md",
-    "third_documents/DeepLearning-500-questions-master/ch09_图像分割/readme.md",
     "未命名.canvas"
   ]
 }
