@@ -22,7 +22,6 @@ build/
 dist/
 
 # other
-copilot/
-howtolearn/
-drafts/
-third_documents/
+notes/howtolearn/
+notes/drafts/
+notes/third_documents/

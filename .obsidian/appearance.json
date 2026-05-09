@@ -2,5 +2,8 @@
   "accentColor": "#1f1d20",
   "interfaceFontFamily": "Maple Mono",
   "textFontFamily": "Maple Mono",
-  "monospaceFontFamily": "Maple Mono"
+  "monospaceFontFamily": "Maple Mono",
+  "enabledCssSnippets": [
+    "quiet-editorial"
+  ]
 }

@@ -1,0 +1,343 @@
+/* ============================================
+   Obsidian 自定义主题 —— 简约大气·白净风
+   使用方式：存入 .obsidian/snippets/ 目录，
+             在「外观 → CSS 片段」中启用
+   保留范围：标题样式 + 全局排版布局
+   其余组件（列表/引用/代码/Checkbox等）回归 Obsidian 默认
+   ============================================ */
+
+/* ──────────────────────────────────────────
+   1. 全局变量
+   ────────────────────────────────────────── */
+.theme-light,
+:root {
+  --clean-bg-primary:      #ffffff;
+  --clean-text-primary:    #1a1a1a;
+  --clean-text-muted:      #8a8a8a;
+  --clean-accent:          #3f7d55;
+  --clean-accent-deep:     #2f6844;
+  --clean-accent-soft:     #e7f2eb;
+  --clean-accent-line:     #bdd8c7;
+  --clean-border-light:    #ececea;
+  --clean-border-medium:   #d8d8d4;
+  --clean-border-strong:   #bdbdb8;
+  --clean-line-height:     1.9;
+  --clean-letter-spacing:  0.01em;
+}
+
+/* ──────────────────────────────────────────
+   2. 编辑器正文基础排版（不干预布局/宽度/留白）
+   ────────────────────────────────────────── */
+.markdown-preview-view,
+.markdown-source-view.mod-cm6 .cm-content {
+  line-height: var(--clean-line-height);
+  letter-spacing: var(--clean-letter-spacing);
+  color: var(--clean-text-primary);
+}
+
+/* ──────────────────────────────────────────
+   3. 段落
+   ────────────────────────────────────────── */
+.markdown-preview-view p {
+  margin: 0 0 1.32em;
+  line-height: var(--clean-line-height);
+  color: var(--clean-text-primary);
+  text-align: justify;
+  word-break: break-word;
+}
+
+.markdown-preview-view p:last-child {
+  margin-bottom: 0;
+}
+
+/* ──────────────────────────────────────────
+   4. 标题系统
+   ────────────────────────────────────────── */
+
+/* H1 —— 全文主标题：居中，无额外装饰 */
+.markdown-preview-view h1 {
+  display: block;
+  font-size: 2.15rem;
+  font-weight: 760;
+  color: #111111;
+  letter-spacing: 0.035em;
+  line-height: 1.32;
+  text-align: center;
+  margin: 2.2em 0 1.4em;
+  padding: 0;
+  border-bottom: none;
+  position: relative;
+}
+
+.markdown-preview-view h1::before,
+.markdown-preview-view h1::after {
+  display: none;
+}
+
+/* H2 —— 章节标题：粗实线跟随内容宽度 */
+.markdown-preview-view h2 {
+  font-size: 1.48rem;
+  font-weight: 700;
+  color: #181818;
+  letter-spacing: 0.02em;
+  line-height: 1.42;
+  margin: 2.35em 0 0.85em;
+  padding: 0;
+  border-left: none;
+  border-bottom: none;
+  position: relative;
+  display: table;
+}
+
+.markdown-preview-view h2::after {
+  content: "";
+  display: block;
+  width: 100%;
+  height: 2.5px;
+  border-radius: 2px;
+  margin-top: 0.32em;
+  background: #1f1f1f;
+}
+
+/* H3-H6 —— 统一虚下划线，跟随内容宽度；H6 不加斜体 */
+.markdown-preview-view h3,
+.markdown-preview-view h4,
+.markdown-preview-view h5,
+.markdown-preview-view h6 {
+  font-weight: 650;
+  color: #333333;
+  line-height: 1.45;
+  margin: 1.75em 0 0.6em;
+  padding-bottom: 0;
+  border-bottom: none;
+  font-style: normal;
+  display: table;
+}
+
+.markdown-preview-view h3::after,
+.markdown-preview-view h4::after,
+.markdown-preview-view h5::after,
+.markdown-preview-view h6::after {
+  content: "";
+  display: block;
+  width: 100%;
+  margin-top: 0.2em;
+  height: 0;
+  border-bottom: 1.5px dashed var(--clean-border-medium);
+}
+
+.markdown-preview-view h3 { font-size: 1.18rem; }
+.markdown-preview-view h4 { font-size: 1.06rem; color: #3d3d3d; }
+.markdown-preview-view h5 { font-size: 0.98rem; color: #505050; }
+.markdown-preview-view h6 { font-size: 0.92rem; color: #666666; font-style: normal; }
+
+/* ──────────────────────────────────────────
+   编辑模式（CM6 Live Preview）标题样式
+   ────────────────────────────────────────── */
+
+/* 编辑模式 H1 */
+.markdown-source-view.mod-cm6 .cm-line.HyperMD-header-1 .cm-header-1 {
+  font-size: 2.15rem;
+  font-weight: 760;
+  color: #111111;
+  letter-spacing: 0.035em;
+}
+.markdown-source-view.mod-cm6 .cm-line.HyperMD-header-1 {
+  text-align: center;
+}
+
+/* 编辑模式 H2：display:table 伪元素在 CM6 中不生效，改用 border-bottom 模拟 */
+.markdown-source-view.mod-cm6 .cm-line.HyperMD-header-2 {
+  display: table;
+  border-bottom: 2.5px solid #1f1f1f;
+  padding-bottom: 0.28em;
+  margin-bottom: 0.1em;
+}
+.markdown-source-view.mod-cm6 .cm-line.HyperMD-header-2 .cm-header-2 {
+  font-size: 1.48rem;
+  font-weight: 700;
+  color: #181818;
+  letter-spacing: 0.02em;
+}
+
+/* 编辑模式 H3-H6：虚线下划线 */
+.markdown-source-view.mod-cm6 .cm-line.HyperMD-header-3,
+.markdown-source-view.mod-cm6 .cm-line.HyperMD-header-4,
+.markdown-source-view.mod-cm6 .cm-line.HyperMD-header-5,
+.markdown-source-view.mod-cm6 .cm-line.HyperMD-header-6 {
+  display: table;
+  border-bottom: 1.5px dashed var(--clean-border-medium);
+  padding-bottom: 0.18em;
+}
+.markdown-source-view.mod-cm6 .cm-line.HyperMD-header-3 .cm-header-3 {
+  font-size: 1.18rem; font-weight: 650; color: #333333;
+}
+.markdown-source-view.mod-cm6 .cm-line.HyperMD-header-4 .cm-header-4 {
+  font-size: 1.06rem; font-weight: 650; color: #3d3d3d;
+}
+.markdown-source-view.mod-cm6 .cm-line.HyperMD-header-5 .cm-header-5 {
+  font-size: 0.98rem; font-weight: 650; color: #505050;
+}
+.markdown-source-view.mod-cm6 .cm-line.HyperMD-header-6 .cm-header-6 {
+  font-size: 0.92rem; font-weight: 650; color: #666666; font-style: normal;
+}
+
+/* ──────────────────────────────────────────
+   5. 分隔线
+   ────────────────────────────────────────── */
+.markdown-preview-view hr {
+  border: none;
+  border-top: 1px solid var(--clean-border-light);
+  margin: 2.6em auto;
+  width: 62%;
+  position: relative;
+}
+
+.markdown-preview-view hr::after {
+  content: "✦";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background: #ffffff;
+  padding: 0 0.65em;
+  color: var(--clean-border-strong);
+  font-size: 0.72em;
+}
+
+/* ──────────────────────────────────────────
+   6. 表格 —— 仅横线，无竖线
+   ────────────────────────────────────────── */
+.markdown-preview-view table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.55em 0;
+  font-size: 0.96em;
+  border: none;
+}
+
+.markdown-preview-view thead {
+  border-top: 1px solid var(--clean-border-medium);
+  border-bottom: 1px solid var(--clean-border-strong);
+}
+
+.markdown-preview-view tbody tr {
+  border-bottom: 1px solid var(--clean-border-light);
+}
+
+.markdown-preview-view tbody tr:last-child {
+  border-bottom: 1px solid var(--clean-border-medium);
+}
+
+.markdown-preview-view th,
+.markdown-preview-view td {
+  border-left: none !important;
+  border-right: none !important;
+  padding: 0.72em 1em;
+  text-align: left;
+  vertical-align: top;
+}
+
+.markdown-preview-view th {
+  background: transparent;
+  color: #222222;
+  font-weight: 650;
+  letter-spacing: 0.015em;
+}
+
+.markdown-preview-view td {
+  color: var(--clean-text-primary);
+}
+
+.markdown-preview-view tr:hover td {
+  background: transparent;
+}
+
+/* ──────────────────────────────────────────
+   7. 链接
+   ────────────────────────────────────────── */
+.markdown-preview-view a {
+  color: var(--clean-accent-deep);
+  text-decoration: none;
+  border-bottom: 1px solid var(--clean-accent-line);
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.markdown-preview-view a:hover {
+  color: #245638;
+  border-color: var(--clean-accent);
+}
+
+.markdown-preview-view .internal-link {
+  color: #526f91;
+  border-color: #c4d2e2;
+}
+
+/* ──────────────────────────────────────────
+   8. 粗体 / 斜体 / 高亮
+   ────────────────────────────────────────── */
+.markdown-preview-view strong {
+  font-weight: 720;
+  color: #111111;
+}
+
+.markdown-preview-view em {
+  font-style: italic;
+  color: #555555;
+}
+
+.markdown-preview-view mark {
+  background: #fff2b8;
+  color: #5f4300;
+  border-radius: 3px;
+  padding: 0 0.22em;
+}
+
+/* ──────────────────────────────────────────
+   9. 图片
+   ────────────────────────────────────────── */
+.markdown-preview-view img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 7px;
+  display: block;
+  margin: 1.65em auto;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.075);
+}
+
+/* ──────────────────────────────────────────
+   10. 标签（Tag）
+   ────────────────────────────────────────── */
+.markdown-preview-view .tag {
+  background: var(--clean-accent-soft);
+  color: var(--clean-accent-deep);
+  border-radius: 999px;
+  padding: 0.08em 0.58em;
+  font-size: 0.82em;
+  font-weight: 520;
+  border: 1px solid var(--clean-accent-line);
+  text-decoration: none;
+}
+
+/* ──────────────────────────────────────────
+   11. 滚动条（美化）
+   ────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--clean-border-medium);
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #aaaaaa;
+}
+
+
