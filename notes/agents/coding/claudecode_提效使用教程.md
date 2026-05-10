@@ -6,17 +6,8 @@ tags:
   - CLI
   - MCP
 updated: 2026-05-10
-source:
-  - https://code.claude.com/docs/en/overview
-  - https://code.claude.com/docs/en/cli-reference
-  - https://cloudcli.ai/docs
 ---
-
-# Claude Code 提效使用教程
-
-这篇教程用于快速搭建并高效使用 Claude Code，同时整理 `cc-switch` 与 Claude Code UI（CloudCLI UI）的使用方式。内容基于 Claude Code 官方文档、CloudCLI UI 官方文档以及社区工具说明整理，重点放在日常可复用的命令、配置和工作流。
-
-## Claude Code 基本使用
+## Claude Code基本使用
 
 Claude Code 是 Anthropic 的 agentic coding 工具，可以在终端、IDE、桌面端和网页端使用。它能读取代码库、编辑文件、运行命令、管理上下文，并通过 MCP 接入外部工具。日常使用建议优先把它当成“项目内协作代理”：先让它理解项目，再让它计划、修改、验证和总结。
 
@@ -362,24 +353,3 @@ MCP 可以在 UI 中通过“齿轮图标 -> 选择 Agent -> MCP Servers -> Add 
 | Windows `node-pty` 安装报错 | 优先使用 WSL；原生 Windows 需安装 Visual Studio Build Tools |
 | MCP server 未连接 | 检查命令、参数和环境变量，运行 `claude mcp list`，并重启会话 |
 | `.env` 修改不生效 | 服务只在启动时读取 `.env`，需要重启 `cloudcli` 或 PM2 服务 |
-
-参考链接：
-
-- [Claude Code overview](https://code.claude.com/docs/en/overview)
-- [Claude Code CLI reference](https://code.claude.com/docs/en/cli-reference)
-- [Claude Code commands](https://code.claude.com/docs/en/commands)
-- [Claude Code settings](https://code.claude.com/docs/en/settings)
-- [Claude Code environment variables](https://code.claude.com/docs/en/env-vars)
-- [Claude Code memory](https://code.claude.com/docs/en/memory)
-- [Claude Code MCP](https://code.claude.com/docs/en/mcp)
-- [CloudCLI UI npm installation](https://cloudcli.ai/docs/installation/global-installation)
-- [CloudCLI UI local development setup](https://cloudcli.ai/docs/installation/local-development-setup)
-- [CloudCLI UI tools and permissions](https://cloudcli.ai/docs/configuration/tools-and-permissions)
-- [CloudCLI UI environment variables](https://cloudcli.ai/docs/configuration/environment-variables)
-- [CloudCLI UI MCP servers](https://cloudcli.ai/docs/configuration/mcp-servers)
-- [CloudCLI UI common issues](https://cloudcli.ai/docs/troubleshooting/common-issues)
-- [CloudCLI UI chat interface](https://cloudcli.ai/docs/features/chat-interface)
-- [CloudCLI UI file explorer](https://cloudcli.ai/docs/features/file-explorer)
-- [CloudCLI UI git explorer](https://cloudcli.ai/docs/features/git-explorer)
-- [CloudCLI UI session management](https://cloudcli.ai/docs/features/session-management)
-- [CloudCLI UI mobile access](https://cloudcli.ai/docs/features/mobile-app)
