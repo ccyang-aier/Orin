@@ -48,6 +48,20 @@
               "icon": "lucide-file",
               "title": "1.codex安装与基本使用"
             }
+          },
+          {
+            "id": "5ed504a167d71a8e",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "notes/agents/coding/codex_提效使用教程.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "codex_提效使用教程"
+            }
           }
         ],
         "currentTab": 2
@@ -107,7 +121,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 321.5
+    "width": 409.5
   },
   "right": {
     "id": "ff6822fa7b405a4a",
@@ -226,12 +240,21 @@
   },
   "active": "9abebf6d8530103b",
   "lastOpenFiles": [
-    "notes/agents/codex/2.在codex使用或开发自己的宠物.md",
-    "notes/agents/codex/1.codex安装与基本使用.md",
-    "notes/agents/codex/imgs/Snipaste_2026-05-10_14-55-12.png",
-    "notes/agents/coding/codex_提效使用教程.md",
     "AGENTS.md",
-    "notes/agents/codex/imgs/Snipaste_2026-05-10_14-39-59.png",
+    "notes/agents/codex/1.codex安装与基本使用.md",
+    "notes/agents/coding/codex_提效使用教程.md",
+    "notes/agents/codex/chatgpt_土区购买教程.md",
+    "notes/agents/codex/imgs/Snipaste_2026-05-09_00-43-34.png",
+    "notes/agents/codex/imgs/Snipaste_2026-05-08_01-43-33.png",
+    "notes/agents/codex/imgs/Snipaste_2026-05-08_01-35-33.png",
+    "notes/agents/codex/imgs/Snipaste_2026-05-08_01-34-11.png",
+    "notes/agents/codex/imgs/Snipaste_2026-05-08_01-14-36.png",
+    "notes/agents/codex/imgs/Snipaste_2026-05-08_01-03-20.png",
+    "notes/agents/codex/imgs/Snipaste_2026-05-04_18-21-09.png",
+    "notes/agents/codex/imgs/Snipaste_2026-05-04_18-05-20.png",
+    "notes/agents/codex/imgs/Snipaste_2026-05-04_17-57-32.png",
+    "notes/agents/codex/imgs/chatgpt_土区购买教程-1778257911348.webp",
+    "notes/agents/codex/2.在codex使用或开发自己的宠物.md",
     "notes/agents/codex/imgs",
     "notes/agents/codex/新建文件夹",
     "notes/agents/coding/claudecode_提效使用教程.md",
@@ -248,14 +271,6 @@
     "imgs.md",
     "notes",
     "notes/agents/coding/未命名 2.md",
-    "notes/agents/coding/imgs/Snipaste_2026-05-09_00-43-34.png",
-    "notes/agents/coding/imgs/20260509001327_50_5.png",
-    "notes/agents/coding/imgs/chatgpt_土区购买教程-1778257911348.webp",
-    "notes/agents/coding/imgs/20260508234918_48_5.png",
-    "notes/agents/coding/imgs/Snipaste_2026-05-08_01-43-33.png",
-    "notes/agents/coding/imgs/Snipaste_2026-05-08_01-35-33.png",
-    "notes/agents/coding/imgs/Snipaste_2026-05-08_01-34-11.png",
-    "notes/agents/coding/imgs/Snipaste_2026-05-08_01-14-36.png",
     "notes/vLLM/未命名 1.md",
     "notes/agents/coding/未命名 1.md",
     "notes/agents/coding/未命名.md",
@@ -270,7 +285,6 @@
     "notes/maas/未命名 2.md",
     "notes/maas/未命名 1.md",
     "notes/maas/未命名.md",
-    "notes/vLLM/未命名.md",
     "notes/agents/coding/imgs",
     "未命名.canvas"
   ]
