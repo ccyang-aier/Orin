@@ -1,13 +1,17 @@
 # Claude Code 提效使用教程
 
-> 基于 Claude Code 官方文档整理，涵盖安装、常用命令、技巧、环境变量、Claude Code UI 等内容。
-> 最后更新：2026-05-10
+> Tags: #ClaudeCode #AI编程 #效率工具 #CLI #MCP
+> 更新日期：2026-05-10
 
----
+这篇教程用于快速搭建并高效使用 Claude Code，同时整理 `cc-switch` 与 Claude Code UI（CloudCLI UI）的使用方式。内容基于 Claude Code 官方文档、CloudCLI UI 官方文档以及社区工具说明整理，重点放在日常可复用的命令、配置和工作流。
 
-## 一、安装 Claude Code
+## Claude Code 基本使用
 
-### 推荐方式：原生安装（支持自动更新）
+Claude Code 是 Anthropic 的 agentic coding 工具，可以在终端、IDE、桌面端和网页端使用。它能读取代码库、编辑文件、运行命令、管理上下文，并通过 MCP 接入外部工具。日常使用建议优先把它当成“项目内协作代理”：先让它理解项目，再让它计划、修改、验证和总结。
+
+**安装 Claude Code**
+
+官方当前推荐原生安装方式，优点是自动更新、权限问题更少。npm 安装仍可用，但不建议使用 `sudo npm install -g`，否则容易带来权限和安全问题。
 
 ```bash
 # macOS / Linux / WSL
@@ -15,237 +19,112 @@ curl -fsSL https://claude.ai/install.sh | bash
 
 # Windows PowerShell
 irm https://claude.ai/install.ps1 | iex
-```
 
-### 其他安装方式
-
-```bash
-# npm（需要 Node.js 18+）
-npm install -g @anthropic-ai/claude-code
-
-# Homebrew（不自动更新，需手动 brew upgrade）
+# Homebrew
 brew install --cask claude-code
+
+# npm，需要 Node.js 18+
+npm install -g @anthropic-ai/claude-code
 
 # WinGet
 winget install Anthropic.ClaudeCode
 ```
 
-### 安装特定版本 / 切换频道
+安装后运行诊断与更新：
 
 ```bash
-claude install 2.1.89    # 安装指定版本
-claude install stable    # 切换到 stable 频道
-claude update            # 更新到最新版本
+claude doctor
+claude update
+claude install stable
+claude install 2.1.118
 ```
 
-### 系统要求
+Windows 用户可以选择 WSL 或 Git for Windows。若使用原生 Windows 且 Claude Code 没有找到 Git Bash，可设置：
 
-- macOS 13+、Windows 10 1809+、Ubuntu 20.04+
-- 4GB+ RAM，x64 或 ARM64
-- 需要网络连接
+```powershell
+$env:CLAUDE_CODE_GIT_BASH_PATH="C:\Program Files\Git\bin\bash.exe"
+```
 
-### 登录认证
+**登录与启动**
 
 ```bash
-claude auth login          # 登录（浏览器 OAuth）
-claude auth login --console  # 无浏览器环境登录
-claude auth status         # 查看认证状态
-claude auth logout         # 登出
+claude auth login
+claude auth login --console
+claude auth status
+claude auth logout
+
+cd your-project
+claude
 ```
 
----
+常见启动方式：
 
-## 二、常用 CLI 命令
+| 命令 | 使用场景 |
+| --- | --- |
+| `claude` | 在当前项目启动交互式会话 |
+| `claude "explain this project"` | 带初始问题进入交互式会话 |
+| `claude -p "query"` | 非交互模式，适合脚本和一次性任务 |
+| `cat logs.txt \| claude -p "explain"` | 处理管道输入 |
+| `claude -c` | 继续当前目录最近一次会话 |
+| `claude -r "session-name"` | 按 ID 或名称恢复会话 |
+| `claude -w feature-auth` | 在隔离的 git worktree 中工作 |
 
-### 启动方式
-
-| 命令 | 说明 |
-|------|------|
-| `claude` | 启动交互式会话 |
-| `claude "query"` | 带初始提示启动 |
-| `claude -p "query"` | 非交互模式，输出后退出 |
-| `cat file \| claude -p "query"` | 处理管道内容 |
-| `claude -c` | 继续当前目录最近的会话 |
-| `claude -r "session-name" "query"` | 按名称恢复会话 |
-
-### 常用 CLI Flags
+**常用 CLI flags**
 
 | Flag | 说明 |
-|------|------|
-| `--model <alias>` | 设置模型，如 `--model opus` |
-| `--effort <level>` | 推理努力级别：`low/medium/high/xhigh/max` |
-| `--permission-mode <mode>` | 权限模式：`default/acceptEdits/plan/auto` |
-| `-p, --print` | 非交互模式 |
-| `-c, --continue` | 继续最近的会话 |
-| `-r, --resume <session>` | 按 ID 或名称恢复会话 |
-| `-w, --worktree <name>` | 在隔离的 git worktree 中启动 |
-| `--add-dir <path>` | 添加额外工作目录 |
-| `--max-turns <N>` | 限制代理轮次（print mode） |
-| `--max-budget-usd <N>` | 限制最大花费（print mode） |
-| `--output-format <fmt>` | 输出格式：`text/json/stream-json` |
-| `--debug` | 启用调试模式 |
-| `--bare` | 最小模式，跳过 hooks/skills/MCP/CLAUDE.md |
-| `--dangerously-skip-permissions` | 跳过所有权限提示（慎用） |
+| --- | --- |
+| `--model sonnet` / `--model opus` | 临时指定模型或模型别名 |
+| `--effort high` | 设置推理强度，常见值为 `low`、`medium`、`high`、`xhigh`、`max` |
+| `--permission-mode plan` | 以计划模式启动，适合复杂改动前先确认方案 |
+| `--permission-mode auto` | 让 Claude Code 自动判断权限模式 |
+| `--add-dir ../lib` | 给当前会话增加可访问目录 |
+| `--max-turns 3` | print mode 下限制代理轮次 |
+| `--max-budget-usd 5.00` | print mode 下限制预算 |
+| `--output-format json` | print mode 下输出结构化结果 |
+| `--bare` | 最小模式，跳过 hooks、skills、plugins、MCP、auto memory 和 `CLAUDE.md` 加载 |
+| `--dangerously-skip-permissions` | 跳过权限提示，风险高，仅在隔离环境中谨慎使用 |
 
-### 模型别名
+**会话内常用命令**
 
-| 别名 | 说明 |
-|------|------|
-| `sonnet` | 最新 Sonnet（日常编码，推荐） |
-| `opus` | 最新 Opus（复杂推理） |
-| `haiku` | 快速高效（简单任务） |
-| `best` | 当前最强模型 |
-| `default` | 恢复账号推荐模型 |
-| `sonnet[1m]` | Sonnet + 100 万 token 上下文 |
+在会话中输入 `/` 可以查看可用命令，输入 `/` 加关键词可以过滤。常用命令按工作流记忆即可：
 
----
+| 阶段 | 命令 | 用途 |
+| --- | --- | --- |
+| 项目初始化 | `/init`、`/memory`、`/mcp`、`/agents`、`/permissions` | 生成项目记忆、配置 MCP/子代理/权限 |
+| 执行任务 | `/plan`、`/model`、`/effort`、`/add-dir` | 规划任务、切换模型、调整推理强度、增加目录 |
+| 管理上下文 | `/context`、`/compact`、`/btw`、`/clear` | 查看上下文、压缩历史、提出旁路问题、开启新任务 |
+| 提交前检查 | `/diff`、`/simplify`、`/review`、`/security-review` | 查看改动、简化代码、代码审查、安全审查 |
+| 会话恢复 | `/resume`、`/branch`、`/rewind`、`/rename` | 恢复、分叉、回滚和命名会话 |
+| 排障 | `/doctor`、`/debug`、`/status` | 诊断安装、调试运行问题、查看状态 |
 
-## 三、会话内 Slash 命令
+**配置、权限与环境变量**
 
-输入 `/` 可查看所有可用命令，输入 `/` 加字母可过滤。
+Claude Code 的配置按作用域组织。优先级大致是：托管策略最高，其次命令行参数、本地配置、项目配置、用户配置。
 
-### 项目初始化
+| 位置 | 作用 |
+| --- | --- |
+| `~/.claude/settings.json` | 用户级配置，影响所有项目 |
+| `.claude/settings.json` | 项目级配置，可提交到 git，适合团队共享 |
+| `.claude/settings.local.json` | 本地项目配置，通常 gitignore，适合个人实验 |
 
-| 命令 | 说明 |
-|------|------|
-| `/init` | 生成 CLAUDE.md 项目指南 |
-| `/memory` | 编辑 CLAUDE.md，管理自动记忆 |
-| `/permissions` | 管理工具权限规则 |
-| `/mcp` | 管理 MCP 服务器连接 |
-| `/hooks` | 查看 hook 配置 |
-
-### 任务执行中
-
-| 命令 | 说明 |
-|------|------|
-| `/plan [description]` | 进入计划模式 |
-| `/model [model]` | 切换模型 |
-| `/effort [level]` | 设置推理努力级别 |
-| `/fast [on\|off]` | 切换快速模式 |
-| `/context [all]` | 可视化上下文使用情况 |
-| `/compact [instructions]` | 压缩对话历史释放上下文 |
-| `/btw <question>` | 提问侧边问题（不加入对话历史） |
-| `/add-dir <path>` | 添加工作目录 |
-
-### 代码审查
-
-| 命令 | 说明 |
-|------|------|
-| `/diff` | 查看未提交的变更 |
-| `/review [PR]` | 本地审查 PR |
-| `/security-review` | 安全漏洞分析 |
-| `/simplify [focus]` | 审查并优化最近修改的文件 |
-
-### 会话管理
-
-| 命令 | 说明 |
-|------|------|
-| `/clear [name]` | 开始新对话（保留项目记忆） |
-| `/resume [session]` | 恢复会话 |
-| `/branch [name]` | 分叉当前对话 |
-| `/rewind` | 回滚代码和对话到检查点 |
-| `/rename [name]` | 重命名当前会话 |
-| `/export [filename]` | 导出对话为纯文本 |
-| `/recap` | 生成当前会话摘要 |
-
-### 工具和配置
-
-| 命令 | 说明 |
-|------|------|
-| `/config` | 打开设置界面 |
-| `/status` | 查看版本、模型、账号状态 |
-| `/usage` | 查看会话花费和用量统计 |
-| `/doctor` | 诊断安装和设置问题 |
-| `/theme` | 更改颜色主题 |
-| `/keybindings` | 打开快捷键配置文件 |
-
-### 自动化
-
-| 命令 | 说明 |
-|------|------|
-| `/loop [interval] [prompt]` | 定期重复执行（如 `/loop 5m check deploy`） |
-| `/batch <instruction>` | 大规模并行代码变更 |
-| `/tasks` | 列出和管理后台任务 |
-
----
-
-## 四、关键环境变量
-
-### 认证和 API
-
-| 变量 | 说明 |
-|------|------|
-| `ANTHROPIC_API_KEY` | API 密钥（覆盖订阅登录） |
-| `ANTHROPIC_BASE_URL` | 覆盖 API 端点（代理/网关） |
-
-### 模型选择
-
-| 变量 | 说明 |
-|------|------|
-| `ANTHROPIC_MODEL` | 使用的模型名称或别名 |
-| `CLAUDE_CODE_EFFORT_LEVEL` | 努力级别：`low/medium/high/xhigh/max/auto` |
-| `CLAUDE_CODE_SUBAGENT_MODEL` | 子代理使用的模型 |
-
-### 超时和限制
-
-| 变量 | 默认值 | 说明 |
-|------|--------|------|
-| `API_TIMEOUT_MS` | 600000 | API 请求超时（ms） |
-| `BASH_DEFAULT_TIMEOUT_MS` | 120000 | Bash 命令默认超时 |
-| `BASH_MAX_TIMEOUT_MS` | 600000 | Bash 命令最大超时 |
-| `CLAUDE_CODE_MAX_OUTPUT_TOKENS` | 模型相关 | 每次请求最大输出 token |
-| `CLAUDE_CODE_MAX_TOOL_USE_CONCURRENCY` | 10 | 最大并行工具调用数 |
-
-### 禁用功能
-
-| 变量 | 禁用内容 |
-|------|---------|
-| `CLAUDE_CODE_DISABLE_THINKING` | 扩展思考 |
-| `CLAUDE_CODE_DISABLE_AUTO_MEMORY` | 自动记忆 |
-| `CLAUDE_CODE_DISABLE_BACKGROUND_TASKS` | 后台任务 |
-| `CLAUDE_CODE_DISABLE_CRON` | 定时任务 |
-| `DISABLE_TELEMETRY` | 遥测数据上报 |
-| `DISABLE_AUTOUPDATER` | 自动更新检查 |
-
-### 上下文压缩
-
-| 变量 | 说明 |
-|------|------|
-| `CLAUDE_AUTOCOMPACT_PCT_OVERRIDE` | 触发压缩的上下文容量百分比（1-100） |
-| `CLAUDE_CODE_MAX_CONTEXT_TOKENS` | 覆盖假设的上下文窗口大小 |
-
----
-
-## 五、设置与配置（settings.json）
-
-### 配置文件位置
-
-| 文件 | 作用域 | 说明 |
-|------|--------|------|
-| `~/.claude/settings.json` | 用户级 | 所有项目的个人偏好 |
-| `.claude/settings.json` | 项目级 | 通过 git 与团队共享 |
-| `.claude/settings.local.json` | 本地级 | 个人项目覆盖，gitignore |
-
-优先级：本地级 > 项目级 > 用户级
-
-### 常用配置示例
+常用配置示例：
 
 ```json
 {
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
   "model": "sonnet",
   "effortLevel": "high",
-  "autoMemoryEnabled": true,
   "permissions": {
     "allow": [
       "Bash(npm run lint)",
       "Bash(npm run test *)",
       "Bash(git log *)",
-      "Bash(git diff *)"
+      "Bash(git diff *)",
+      "Read"
     ],
     "deny": [
-      "Bash(curl *)",
-      "Read(./.env)"
+      "Read(./.env)",
+      "Bash(curl *)"
     ]
   },
   "env": {
@@ -254,366 +133,257 @@ claude auth logout         # 登出
 }
 ```
 
-### 权限规则语法
+高频环境变量：
 
-```
-Tool                          # 匹配工具的所有使用
-Bash(npm run *)               # 匹配以 "npm run" 开头的命令
-Read(./.env)                  # 匹配读取 .env 文件
-WebFetch(domain:example.com)  # 匹配对特定域名的请求
-MCP(server_name:tool_name)    # 匹配特定 MCP 工具
-```
+| 变量 | 说明 |
+| --- | --- |
+| `ANTHROPIC_API_KEY` | API key。设置后会优先于 Claude Pro/Max/Team/Enterprise 登录态，可能产生 API 计费 |
+| `ANTHROPIC_BASE_URL` | 覆盖 API endpoint，常用于代理或网关 |
+| `ANTHROPIC_MODEL` | 指定默认模型 |
+| `CLAUDE_CODE_EFFORT_LEVEL` | 设置推理强度 |
+| `API_TIMEOUT_MS` | API 请求超时，默认 10 分钟 |
+| `BASH_DEFAULT_TIMEOUT_MS` | Bash 工具默认超时，默认 2 分钟 |
+| `BASH_MAX_TIMEOUT_MS` | Bash 工具最大超时，默认 10 分钟 |
+| `CLAUDE_AUTOCOMPACT_PCT_OVERRIDE` | 调整自动压缩触发比例 |
+| `CLAUDE_CODE_DISABLE_AUTO_MEMORY` | 禁用 auto memory |
+| `CLAUDE_CODE_DISABLE_BACKGROUND_TASKS` | 禁用后台任务能力 |
+| `CLAUDE_CODE_DISABLE_THINKING` | 禁用 extended thinking |
+| `DISABLE_AUTOUPDATER` | 禁用自动更新 |
+| `DISABLE_TELEMETRY` | 禁用遥测 |
 
-拒绝规则 > 询问规则 > 允许规则。
+**CLAUDE.md、auto memory 与 MCP**
 
----
+`CLAUDE.md` 是给 Claude 的项目说明和长期规则，适合写架构背景、开发命令、代码规范、提交要求和项目禁忌。Auto memory 则是 Claude 根据你的纠正和偏好自动积累的项目记忆。两者都会作为上下文加载，但它们不是强制规则，所以越具体、越短、越可执行，效果越稳定。
 
-## 六、CLAUDE.md 最佳实践
-
-CLAUDE.md 是给 Claude 的持久化指令文件，每次会话开始时自动加载。
-
-### 文件位置
-
-| 路径 | 作用域 |
-|------|--------|
-| `./CLAUDE.md` | 项目级（提交到 git） |
-| `~/.claude/CLAUDE.md` | 用户级（所有项目） |
-| `./CLAUDE.local.md` | 本地个人偏好（gitignore） |
-
-### 有效写法示例
+建议 `CLAUDE.md` 控制在清晰可读的范围内，优先写这些内容：
 
 ```markdown
-# 项目概述
-这是一个 React + TypeScript 项目。
+# Project Overview
+This is a React + TypeScript project.
 
-# 构建命令
-- 开发：`npm run dev`
-- 测试：`npm run test`
-- 构建：`npm run build`
+# Commands
+- Dev: `npm run dev`
+- Test: `npm run test`
+- Build: `npm run build`
 
-# 代码规范
-- 使用 2 空格缩进
-- 所有函数必须有 TypeScript 类型注解
-
-# 重要约定
-- 提交前运行 `npm run lint`
-- 使用 pnpm，不用 npm
+# Conventions
+- Use 2-space indentation.
+- Prefer existing utilities before adding new abstractions.
+- Run `npm run lint` before committing.
 ```
 
-**技巧：**
-- 目标 200 行以内，过长会降低遵从度
-- 使用 `@path/to/file` 语法导入其他文件内容
-- HTML 注释 `<!-- -->` 会被过滤，不消耗 token
-- 用 `/init` 命令让 Claude 自动生成初始 CLAUDE.md
-
----
-
-## 七、Hooks（钩子）
-
-Hooks 是在 Claude Code 生命周期特定时间点自动执行的 shell 命令。
-
-### 常用 Hook 事件
-
-| 事件 | 触发时机 |
-|------|---------|
-| `PostToolUse` | 工具执行后 |
-| `PreToolUse` | 工具执行前 |
-| `Notification` | Claude 等待输入时 |
-| `Stop` | Claude 停止时 |
-| `SessionStart` | 会话开始时 |
-
-### 配置示例
-
-```json
-{
-  "hooks": {
-    "PostToolUse": [
-      {
-        "matcher": "Edit|Write",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "jq -r '.tool_input.file_path' | xargs npx prettier --write"
-          }
-        ]
-      }
-    ],
-    "Notification": [
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "osascript -e 'display notification \"Claude Code needs your attention\"'"
-          }
-        ]
-      }
-    ]
-  }
-}
-```
-
-**常见用途：**
-- 文件编辑后自动格式化（Prettier、Black 等）
-- Claude 等待输入时发送桌面通知
-- 阻止对受保护文件的编辑
-- 压缩后重新注入上下文
-
----
-
-## 八、MCP 服务器集成
-
-MCP（Model Context Protocol）让 Claude 连接外部工具、数据库和 API。
-
-### 添加 MCP 服务器
+MCP 用于把 Claude Code 连接到 GitHub、数据库、监控、设计工具等外部系统。适合“我本来要把外部信息复制进聊天”的场景。
 
 ```bash
-# 添加远程 HTTP 服务器
+# 添加远程 HTTP MCP
 claude mcp add my-server --transport http https://example.com/mcp
 
-# 添加本地 stdio 服务器
-claude mcp add my-server --transport stdio -- npx -y @modelcontextprotocol/server-github
-
-# 带环境变量
+# 添加本地 stdio MCP
 claude mcp add github --transport stdio \
   --env GITHUB_TOKEN=your_token \
   -- npx -y @modelcontextprotocol/server-github
+
+# 管理 MCP
+claude mcp list
+claude mcp get github
+claude mcp remove github
 ```
 
-### 作用域
+MCP 可以按 user、project、local 等范围配置。项目级配置适合团队共享，本地配置适合只在自己机器上使用的密钥或工具。
+
+**实用工作流**
+
+| 场景 | 推荐做法 |
+| --- | --- |
+| 新项目接入 | 运行 `/init` 生成初稿，再手动精简 `CLAUDE.md` |
+| 大改动 | 先 `/plan`，确认边界后再让 Claude 修改 |
+| 长任务 | 用 `/context` 观察上下文，用 `/compact` 在关键阶段压缩 |
+| 自动化脚本 | 使用 `claude -p`、`--output-format json`、`--max-turns`、`--max-budget-usd` |
+| 并行探索 | 使用 `claude -w <name>` 在隔离 worktree 中执行 |
+| 提交前 | 先 `/diff`，再 `/review` 或 `/simplify`，最后运行项目测试 |
+
+## cc-switch 介绍与使用
+
+`cc-switch` 是社区提供的 Claude Code 配置切换工具，用于在多套 API key、Base URL、模型配置之间快速切换。它适合同时使用个人账号、工作代理、第三方网关或不同模型策略的人。它不是 Claude Code 官方工具，使用前要确认包来源、配置文件位置和密钥安全。
+
+**安装与初始化**
+
+npm 上常见的包名是 `@hobeeliu/cc-switch`，安装命令通常为：
 
 ```bash
-claude mcp add my-server --scope user    # 用户级（所有项目）
-claude mcp add my-server --scope project # 项目级（.mcp.json，提交到 git）
-claude mcp add my-server --scope local   # 本地级（仅本机）
+npm install -g cc-switch
+cc-switch init
 ```
 
-### 常用 MCP 服务器
+另一个相近工具是 `@dingpx/claude-code-switch`，命令名为 `ccs`：
 
 ```bash
-# GitHub
-claude mcp add github --transport http https://api.githubcopilot.com/mcp/ \
-  --header "Authorization: Bearer YOUR_GITHUB_PAT"
-
-# PostgreSQL
-claude mcp add postgres --transport stdio \
-  --env DATABASE_URL=postgresql://localhost/mydb \
-  -- npx -y @modelcontextprotocol/server-postgres
+npm install -g @dingpx/claude-code-switch
+ccs current
+ccs list
+ccs switch
 ```
 
-### 管理命令
+两者定位相似，都是“多配置管理与切换”。如果你的目标只是切换 `ANTHROPIC_API_KEY`、`ANTHROPIC_BASE_URL`、`ANTHROPIC_MODEL`，可以先用其中一个，不要同时混用，避免不知道当前环境到底由谁写入。
+
+**常用命令**
+
+以 `cc-switch` 为例，常见操作是：
 
 ```bash
-claude mcp list          # 列出所有服务器
-claude mcp remove <name> # 删除服务器
-claude mcp get <name>    # 查看服务器详情
+cc-switch list
+cc-switch init
+cc-switch new personal
+cc-switch new work-proxy
+cc-switch use personal
+cc-switch current
 ```
 
-会话内使用 `/mcp` 命令管理连接和 OAuth 认证。
-
----
-
-## 九、提效技巧
-
-### 非交互模式（脚本集成）
+如果使用的是 `ccs`：
 
 ```bash
-# 管道输入
-cat error.log | claude -p "分析这些错误"
-
-# JSON 输出（适合脚本解析）
-claude -p "列出所有函数" --output-format json
-
-# 限制轮次和预算
-claude -p --max-turns 5 --max-budget-usd 1.00 "重构认证模块"
-
-# 最小模式（更快启动）
-claude --bare -p "快速查询"
+ccs current
+ccs list
+ccs switch
+ccs switch personal
 ```
 
-### 并行代理和 Worktrees
+**推荐使用方式**
+
+把配置切换当成“运行前的显式动作”，不要在同一个终端里频繁来回切。切换后建议立刻检查：
 
 ```bash
-# 在隔离的 worktree 中启动 Claude（互不干扰）
-claude -w feature-auth
-
-# 带 tmux 的 worktree
-claude -w feature-auth --tmux
-
-# 批量并行变更
-/batch migrate src/ from Solid to React
+claude auth status --text
+claude -p "print current model and provider assumptions"
 ```
 
-### 上下文管理
+同时注意 `ANTHROPIC_API_KEY` 的优先级：只要环境变量存在，Claude Code 可能优先使用 API key 而不是 Claude 订阅登录态。为了避免误计费，日常订阅使用场景可以保持 `ANTHROPIC_API_KEY` 未设置；需要 API key 时再临时启用。
 
 ```bash
-/context          # 查看上下文使用情况
-/compact          # 压缩对话历史
-/compact 保留关于认证模块的所有信息   # 带焦点指令的压缩
-/clear            # 开始新对话（保留项目记忆）
+# macOS / Linux
+unset ANTHROPIC_API_KEY
+
+# Windows PowerShell
+Remove-Item Env:ANTHROPIC_API_KEY
 ```
 
-### 自动记忆
+**什么时候不需要 cc-switch**
 
-Claude 会自动将学到的内容保存到 `~/.claude/projects/<project>/memory/`。
+如果你只有一套 Claude 订阅账号，或者只是在项目内固定使用一套配置，直接用 `~/.claude/settings.json`、项目级 `.claude/settings.json` 和 shell profile 就够了。`cc-switch` 的价值在于“经常切换”，不是“必须配置”。
 
-```bash
-/memory           # 查看和管理记忆
-```
+## Claude Code UI 介绍与使用
 
-在 settings.json 中禁用：`"autoMemoryEnabled": false`
+Claude Code UI 现在对应 CloudCLI UI，是一个基于浏览器的图形界面，用来访问 Claude Code、Codex、Cursor CLI、Gemini CLI 等 coding agent。它把聊天、Shell、文件浏览、Git、会话管理、MCP 和权限配置放到一个 Web UI 中，适合不想一直留在纯终端、需要移动端访问、或希望可视化审查 agent 改动的场景。
 
-### 后台任务
+**安装方式**
 
-按 `Ctrl+B` 将 Bash 命令放到后台运行，用 `/tasks` 查看状态。
-
-### 检查点和回滚
-
-```bash
-/rewind           # 回滚代码和对话到上一个检查点
-/branch my-exp    # 分叉当前对话做实验
-```
-
----
-
-## 十、Claude Code UI（cloudcli）
-
-Claude Code UI 是一个基于 Web 的图形界面，让你通过浏览器使用 Claude Code，适合不习惯纯命令行的场景。
-
-### 简介
-
-- 提供聊天界面、文件浏览器、Git 浏览器等可视化功能
-- 支持多 Agent（Claude Code、Cursor CLI、Codex、Gemini CLI 等）
-- 会话与 CLI 完全同步，`~/.claude` 配置共用
-- 支持移动端访问（自托管或云端）
-
-### 安装方式
-
-**方式一：npm 全局安装（推荐）**
+全局 npm 安装适合日常使用：
 
 ```bash
 npm install -g @siteboon/claude-code-ui
-cloudcli                    # 启动，默认 http://localhost:3001
-cloudcli -p 8080            # 自定义端口
-cloudcli status             # 查看配置和数据位置
-cloudcli update             # 更新到最新版本
+cloudcli
+cloudcli -p 8080
+cloudcli status
+cloudcli update
+cloudcli version
 ```
 
-**方式二：源码安装（获取最新特性）**
+默认服务地址是 `http://localhost:3001`。如果端口冲突，可以用 `cloudcli --port 8080` 或 `cloudcli -p 8080`。
+
+源码安装适合贡献代码、二次开发或体验 npm 包尚未发布的最新功能：
 
 ```bash
 git clone https://github.com/siteboon/claudecodeui.git
 cd claudecodeui
 npm install
-cp .env.example .env        # 编辑 .env 配置端口等
-npm run dev                 # 启动，支持热重载
+cp .env.example .env
+npm run dev
 ```
 
-**方式三：后台服务（PM2）**
+需要常驻后台时可用 PM2：
 
 ```bash
 npm install -g pm2
 pm2 start cloudcli --name "cloudcli-ui"
-pm2 startup && pm2 save     # 开机自启
+pm2 start cloudcli --name "cloudcli-ui" -- --port 8080
+pm2 startup
+pm2 save
+pm2 logs cloudcli-ui
+pm2 restart cloudcli-ui
 ```
 
-### 主要功能
+**权限、环境变量与 MCP 配置**
 
-**聊天界面（Chat Mode）**
-- 实时流式响应（WebSocket）
-- 会话历史持久化，带时间戳
-- 文件引用高亮、代码块语法高亮
-- 支持 Claude 的 Thinking Mode
-- 内联工具审批/拒绝
+CloudCLI UI 默认禁用 Claude Code 工具，需要在 Tools Settings 中显式开启。建议从只读能力开始，再按需打开写入和命令执行权限。
 
-**Shell 模式**
-- 点击聊天工具栏的 Shell 图标进入
-- 完整终端，等同于直接运行 CLI
-- 支持传递 flags、运行长任务、监控原始输出
+| 配置项 | 说明 |
+| --- | --- |
+| Tools & Permissions | 在侧边栏齿轮中开启工具权限；Read、Glob、Grep 风险较低，Edit/Write/Bash 风险更高 |
+| Scoped Bash | 优先允许 `Bash(npm run lint)`、`Bash(git diff *)` 这类具体命令，而不是开放全部 Bash |
+| 同步机制 | UI 修改会写入本地 Claude 配置，CLI 与 UI 共享配置 |
+| Project scope | 项目级 `.claude/settings.json` 可提交到仓库，适合团队共享规则 |
 
-**文件浏览器**
-- 可视化浏览项目文件结构
-- 支持文件编辑
+CloudCLI UI 的环境变量读取顺序是：CLI flag 优先，其次进程环境变量、`.env` 文件、内置默认值。常用变量：
 
-**Git 浏览器**
-- 可视化查看 Git 状态和历史
+| 变量 | 默认值 | 说明 |
+| --- | --- | --- |
+| `PORT` | `3001` | UI 服务端口 |
+| `WORKSPACES_ROOT` | `~` | 项目发现根目录 |
+| `ENABLE_HTTPS` | `false` | 是否启用 HTTPS |
 
-**会话管理**
-- 按项目目录自动组织会话
-- 支持恢复、重命名、删除会话
-- 跨设备访问（自托管通过局域网 IP，云端任意设备）
+全局安装时通常在 shell profile 或进程管理器中设置环境变量；源码安装时可写入项目根目录 `.env`。修改 `.env` 后需要重启服务。
 
-### 配置
+MCP 可以在 UI 中通过“齿轮图标 -> 选择 Agent -> MCP Servers -> Add Server”添加。UI 写入 `~/.claude.json`，所以通过 UI 添加的 MCP 会出现在 Claude Code CLI 中；通过终端 `claude mcp add` 添加的 MCP 也会显示在 UI 中。MCP 通常在会话开始时初始化，添加或修改后如果工具未出现，先重启会话。
 
-**工具权限**
-- 默认所有工具禁用，需手动开启
-- 推荐从只读工具开始（Read、Glob、Grep），按需添加写入/执行权限
-- UI 中的配置变更直接写入 `~/.claude/settings.json`，CLI 和 UI 自动同步
+**核心功能**
 
-**MCP 服务器**
-- 通过 UI 的齿轮图标 → 选择 Agent → MCP Servers → Add Server 添加
-- 配置写入 `~/.claude.json`，CLI 和 UI 共用
-- MCP 服务器在会话开始时初始化，添加后需重启会话生效
+| 功能 | 适合场景 |
+| --- | --- |
+| Chat Interface | 用聊天方式启动、恢复和继续 agent 会话，支持实时流式响应、文件引用、代码块、Thinking Mode 和工具审批 |
+| Shell Mode | 从聊天工具栏进入完整终端，适合传 CLI flags、看长任务原始输出、执行 UI 未暴露的操作 |
+| File Explorer & Editor | 在 UI 中浏览目录、打开文件、创建/重命名/删除文件，编辑器支持语法高亮和即时保存 |
+| Agent Changes | agent 修改文件后可在 UI 中查看 diff，并按文件接受或拒绝 |
+| Git Explorer | 查看变更文件、审查 diff、stage、commit、切换分支，适合把 agent 改动纳入正式提交前做人工检查 |
+| Session Management | 按项目目录组织会话，支持恢复、重命名、删除和查看历史 |
+| Mobile Access | 同一局域网中可用 `http://[your-machine-ip]:3001` 访问；移动端有底部导航、折叠侧栏和 PWA 支持 |
 
-**环境变量**
-- npm 全局安装：在 shell profile（`.bashrc`/`.zshrc`）中设置
-- 源码安装：在 `.env` 文件中设置
+**推荐工作流**
 
-### 常见问题
+1. 在本机启动 `cloudcli`，打开 `http://localhost:3001`。
+2. 先到 Tools Settings 开启只读工具，确认项目能被发现。
+3. 在 Chat 中让 agent 解释项目或执行小任务。
+4. agent 修改文件后，到 File Explorer 和 Git Explorer 查看 diff。
+5. 确认无误后在 Git Explorer stage/commit，或回到终端执行测试与提交。
+6. 需要手机查看长任务时，在同一局域网打开 `http://[your-machine-ip]:3001`，或将其添加为 PWA。
 
-| 问题 | 解决方案 |
-|------|---------|
-| 无项目或会话显示 | 确保 Claude Code 至少运行过一次，`~/.claude/projects/` 存在且有权限 |
-| 端口被占用（EADDRINUSE） | 用 `--port 8080` 换端口，或 `lsof -i :3001` 找到并结束占用进程 |
-| Windows node-pty 报错 | 推荐使用 WSL；或安装 Visual Studio Build Tools |
-| MCP 服务器未连接 | 检查命令和环境变量，重启会话（MCP 在会话开始时初始化） |
-| 文件浏览器为空 | 检查目录权限，查看服务端控制台日志 |
+**常见问题**
 
----
+| 问题 | 处理方式 |
+| --- | --- |
+| 没有项目或会话 | 确保 Claude Code 至少在项目中运行过一次，检查 `~/.claude/projects/` 和 `WORKSPACES_ROOT` |
+| 文件浏览为空或权限错误 | 检查项目目录权限，确认运行 CloudCLI UI 的用户能访问该目录 |
+| `EADDRINUSE :::3001` | 换端口启动：`cloudcli --port 8080` |
+| Windows `node-pty` 安装报错 | 优先使用 WSL；原生 Windows 需安装 Visual Studio Build Tools |
+| MCP server 未连接 | 检查命令、参数和环境变量，运行 `claude mcp list`，并重启会话 |
+| `.env` 修改不生效 | 服务只在启动时读取 `.env`，需要重启 `cloudcli` 或 PM2 服务 |
 
-## 十一、cc-switch（模型切换工具）
+**参考链接**
 
-cc-switch 是社区工具，用于在多个 Claude Code 配置（API Key、模型、Base URL）之间快速切换，适合同时使用多个账号或代理的场景。
-
-### 安装
-
-```bash
-npm install -g cc-switch
-```
-
-### 基本用法
-
-```bash
-cc-switch list              # 列出所有配置
-cc-switch use <profile>     # 切换到指定配置
-cc-switch add <profile>     # 添加新配置
-cc-switch remove <profile>  # 删除配置
-```
-
-### 配置示例
-
-```json
-{
-  "profiles": {
-    "personal": {
-      "ANTHROPIC_API_KEY": "sk-ant-xxx",
-      "ANTHROPIC_MODEL": "claude-sonnet-4-6"
-    },
-    "work-proxy": {
-      "ANTHROPIC_BASE_URL": "https://your-proxy.example.com",
-      "ANTHROPIC_API_KEY": "sk-ant-yyy"
-    }
-  }
-}
-```
-
-> 注：也可以直接在 settings.json 的 `env` 字段中配置 `ANTHROPIC_BASE_URL` 和 `ANTHROPIC_MODEL` 实现类似效果，无需额外工具。
-
----
-
-## 参考链接
-
-- [Claude Code 官方文档](https://docs.anthropic.com/claude-code)
-- [Claude Code UI (cloudcli)](https://cloudcli.ai/docs)
-- [MCP 协议官网](https://modelcontextprotocol.io)
-- [Claude Code GitHub Issues](https://github.com/anthropics/claude-code/issues)
+- [Claude Code overview](https://code.claude.com/docs/en/overview)
+- [Claude Code CLI reference](https://code.claude.com/docs/en/cli-reference)
+- [Claude Code commands](https://code.claude.com/docs/en/commands)
+- [Claude Code settings](https://code.claude.com/docs/en/settings)
+- [Claude Code environment variables](https://code.claude.com/docs/en/env-vars)
+- [Claude Code memory](https://code.claude.com/docs/en/memory)
+- [Claude Code MCP](https://code.claude.com/docs/en/mcp)
+- [CloudCLI UI npm installation](https://cloudcli.ai/docs/installation/global-installation)
+- [CloudCLI UI local development setup](https://cloudcli.ai/docs/installation/local-development-setup)
+- [CloudCLI UI tools and permissions](https://cloudcli.ai/docs/configuration/tools-and-permissions)
+- [CloudCLI UI environment variables](https://cloudcli.ai/docs/configuration/environment-variables)
+- [CloudCLI UI MCP servers](https://cloudcli.ai/docs/configuration/mcp-servers)
+- [CloudCLI UI common issues](https://cloudcli.ai/docs/troubleshooting/common-issues)
+- [CloudCLI UI chat interface](https://cloudcli.ai/docs/features/chat-interface)
+- [CloudCLI UI file explorer](https://cloudcli.ai/docs/features/file-explorer)
+- [CloudCLI UI git explorer](https://cloudcli.ai/docs/features/git-explorer)
+- [CloudCLI UI session management](https://cloudcli.ai/docs/features/session-management)
+- [CloudCLI UI mobile access](https://cloudcli.ai/docs/features/mobile-app)
