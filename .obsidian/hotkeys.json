@@ -53,24 +53,6 @@
       "key": "6"
     }
   ],
-  "editor:toggle-code": [
-    {
-      "modifiers": [
-        "Alt",
-        "Mod"
-      ],
-      "key": "L"
-    }
-  ],
-  "editor:insert-codeblock": [
-    {
-      "modifiers": [
-        "Alt",
-        "Mod"
-      ],
-      "key": "`"
-    }
-  ],
   "editor:insert-mathblock": [
     {
       "modifiers": [
@@ -94,6 +76,24 @@
         "Mod"
       ],
       "key": "Y"
+    }
+  ],
+  "editor:toggle-code": [
+    {
+      "modifiers": [
+        "Alt",
+        "Mod"
+      ],
+      "key": "`"
+    }
+  ],
+  "editor:insert-codeblock": [
+    {
+      "modifiers": [
+        "Alt",
+        "Mod"
+      ],
+      "key": "L"
     }
   ]
 }

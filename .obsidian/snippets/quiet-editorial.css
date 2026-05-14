@@ -42,7 +42,7 @@
   margin: 0 0 1.32em;
   line-height: var(--clean-line-height);
   color: var(--clean-text-primary);
-  text-align: justify;
+  text-align: left;
   word-break: break-word;
 }
 
@@ -340,4 +340,164 @@
   background: #aaaaaa;
 }
 
+/* Inline code style for Obsidian
+   Supports Reading View + Live Preview / Editing Mode
+*/
 
+/* ========================================================
+   Obsidian 行内代码样式 (类似 GitHub / 截图样式)
+   包含: 浅灰背景、圆角、细边框
+   排除: H1~H6 标题内的行内代码
+======================================================== */
+
+/* 阅读模式 (Reading Mode)：排除代码块(pre)和标题 */
+.markdown-rendered :not(pre):not(h1):not(h2):not(h3):not(h4):not(h5):not(h6) > code,
+/* 编辑模式/实时预览 (Live Preview) 的行内代码内容：排除标题行 */
+.cm-s-obsidian .cm-line:not(.cm-heading) .cm-inline-code:not(.cm-formatting) {
+    background-color: #f4f5f6 !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 6px !important;
+    padding: 0.15em 0.4em !important;
+    color: #032f62 !important;
+    font-size: 0.9em !important;
+    font-family: Consolas, Monaco, "Courier New", monospace !important;
+    margin: 0 0.15em !important;
+}
+
+/* 编辑模式下的反引号（`）淡化处理（同样排除标题行） */
+.cm-s-obsidian .cm-line:not(.cm-heading) .cm-inline-code.cm-formatting {
+    color: #94a3b8 !important;
+}
+
+/* ========================================================
+   暗色主题 (Dark Theme) 适配
+   防止切换到夜间模式时行内代码刺眼
+======================================================== */
+.theme-dark .markdown-rendered :not(pre):not(h1):not(h2):not(h3):not(h4):not(h5):not(h6) > code,
+.theme-dark .cm-s-obsidian .cm-line:not(.cm-heading) .cm-inline-code:not(.cm-formatting) {
+    background-color: #1e293b !important;
+    border: 1px solid #334155 !important;
+    color: #e2e8f0 !important;
+}
+
+/* ========================================================
+   阅读模式排版补丁
+   目标：
+   1. 让阅读模式标题与内容的间距更接近编辑模式
+   2. 让阅读模式有序/无序列表缩进更接近编辑模式
+======================================================== */
+
+/* ──────────────────────────────────────────
+   1. 阅读模式标题间距优化
+   ────────────────────────────────────────── */
+
+/* H1 */
+.markdown-preview-view h1 {
+  margin-top: 2.4em;
+  margin-bottom: 1.45em;
+}
+
+/* H2 */
+.markdown-preview-view h2 {
+  margin-top: 2.6em;
+  margin-bottom: 1.05em;
+}
+
+/* H3-H6 */
+.markdown-preview-view h3,
+.markdown-preview-view h4,
+.markdown-preview-view h5,
+.markdown-preview-view h6 {
+  margin-top: 2.05em;
+  margin-bottom: 0.9em;
+}
+
+/* 标题后紧跟段落时，额外增加一点呼吸感 */
+.markdown-preview-view h1 + p {
+  margin-top: 0.15em;
+}
+
+.markdown-preview-view h2 + p {
+  margin-top: 0.2em;
+}
+
+.markdown-preview-view h3 + p,
+.markdown-preview-view h4 + p,
+.markdown-preview-view h5 + p,
+.markdown-preview-view h6 + p {
+  margin-top: 0.15em;
+}
+
+/* 标题后紧跟列表时，保持与正文一致的舒适间距 */
+.markdown-preview-view h1 + ul,
+.markdown-preview-view h1 + ol {
+  margin-top: 0.25em;
+}
+
+.markdown-preview-view h2 + ul,
+.markdown-preview-view h2 + ol {
+  margin-top: 0.3em;
+}
+
+.markdown-preview-view h3 + ul,
+.markdown-preview-view h3 + ol,
+.markdown-preview-view h4 + ul,
+.markdown-preview-view h4 + ol,
+.markdown-preview-view h5 + ul,
+.markdown-preview-view h5 + ol,
+.markdown-preview-view h6 + ul,
+.markdown-preview-view h6 + ol {
+  margin-top: 0.22em;
+}
+
+
+/* ──────────────────────────────────────────
+   2. 阅读模式列表缩进优化（强覆盖版）
+   ────────────────────────────────────────── */
+
+/* 强制统一无序列表和有序列表的缩进，确保文本左对齐一致 */
+.markdown-rendered ul {
+  padding-inline-start: 1.8em !important; 
+  margin-top: 0.7em !important;
+  margin-bottom: 1em !important;
+  list-style-position: outside !important;
+}
+
+.markdown-rendered ol {
+  /* 与 ul 保持相同的数值，这样它们的【正文文本】就能完全垂直对齐 */
+  padding-inline-start: 2.9em !important; 
+  margin-top: 0.7em !important;
+  margin-bottom: 1em !important;
+  list-style-position: outside !important;
+}
+
+/* 列表项行距与段落保持协调 */
+.markdown-rendered li {
+  line-height: var(--clean-line-height) !important;
+  padding-left: 0.15em !important;
+  margin: 0.32em 0 !important;
+}
+
+/* 嵌套无序列表 */
+.markdown-rendered li > ul {
+  margin-top: 0.35em !important;
+  margin-bottom: 0.35em !important;
+  padding-inline-start: 2.2em !important;
+}
+
+/* 嵌套有序列表 */
+.markdown-rendered li > ol {
+  margin-top: 0.35em !important;
+  margin-bottom: 0.35em !important;
+  padding-inline-start: 2.2em !important;
+}
+
+/* 修正列表内段落的额外间距 */
+.markdown-rendered li > p {
+  margin-top: 0 !important;
+  margin-bottom: 0.35em !important;
+}
+
+.markdown-rendered li:last-child > p:last-child {
+  margin-bottom: 0 !important;
+}
