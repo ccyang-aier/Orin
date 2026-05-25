@@ -240,6 +240,7 @@
   },
   "active": "06f7e0a28c1c301d",
   "lastOpenFiles": [
+    "notes/LLM/imgs/tp-column-row-parallel-cn.png",
     "notes/LLM/imgs/tp-megatron-mlp-flow-cn.png",
     "notes/LLM/imgs/tp-sharding-dimensions-semantics-cn.png",
     "notes/LLM/imgs/tp-attention-head-sharding-cn.png",
@@ -269,7 +270,6 @@
     "README.md",
     "opc",
     "notes/AICoding/iFile/界面原型效果.md",
-    "notes/AICoding/iFile/imgs/界面原型效果-1779040517525.webp",
     "notes/AICoding/iFile/imgs",
     "notes/AICoding/iFile/未命名 2.md",
     "notes/AICoding/提示词篇/Karpathy的编码准则.md",

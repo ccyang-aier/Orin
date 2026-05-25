@@ -6,9 +6,12 @@ A strong Orin tutorial should feel like a durable learning artifact inside a per
 
 The preferred experience is:
 
+- The opening gives enough context and narrative runway before raising the central problem；
 - The reader quickly understands why the topic matters；
 - The first concept hook is concrete, not abstract；
 - Definitions arrive after intuition, not before；
+- Section transitions feel smooth and intentional rather than abrupt；
+- Figures enrich the tutorial instead of making the prose feel like a sequence of image captions；
 - Mechanism is explained with diagrams, formulas, and examples working together；
 - Engineering judgment is explicit: when to use it, when not to use it, and what can go wrong；
 - Sources are visible at the end so claims can be traced later；
@@ -30,7 +33,9 @@ Use this structure as a starting point, then adapt to the topic.
    - Use an Obsidian `[!Quote]` or similar callout when useful；
    - State the core learning promise in plain language；
 
-4. Problem section:
+4. Context and problem section:
+   - Give enough runway before the central problem；
+   - Avoid abrupt openings like jumping directly into "why single GPU is not enough" without a concrete learning setup；
    - Explain what practical or conceptual problem forces this idea to exist；
    - Avoid starting with a dictionary definition；
 
@@ -56,11 +61,17 @@ Use this structure as a starting point, then adapt to the topic.
    - Prefer a reusable mental model over a slogan；
 
 10. References:
-   - Group by papers, official docs/GitHub, and blogs/tutorials when the source set is large；
+   - Use one ordered list of references unless the user asks for categories；
 
-Keep top-level content chapters to 6-7 or fewer, excluding references. Too many major chapters make the tutorial feel fragmented and make it harder for readers to see the article's full map.
+11. Learning assessment:
+   - Add a fixed chapter named `学习测评` after references；
+   - Include 10 or more customized questions, mostly single-choice or multiple-choice；
+   - First list all questions, then list answers and explanations；
+   - Cover core concepts, transfer scenarios, common pitfalls, difficult mechanisms, and deeper implementation details；
 
-Keep headings short. A heading should be a navigation handle, not a compressed paragraph. Avoid sentence-length headings such as "TP usually shards hidden dimension, output dimension, head dimension, or vocab dimension"; use a short heading like "Shard Dimensions" and move the detail into body text.
+Keep top-level teaching chapters to 6-7 or fewer, excluding references and the learning assessment chapter. Too many major teaching chapters make the tutorial feel fragmented and make it harder for readers to see the article's full map.
+
+Keep headings short, formal, and durable. A heading should be a navigation handle, not a compressed paragraph or casual aside. Avoid sentence-length headings such as "TP usually shards hidden dimension, output dimension, head dimension, or vocab dimension"; avoid casual headings such as "读懂 TP 的第一张图"; use short headings like "Shard Dimensions" and move the detail into body text.
 
 ## 3. Visual Strategy
 
@@ -78,13 +89,16 @@ Good imagegen candidates:
 
 Figure rules:
 
-- Every figure needs nearby reading guidance: an ordered caption, a "读图顺序", or a short explanation of the key objects and arrows；
+- Every figure needs nearby reading guidance, but the guidance form should vary: sometimes a short paragraph, sometimes an ordered caption, sometimes a compact note；
+- Avoid making every figure follow the same "图 X 读图顺序" template；
+- The prose should drive the learning path; figures should support the prose, not the other way around；
 - For long technical tutorials, three figures is usually too sparse unless the note is short. Add figures at major conceptual transitions, but only when the figure teaches a concrete point；
 - Keep figure style consistent across a note；
 - Use Chinese for reader-facing explanatory labels that reduce comprehension cost；
 - Keep professional terms and standard phrases in English when they are the terms readers will see in docs or code, for example `Tensor Parallelism`, `all-reduce`, `hidden states`, `input activations`, `Column Parallel`, `Row Parallel`；
 - Avoid all-English diagrams in Chinese tutorials unless the figure is a screenshot or an external source image；
 - When a diagram teaches implementation mechanics, make output layout and communication semantics explicit. For example, distinguish `all-reduce -> replicated output` from `reduce-scatter -> sharded output`；
+- Treat generated figure text as technical content, not decoration. If a visually good image encodes a wrong mechanism or overstates a relationship, regenerate or replace it；
 
 Use generated diagrams with caution when exact text fidelity is critical. In those cases:
 
@@ -125,6 +139,7 @@ The preferred tone is clear, structured, and technically confident.
 Use:
 
 - short conceptual paragraphs；
+- smooth transitions and contextual setup before new problems；
 - concrete examples；
 - small toy examples when formulas introduce a new algebraic distinction；
 - comparison tables；
@@ -135,6 +150,10 @@ Avoid:
 
 - hype language；
 - vague adjectives without mechanism；
+- excessive quotation marks for emphasis；
+- casual or throwaway headings；
+- repetitive figure-caption templates；
+- unnecessary blank-line padding around LaTeX display formulas；
 - overlong historical detours；
 - excessive H4/H5 nesting；
 - decorative horizontal rules；
@@ -153,9 +172,13 @@ Current durable preferences learned from Orin work:
 - Figure captions are mandatory when a diagram introduces unfamiliar objects such as `shard`, `hidden states`, `input activations`, or communication collectives；
 - Bilingual diagram labels should be deliberate: Chinese lowers reading cost, English preserves standard technical terminology；
 - Top-level chapters should normally stay within 6-7 content sections, excluding references；
+- `参考资料` and `学习测评` do not count toward the 6-7 teaching-chapter limit；
 - The quality gate should use one content-accuracy reviewer and one reader-experience reviewer, each scoring out of 100. A combined score above 190 is the target for high-quality tutorials；
 - If reviewers find formula-to-concept jumps, add a tiny worked example instead of adding more abstract prose；
 - For TP and similar systems tutorials, explicitly state where communication happens and what layout the output has after each collective；
 - At least one realistic deployment or usage scenario should connect theory to operational judgment when the topic is engineering-facing；
+- Reader-experience review must explicitly judge narrative continuity, setup, transitions, and whether the tutorial feels like a coherent article instead of a sequence of figure explanations；
+- Learning assessments are part of high-quality tutorials and should be written and reviewed as their own artifact；
+- Generated diagrams must be reviewed for factual labels as carefully as prose, especially when they name sharding directions, communication operators, or framework relationships；
 
 When the user gives new correction, append only durable preferences here. Do not add transient task details.
