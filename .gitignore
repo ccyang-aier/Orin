@@ -13,8 +13,6 @@
 *.njsproj
 *.sln
 *.sw?
-.trae/
-.cursor/
 
 # build
 out/
