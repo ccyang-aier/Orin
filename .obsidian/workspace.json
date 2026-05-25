@@ -55,12 +55,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "notes/AICoding/vibecoding/taste-skill的详细使用教程.md",
+                "file": "AGENTS.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "taste-skill的详细使用教程"
+              "title": "AGENTS"
             }
           }
         ],
@@ -199,13 +199,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "notes/AICoding/vibecoding/taste-skill的详细使用教程.md",
+                "file": "AGENTS.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "taste-skill的详细使用教程 的大纲"
+              "title": "AGENTS 的大纲"
             }
           },
           {
@@ -240,8 +240,8 @@
   },
   "active": "06f7e0a28c1c301d",
   "lastOpenFiles": [
-    "AGENTS.md",
     "notes/AICoding/vibecoding/taste-skill的详细使用教程.md",
+    "AGENTS.md",
     "opc/games/ji/未命名.md",
     "opc/games/ji",
     "opc/games",
