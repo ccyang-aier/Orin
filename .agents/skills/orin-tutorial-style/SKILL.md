@@ -9,7 +9,7 @@ description: "Write, revise, and iteratively improve source-backed Chinese tutor
 
 Use this skill when creating or revising Orin tutorial notes, especially under `notes/`, when the user expects a polished long-term learning artifact rather than a one-off answer.
 
-1. Read repo rules first:
+1. Act as the main research-and-writing agent:
    - Load `AGENTS.md` for Orin-wide writing and git conventions;
    - Open the target note and preserve any user-provided outline or existing structure;
    - If this skill is being refined, also read `references/tutorial-style-playbook.md`;
@@ -24,10 +24,15 @@ Use this skill when creating or revising Orin tutorial notes, especially under `
    - Give a compact definition after the reader has a mental hook;
    - Move from intuition to mechanism, then to implementation and decision rules;
    - Include common misconceptions and deployment/practice guidance when the topic is engineering-facing;
+   - Keep top-level content chapters to 6-7 or fewer, excluding references;
+   - Keep headings short. Do not use a heading as a sentence-length summary;
 
 4. Use AI-era visuals deliberately:
    - Prefer generated raster diagrams via the `imagegen` skill for spatial, architectural, conceptual, or comparison-heavy explanations;
    - Copy final project-bound images into the note's local `imgs/` folder before referencing them;
+   - Give every figure a nearby ordered reading guide or caption that explains the key objects and how to read the flow;
+   - Use Chinese for reader-helping explanatory labels, and keep stable professional terms in English where they are standard;
+   - Add enough figures for the length and conceptual density of the tutorial, but only when each figure clarifies a specific nearby knowledge point;
    - Use Mermaid/PlantUML only when exact syntax, deterministic graph text, or source-controlled diagram diffability matters more than visual quality;
    - Do not leave generated images only under `$CODEX_HOME/generated_images`;
 
@@ -45,6 +50,26 @@ Use this skill when creating or revising Orin tutorial notes, especially under `
    - Verify image paths exist and are repo-local;
    - Run `git diff --check -- <target-file>` on edited Markdown files;
    - Run `quick_validate.py` when this skill itself changes;
+
+## Multi-Agent Quality Gate
+
+After the main agent completes a substantial draft or revision, run a two-reviewer quality gate when sub-agent tools are available.
+
+1. Spawn two reviewers in parallel:
+   - Content accuracy reviewer: verify factual accuracy, source support, conceptual order, terminology, and whether the tutorial could mislead readers;
+   - Reader experience reviewer: simulate a serious learner reading the note, judge clarity, depth, figure usefulness, continuity, and whether the tutorial feels exceptional rather than merely acceptable;
+
+2. Ask each reviewer to return:
+   - score out of 100;
+   - top risks;
+   - concrete improvement suggestions;
+   - pass/fail judgment;
+
+3. Treat the draft as passing only when the combined score is greater than 190 out of 200.
+
+4. If the combined score is 190 or lower, revise the note using the reviewers' highest-signal suggestions, then repeat the review loop or perform an equivalent strict local review if sub-agents are unavailable.
+
+5. Do not leak the intended answer to reviewers. Pass the note, relevant skill, and source requirements; ask for independent judgment.
 
 ## Style Refinement Loop
 

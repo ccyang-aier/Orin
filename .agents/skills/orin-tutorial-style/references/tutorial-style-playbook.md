@@ -58,6 +58,10 @@ Use this structure as a starting point, then adapt to the topic.
 10. References:
    - Group by papers, official docs/GitHub, and blogs/tutorials when the source set is large；
 
+Keep top-level content chapters to 6-7 or fewer, excluding references. Too many major chapters make the tutorial feel fragmented and make it harder for readers to see the article's full map.
+
+Keep headings short. A heading should be a navigation handle, not a compressed paragraph. Avoid sentence-length headings such as "TP usually shards hidden dimension, output dimension, head dimension, or vocab dimension"; use a short heading like "Shard Dimensions" and move the detail into body text.
+
 ## 3. Visual Strategy
 
 Prefer generated raster images when the concept needs visual intuition.
@@ -71,6 +75,16 @@ Good imagegen candidates:
 - system topology；
 - conceptual maps；
 - lifecycle diagrams；
+
+Figure rules:
+
+- Every figure needs nearby reading guidance: an ordered caption, a "读图顺序", or a short explanation of the key objects and arrows；
+- For long technical tutorials, three figures is usually too sparse unless the note is short. Add figures at major conceptual transitions, but only when the figure teaches a concrete point；
+- Keep figure style consistent across a note；
+- Use Chinese for reader-facing explanatory labels that reduce comprehension cost；
+- Keep professional terms and standard phrases in English when they are the terms readers will see in docs or code, for example `Tensor Parallelism`, `all-reduce`, `hidden states`, `input activations`, `Column Parallel`, `Row Parallel`；
+- Avoid all-English diagrams in Chinese tutorials unless the figure is a screenshot or an external source image；
+- When a diagram teaches implementation mechanics, make output layout and communication semantics explicit. For example, distinguish `all-reduce -> replicated output` from `reduce-scatter -> sharded output`；
 
 Use generated diagrams with caution when exact text fidelity is critical. In those cases:
 
@@ -112,6 +126,7 @@ Use:
 
 - short conceptual paragraphs；
 - concrete examples；
+- small toy examples when formulas introduce a new algebraic distinction；
 - comparison tables；
 - precise terms with Chinese explanation；
 - "why this design exists" framing；
@@ -135,5 +150,12 @@ Current durable preferences learned from Orin work:
 - The user values source-backed explanations over unsupported confidence；
 - When a note is empty or outline-like, expand it into a complete artifact rather than creating a separate side document；
 - For AI-era tutorials, imagegen diagrams should be first-class educational assets, not optional decoration；
+- Figure captions are mandatory when a diagram introduces unfamiliar objects such as `shard`, `hidden states`, `input activations`, or communication collectives；
+- Bilingual diagram labels should be deliberate: Chinese lowers reading cost, English preserves standard technical terminology；
+- Top-level chapters should normally stay within 6-7 content sections, excluding references；
+- The quality gate should use one content-accuracy reviewer and one reader-experience reviewer, each scoring out of 100. A combined score above 190 is the target for high-quality tutorials；
+- If reviewers find formula-to-concept jumps, add a tiny worked example instead of adding more abstract prose；
+- For TP and similar systems tutorials, explicitly state where communication happens and what layout the output has after each collective；
+- At least one realistic deployment or usage scenario should connect theory to operational judgment when the topic is engineering-facing；
 
 When the user gives new correction, append only durable preferences here. Do not add transient task details.

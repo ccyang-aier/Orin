@@ -238,8 +238,15 @@
       "bases:新建数据库": false
     }
   },
-  "active": "355c39dd8741f2da",
+  "active": "06f7e0a28c1c301d",
   "lastOpenFiles": [
+    "notes/LLM/imgs/tp-megatron-mlp-flow-cn.png",
+    "notes/LLM/imgs/tp-sharding-dimensions-semantics-cn.png",
+    "notes/LLM/imgs/tp-attention-head-sharding-cn.png",
+    "notes/LLM/imgs/tp-dp-tp-pp-decision-map-cn.png",
+    "notes/LLM/imgs/tp-communication-cost-cn.png",
+    "notes/LLM/imgs/tp-sharding-dimensions-cn.png",
+    "notes/LLM/imgs/tp-mental-model-cn.png",
     "notes/LLM/imgs/tp-dp-pp-decision-map.png",
     "notes/LLM/imgs/tp-megatron-mlp-column-row.png",
     "notes/LLM/imgs/tp-overview-tp1-vs-tp4.png",
@@ -279,13 +286,6 @@
     "code/yh-skills/karpathy-guidelines",
     "code/yh-skills/sk/karpathy-guidelines-zh.mdc",
     "code/yh-skills/sk/karpathy-guidelines.mdc",
-    "notes/AICoding/codex最佳实践/imgs/Snipaste_2026-05-11_00-20-55.png",
-    "notes/AICoding/codex最佳实践/imgs/Snipaste_2026-05-11_00-08-30.png",
-    "notes/AICoding/codex最佳实践/imgs/Snipaste_2026-05-11_00-07-35.png",
-    "notes/AICoding/codex最佳实践/imgs/Snipaste_2026-05-10_14-55-12.png",
-    "notes/AICoding/codex最佳实践/imgs/Snipaste_2026-05-10_14-39-59.png",
-    "notes/AICoding/codex最佳实践/imgs/Snipaste_2026-05-09_00-43-34.png",
-    "notes/AICoding/codex最佳实践/imgs/Snipaste_2026-05-08_01-43-33.png",
     "未命名.canvas"
   ]
 }
