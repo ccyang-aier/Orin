@@ -22,7 +22,7 @@
             }
           },
           {
-            "id": "188ec562a6f59582",
+            "id": "f9ce0f74defa923a",
             "type": "leaf",
             "state": {
               "type": "markdown",
@@ -36,21 +36,35 @@
             }
           },
           {
-            "id": "23c68bad776cc177",
+            "id": "63f2d053b72b53bd",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "notes/AICoding/提示词篇/Karpathy的编码准则.md",
+                "file": "notes/AICoding/iFile/未命名 2.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Karpathy的编码准则"
+              "title": "未命名 2"
+            }
+          },
+          {
+            "id": "06f7e0a28c1c301d",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "notes/AICoding/vibecoding/taste-skill的详细使用教程.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "taste-skill的详细使用教程"
             }
           }
         ],
-        "currentTab": 2
+        "currentTab": 3
       }
     ],
     "direction": "vertical"
@@ -185,13 +199,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "notes/AICoding/提示词篇/Karpathy的编码准则.md",
+                "file": "notes/AICoding/vibecoding/taste-skill的详细使用教程.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Karpathy的编码准则 的大纲"
+              "title": "taste-skill的详细使用教程 的大纲"
             }
           },
           {
@@ -224,44 +238,45 @@
       "bases:新建数据库": false
     }
   },
-  "active": "23c68bad776cc177",
+  "active": "06f7e0a28c1c301d",
   "lastOpenFiles": [
-    "notes/AICoding/codex最佳实践/3.如何用codex设计精美且炫酷的UI.md",
+    "AGENTS.md",
+    "notes/AICoding/vibecoding/taste-skill的详细使用教程.md",
+    "opc/games/ji/未命名.md",
+    "opc/games/ji",
+    "opc/games",
+    "README.md",
     "notes/AICoding/codex最佳实践/oh_my_codex架构设计与使用教程.md",
-    "notes/AICoding/codex最佳实践/2.在codex使用或开发自己的宠物.md",
+    "opc",
+    "notes/AICoding/iFile/界面原型效果.md",
+    "notes/AICoding/iFile/imgs/界面原型效果-1779040517525.webp",
+    "notes/AICoding/iFile/imgs",
+    "notes/AICoding/iFile/未命名 2.md",
+    "notes/AICoding/提示词篇/Karpathy的编码准则.md",
+    "notes/AICoding/iFile/未命名.md",
+    "notes/AICoding/iFile/未命名 1.md",
+    "notes/AICoding/iFile/原始需求提取.md",
+    "notes/AICoding/iFile/题目说明.md",
+    "notes/AICoding/codex最佳实践/3.如何用codex设计精美且炫酷的UI.md",
+    "notes/AICoding/codex最佳实践/未命名.md",
+    "notes/AICoding/iFile/IP设计.md",
+    "notes/AICoding/iFile",
+    "notes/AICoding/提示词篇/Linus Torvalds的编码准则.md",
     "notes/AICoding/codex最佳实践/1.codex安装与使用.md",
+    "notes/AICoding/codex最佳实践/2.在codex使用或开发自己的宠物.md",
+    "notes/AICoding/codex最佳实践/chatgpt_土区购买教程.md",
     "notes/AICoding/codex最佳实践/OMX_USER_GUIDE.md",
     "notes/AICoding/codex最佳实践/OMX_SKILLS_PLUGINS_REFERENCE.md",
     "notes/AICoding/codex最佳实践/OMX_COMPREHENSIVE_GUIDE.md",
     "notes/AICoding/codex最佳实践/OMX_ARCHITECTURE_DESIGN.md",
     "notes/AICoding/codex最佳实践/oh_my_codex架构设计与使用教程1.md",
-    "notes/AICoding/codex最佳实践/chatgpt_土区购买教程.md",
-    "README.md",
     "CLAUDE.md",
-    "AGENTS.md",
-    "notes/AICoding/提示词篇/Karpathy的编码准则.md",
     "notes/AICoding/codex最佳实践/未命名",
-    "notes/AICoding/未命名",
-    "notes/AICoding/提示词篇/Linus Torvalds的编码准则.md",
     "code/yh-skills/torvalds-doctrine/torvalds-doctrine.md",
     "code/yh-skills/torvalds-doctrine",
-    "code/yh-skills/karpathy-guidelines/karpathy-guidelines.md",
-    "code/yh-skills/karpathy-guidelines/karpathy-guidelines-zh.md",
     "code/yh-skills/karpathy-guidelines",
-    "code/yh-skills/sk/karpathy-guidelines.md",
-    "code/yh-skills/sk/karpathy-guidelines-zh.md",
     "code/yh-skills/sk/karpathy-guidelines-zh.mdc",
     "code/yh-skills/sk/karpathy-guidelines.mdc",
-    "code/yh-skills/sk/karpathy-guidelines.mdc.md",
-    "code/yh-skills/sk",
-    "code/yh-plugins",
-    "code/yh-skills",
-    "未命名.md",
-    "notes/AICoding/前端开发",
-    "notes/agents/coding/未命名 2.md",
-    "notes/agents/coding/未命名 1.md",
-    "notes/agents/coding/未命名.md",
-    "notes/agents/coding/codex_提效使用教程.md",
     "notes/AICoding/codex最佳实践/imgs/Snipaste_2026-05-11_00-20-55.png",
     "notes/AICoding/codex最佳实践/imgs/Snipaste_2026-05-11_00-08-30.png",
     "notes/AICoding/codex最佳实践/imgs/Snipaste_2026-05-11_00-07-35.png",
@@ -271,7 +286,6 @@
     "notes/AICoding/codex最佳实践/imgs/Snipaste_2026-05-08_01-43-33.png",
     "notes/AICoding/codex最佳实践/imgs/Snipaste_2026-05-08_01-35-33.png",
     "notes/AICoding/codex最佳实践/imgs/Snipaste_2026-05-08_01-34-11.png",
-    "notes/AICoding/codex最佳实践/imgs/Snipaste_2026-05-08_01-14-36.png",
     "未命名.canvas"
   ]
 }

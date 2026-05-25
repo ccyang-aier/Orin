@@ -16,9 +16,11 @@ Orin 可以包含多种知识资产：
 - `media/`：视频、图片、音频等非文本资料
 - `map/`：全局地图、知识结构、导航入口
 - `inbox/`：临时输入与待整理内容
+- `opc/`：我的一人公司(One Person Company)项目企划
 
-完成任务后应及时执行git commit提交修改记录（包括非本次任务相关但还未提交的改动），防止内容丢失。
-git commit 信息必须使用英文。
+完成任务后应及时执行 `git add` 与 `git commit` 提交修改记录（包括非本次任务相关但还未提交的改动），防止内容丢失。
+`git commit` 信息必须使用英文。
+本地提交完成后，应继续执行 `git push origin <当前分支>`，将提交同步至 `git@github.com:ccyang-aier/Orin.git` 远程仓库。
 
 ## 内容风格建议
 
