@@ -19,6 +19,7 @@ Orin 可以包含多种知识资产：
 - `opc/`：我的一人公司(One Person Company)项目企划
 
 完成任务后应及时执行 `git add` 与 `git commit` 提交修改记录（包括非本次任务相关但还未提交的改动），防止内容丢失。
+每次提交前必须检查 `git status`，并默认使用 `git add -A` 将工作树中所有未提交的修改、删除和新增文件一并提交；不得只提交当前任务相关文件，除非用户明确要求排除特定改动。
 `git commit` 信息必须使用英文。
 本地提交完成后，应继续执行 `git push origin <当前分支>`，将提交同步至 `git@github.com:ccyang-aier/Orin.git` 远程仓库。
 
