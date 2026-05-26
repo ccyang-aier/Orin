@@ -1,7 +1,0 @@
-interface:
-  display_name: "Orin Tutorial Style"
-  short_description: "Write source-backed Orin tutorials with rich diagrams."
-  default_prompt: "Use $orin-tutorial-style to draft or revise a source-backed Orin tutorial note."
-
-policy:
-  allow_implicit_invocation: true

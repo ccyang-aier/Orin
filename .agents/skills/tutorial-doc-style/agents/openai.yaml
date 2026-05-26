@@ -1,0 +1,7 @@
+interface:
+  display_name: "Tutorial Doc Style"
+  short_description: "Write source-backed technical tutorials with rigorous diagrams and assessments."
+  default_prompt: "Use $tutorial-doc-style to draft or revise a source-backed technical tutorial."
+
+policy:
+  allow_implicit_invocation: true
