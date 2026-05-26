@@ -17,9 +17,22 @@ The preferred experience:
 - Engineering judgment is explicit: when to use it, when not to use it, and what can go wrong;
 - Sources are visible at the end so claims can be traced later.
 
-## 2. Default Tutorial Structure
+## 2. Structure Design Toolkit
 
-Use this structure as a starting point, then adapt to the target repository, document system, or publishing environment.
+Use these as teaching moves, not as a fixed outline. Select, reorder, combine, or omit them according to the topic's learning problem, target reader, and publishing environment.
+
+Before using any structure, establish a short teaching brief:
+
+- target reader and their prior knowledge;
+- excluded audience or domain;
+- central question the article must answer;
+- the article's distinctive teaching promise within the broader learning path;
+- desired visual style and figure density;
+- expected assessment style.
+
+A tutorial series should feel coherent without becoming formulaic. Keep recurring terminology, notation, tone, and quality standards where they help readers, but let each topic determine its own narrative architecture, examples, figure strategy, and assessment focus.
+
+Possible structural moves:
 
 1. Metadata:
    - Add frontmatter, tags, updated dates, descriptions, or source fields only when the target environment expects them;
@@ -67,6 +80,41 @@ Keep top-level teaching chapters to 6-7 or fewer, excluding references and `å­¦ä
 
 Keep headings short, formal, and durable. A heading should be a navigation handle, not a compressed paragraph or casual aside. Avoid sentence-length headings that try to explain the whole mechanism; avoid casual headings that depend on the current draft's figure order or conversational framing; use short conceptual labels and move detail into body text.
 
+## 2.1 Direction-Setting Questions
+
+When the user has not fully specified the tutorial direction, ask a small number of high-yield questions before drafting. Do not ask a long questionnaire. Good defaults:
+
+1. Who is this tutorial for, and who is it explicitly not for?
+2. What should the article help readers decide or understand after reading?
+3. Should this article emphasize intuition, implementation mechanics, engineering deployment, math, or conceptual comparison?
+4. What visual style should the diagrams follow: refined hand-drawn teaching board, paper-style mechanism figure, dark system topology, or a user-provided reference?
+
+If the user gives a clear exclusion, honor it structurally. For example, if a DP tutorial is not for training-focused readers, do not make training loops, optimizer states, backward passes, or ZeRO/FSDP the central spine. Mention them only as contrast or boundary notes when they are necessary for conceptual clarity.
+
+## 2.2 Series Cohesion Without Formula
+
+Before writing a new article in an existing series:
+
+- Read the series context to learn tone, terminology, notation, and quality bar;
+- Identify whether a shared chapter pattern is genuinely useful for the current topic or merely habitual;
+- Write a one-sentence "distinctive promise" for the new article;
+- Pick the narrative engine that best fits the topic:
+  - operational story;
+  - conceptual contrast;
+  - failure-mode investigation;
+  - decision tree;
+  - historical evolution;
+  - system lifecycle;
+  - mental-model ladder.
+
+Bad pattern:
+
+- Every installment follows the same chapter sequence regardless of the concept's actual explanatory needs.
+
+Better pattern:
+
+- Keep series continuity in title style, notation, figure quality, and assessment rigor, while letting each topic choose its own structure.
+
 ## 3. Visual Strategy
 
 Use the visual mode that best serves accuracy and learning. For exact style rules, read `visual-style-baselines.md`.
@@ -99,9 +147,9 @@ Figure rules:
 
 Use generated raster diagrams via `imagegen` when the goal is visual intuition, architecture, conceptual comparison, or polished didactic imagery.
 
-Use deterministic SVG/HTML/canvas/Python-rendered figures only when the user explicitly asks for code-native diagrams, when the publishing system requires source-controlled vector output, or when exact post-processing is needed after an `imagegen` draft. For exact figures, clarity and style fidelity both matter; do not fall back to generic filled cards.
+Do not use deterministic SVG/HTML/canvas/Python/PIL-rendered figures, plotting libraries, scripts, Mermaid, PlantUML, or local annotation layers for final tutorial images governed by this skill. If an `imagegen` result has bad labels, cramped layout, or incorrect structure, regenerate it with a clearer prompt, split the figure, shorten labels, or ask a direction-setting question before continuing.
 
-Use Mermaid or PlantUML only for deterministic flow charts, state machines, source-controlled diagrams, or quick local sketches where visual polish is not important.
+Do not include Mermaid or PlantUML diagrams as substitutes for tutorial illustrations in image-rich AI/LLM tutorial documents. They may appear only when the user explicitly requests a code-native diagram deliverable separate from this skill's final tutorial-image workflow.
 
 ## 4. Source Standards
 
@@ -181,5 +229,8 @@ Learning assessments should be professional, not perfunctory.
 - Learning assessments are part of high-quality tutorials and should be written and reviewed as their own artifact;
 - Generated diagrams must be reviewed for factual labels as carefully as prose, especially when they name data ownership, state transitions, operators, protocols, or framework relationships;
 - For handdrawn diagrams, prioritize a careful teaching-board feel: human-authored composition, legible labels, consistent semantic color, generous spacing, and no generic sketch effects.
+- Do not generate final tutorial images with scripts, Python/PIL, SVG, HTML/canvas, Mermaid, PlantUML, or local post-processing. Use `imagegen` iteration as the default correction path.
+- Avoid formulaic repetition across tutorial series. Preserve continuity without forcing the same article architecture onto every topic.
+- Before drafting, quickly confirm audience, exclusions, narrative focus, and visual style when the user has not specified them.
 
 When the user gives new correction, append only durable preferences here. Do not add transient task details.

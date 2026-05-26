@@ -14,10 +14,11 @@ If the user supplies actual reference images in the conversation, treat those im
 
 Generation route for all modes:
 
-- Every visual mode in this file is `imagegen`-first unless the user explicitly asks for a code-native/vector artifact;
-- Generate `handdrawn`, `paper`, `dark-system`, and future style modes with `imagegen` as the primary visual source;
-- Do not use Python/PIL/SVG/canvas as the primary renderer for tutorial figures governed by this skill. These tools may be used only as an explicitly disclosed correction or annotation layer after an `imagegen` draft exists;
-- If technical labels or structural details need correction after generation, use prompt iteration, reference images, selective editing, or post-processing after the `imagegen` draft. Do not silently change the generation medium.
+- Every visual mode in this file is `imagegen`-only for final tutorial figures;
+- Generate `handdrawn`, `paper`, `dark-system`, and future style modes with `imagegen` as the visual source;
+- Do not use Python/PIL/SVG/canvas, plotting libraries, local scripts, Mermaid, PlantUML, or any deterministic renderer to generate, redraw, reconstruct, typeset, annotate, or post-process final tutorial figures governed by this skill;
+- If technical labels or structural details need correction after generation, use prompt iteration, reference images, shorter labels, more generous canvas space, or split one figure into multiple imagegen figures. Do not silently change the generation medium;
+- Local tools may inspect image metadata, verify file existence, copy/move selected generated outputs, or check dimensions. They must not create or modify the visual content of final figures.
 
 ## 1. `handdrawn`
 
@@ -41,10 +42,24 @@ Hard bans:
 - Do not squeeze long sentences into thin strips or place text close to borders;
 - Do not use decorative sketchiness that makes technical structure harder to read.
 
+Default for Chinese AI/LLM tutorials when the user has not specified a visual style:
+
+- Use `handdrawn`;
+- Make the figure professional and information-rich, not childish or casual;
+- Prefer a teaching-board metaphor: carefully drawn boxes, arrows, timelines, state changes, small examples, and concise bilingual labels;
+- Use Chinese for reader-facing labels and keep stable English terms such as DP, TP, KV cache, all-reduce, replica, prefill, decode, router, shard;
+- Keep each figure focused on one teaching job. If a diagram becomes crowded, split it into two imagegen figures instead of compressing labels.
+
 Prompt skeleton for image exploration:
 
 ```text
 Refined hand-drawn technical teaching diagram, clean light background, human-authored teaching-board composition, readable ink-like lines, restrained semantic color, short Chinese helper labels with stable English technical terms, clear arrows, generous spacing, no decorative doodles, no dense paragraphs, no cramped labels, no highlight or fill outside its semantic object.
+```
+
+Prompt skeleton for information-rich Chinese LLM diagrams:
+
+```text
+Refined hand-drawn Chinese technical tutorial diagram for an AI/LLM engineering article. Clean warm-white teaching-board background, careful human-authored composition, readable ink-like linework, restrained semantic colors, generous margins, clear arrows and state boundaries. Use short Chinese labels plus stable English technical terms. Show concrete data/state ownership and before/after transitions. Professional, information-rich, accurate, easy to understand, lively but not decorative. No dense paragraphs, no tiny text, no cramped labels, no UI dashboard cards, no stickers, no watermark.
 ```
 
 ## 2. `paper`
@@ -101,7 +116,6 @@ Problem:
 Fix:
 
 - Clip hatching and fills to the exact object, region, cell, or boundary they represent;
-- If using a deterministic post-processing renderer, draw repeated fills within each object or use a clipping mask;
 - If using `imagegen`, explicitly forbid fill/hatching outside semantic boundaries and inspect the result;
 - Prefer sparse internal hatching over large translucent overlays.
 
