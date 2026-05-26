@@ -26,14 +26,14 @@ Use this skill when a tutorial should become a polished long-term learning artif
    - Give a compact definition after the reader has a mental hook;
    - Move from intuition to mechanism, then to implementation details and decision rules;
    - Use natural transitions so the tutorial feels like one coherent article, not a sequence of figure captions;
-   - Treat central mechanisms as full teaching objects. Do not compress important topics such as communication cost into a shallow aside;
+   - Treat central mechanisms as full teaching objects. Do not compress prerequisite reasoning, cost models, constraints, or failure modes into shallow asides;
    - Keep top-level teaching chapters to 6-7 or fewer, excluding references and learning assessment;
    - Keep headings short, formal, and durable.
 
 4. Design figures as first-class teaching assets:
    - Select a visual mode from `references/visual-style-baselines.md`;
    - If the user provides reference images, treat them as the canonical style target. If actual files are available, copy them into `assets/style-baselines/`; if they are only conversation images, encode their reusable visual rules in `references/visual-style-baselines.md`;
-   - All named tutorial visual styles in this skill are `imagegen`-first. This includes `handdrawn`, `paper`, `paper-detailed`, `dark-system`, and future style modes unless the user explicitly says otherwise;
+   - All named tutorial visual styles in this skill are `imagegen`-first. This includes `handdrawn`, `paper`, `dark-system`, and future style modes unless the user explicitly says otherwise;
    - When the user asks for AI-era tutorial diagrams, bitmap tutorial figures, image-rich Markdown tutorials, or any named visual style from this skill, use `imagegen` as the primary generation path for the final visual asset;
    - Do not replace an `imagegen` request with Python/PIL, SVG, HTML/canvas, Mermaid, PlantUML, or other deterministic rendering because of convenience or fear of label drift;
    - Deterministic rendering may be used only when the user explicitly asks for code-native diagrams, when the target format requires source-controlled vector output, or as a clearly disclosed post-processing/annotation aid after an `imagegen` draft exists;
@@ -48,7 +48,7 @@ Use this skill when a tutorial should become a polished long-term learning artif
    - Follow the target repository or publishing environment for frontmatter, heading numbering, callouts, and punctuation;
    - Make the note self-contained outside the current conversation;
    - Avoid process narration, excessive quotation marks, repetitive caption templates, and unnecessary blank lines around LaTeX;
-   - Use Chinese for reader-helping labels and English for stable professional terms such as `Tensor Parallelism`, `all-reduce`, `hidden states`, and `Column Parallel`.
+   - Use Chinese for reader-helping labels and English for stable professional terms from the target domain, such as framework concepts, operators, APIs, model names, and paper terms.
 
 6. Add learning assessment for substantial tutorials:
    - Add a fixed final chapter named `学习测评` after references;

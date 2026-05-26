@@ -1,135 +1,73 @@
 # Visual Style Baselines
 
-Use this file whenever the user requests a visual mode such as `/tutorial-doc-style handdrawn`, `/tutorial-doc-style paper`, `/tutorial-doc-style paper-detailed`, or `/tutorial-doc-style dark-system`.
+Use this file whenever the user requests a visual mode such as `/tutorial-doc-style handdrawn`, `/tutorial-doc-style paper`, or `/tutorial-doc-style dark-system`. Treat legacy requests for `paper-detail` or `paper-detailed` as `paper` with a denser information payload, not as a separate style family.
 
-The current canonical reference board has four positive styles and three negative anti-patterns:
+The current canonical reference board has three positive styles and two negative anti-patterns:
 
 1. `handdrawn`: refined hand-drawn teaching board;
-2. `paper`: austere paper-style mechanism figure;
-3. `paper-detailed`: detailed paper-style inspection figure;
-4. `dark-system`: dark engineering communication/topology figure;
-5. Anti-pattern A: highlight or hatching spills beyond the actual semantic object;
-6. Anti-pattern B: content is packed too tightly, with insufficient margins or cramped text;
-7. Anti-pattern C: English technical labels render as missing-glyph boxes because the selected font does not cover Latin characters.
+2. `paper`: professional paper-style mechanism or inspection figure;
+3. `dark-system`: dark engineering communication/topology figure;
+4. Anti-pattern A: highlight or hatching spills beyond the actual semantic object;
+5. Anti-pattern B: content is packed too tightly, with insufficient margins or cramped text.
 
 If the user supplies actual reference images in the conversation, treat those images as the highest-priority style target. If the image files are available on disk, copy them into `assets/style-baselines/` using the names above; if they are only visible in the chat, encode their visual rules here instead of pretending the binary files exist.
+
+Generation route for all modes:
+
+- Every visual mode in this file is `imagegen`-first unless the user explicitly asks for a code-native/vector artifact;
+- Generate `handdrawn`, `paper`, `dark-system`, and future style modes with `imagegen` as the primary visual source;
+- Do not use Python/PIL/SVG/canvas as the primary renderer for tutorial figures governed by this skill. These tools may be used only as an explicitly disclosed correction or annotation layer after an `imagegen` draft exists;
+- If technical labels or structural details need correction after generation, use prompt iteration, reference images, selective editing, or post-processing after the `imagegen` draft. Do not silently change the generation medium.
 
 ## 1. `handdrawn`
 
 Use for intuition-building diagrams, concept comparisons, and step-by-step mechanism sketches where a human teaching presence helps comprehension.
 
-Generation route:
-
-- Every visual mode in this file is `imagegen`-first unless the user explicitly asks for a code-native/vector artifact;
-- Generate `handdrawn`, `paper`, `paper-detailed`, `dark-system`, and future style modes with `imagegen` as the primary visual source;
-- Do not use Python/PIL/SVG/canvas as the primary renderer for tutorial figures governed by this skill. These tools may be used only as an explicitly disclosed correction or annotation layer after an `imagegen` draft exists;
-- If technical labels or matrix shapes need correction after generation, use prompt iteration, reference images, selective editing, or post-processing after the `imagegen` draft. Do not silently change the generation medium.
-
 Canonical visual DNA:
 
-- The image should look like a careful human-drawn teaching note, not a generic UI dashboard and not a sloppy doodle;
-- Background is near-white or very light warm paper. It must not look yellow, sepia, aged, stained, kraft-paper, or notebook-brown;
-- Large title uses a confident hand-written black marker style;
-- Major section titles can be blue/green/orange marker text with a single hand-drawn underline;
-- Use black ink for neutral matrices, formulas, separators, and explanatory text;
-- Use blue for rank 0 / column-parallel elements, green for rank 1 / row-parallel or local elements, orange for communication or reduction, and purple only for summary/mental-model strips;
-- Prefer white interior panels with colored outlines over filled pastel cards;
-- Use generous margins around the canvas, between panels, inside boxes, and around text;
-- Use real matrix grids with exact row/column counts when shapes matter;
-- Hatching should be hand-drawn and clipped inside each matrix cell or matrix rectangle. It must never spill outside the matrix boundary;
-- Arrows should be simple, ink-like, and readable. Avoid decorative arrowheads or excessive crossing lines;
-- Use Chinese for reader-facing explanation and English for stable technical terms such as `Column Parallel`, `Row Parallel`, `all-reduce`, `concat`, `hidden states`, `rank`, `shard`;
-- Dense paragraphs do not belong inside the figure. Move long explanations to nearby prose.
-
-Reference-board micro-anatomy:
-
-- Lines are not perfectly geometric. Borders, underlines, dividers, arrows, and matrix grids should have tiny deterministic wobble, double-pass marker thickness, or slight pressure variation;
-- Arrows should use open, hand-drawn arrowheads made from two strokes. Avoid filled triangular vector arrowheads;
-- Matrix cells should use light tinted cell backgrounds plus sparse diagonal hand hatching. The fill should feel like marker shading inside the cell, not like a flat UI rectangle and not like a single crisp slash;
-- Matrix outlines and grid lines should be slightly heavier than hatching, with enough contrast to preserve exact row/column counts;
-- Text should look like marker handwriting: modestly thick, slightly informal, and readable. Do not use a neat modern sans-serif look for a handdrawn mode;
-- Use marker-like emphasis by stroke weight and color, not by UI-card styling, shadows, gradients, or icons;
-- Bottom summary strips should look like annotated whiteboard callouts: hand border, ample vertical padding, and text centered with breathing room.
-
-Recommended layout patterns:
-
-- Two-panel comparison with a hand-drawn vertical separator;
-- One small worked example, for example `X (2x4), W (4x4), TP=2`;
-- GPU/rank boxes with white interiors, colored outlines, and matrix diagrams inside;
-- Bottom mental-model strip only when it has enough height and padding;
-- A concise core-judgment box, such as "Column Parallel = concat" or "Row Parallel = all-reduce".
+- Make the image feel like a careful human teaching note, not a generic UI dashboard and not a sloppy doodle;
+- Use a clean light background, readable hand-drawn linework, and restrained semantic color;
+- Keep object boundaries, arrows, labels, and examples easy to inspect at reading size;
+- Use color consistently to mean real concepts in the diagram, not decoration;
+- Prefer short labels and small worked examples over dense paragraphs inside the figure;
+- Use Chinese for reader-facing explanations and English for stable technical terms when those terms are the professional vocabulary readers will encounter;
+- Give the composition generous margins and enough room between panels, arrows, labels, and objects.
 
 Hard bans:
 
-- Do not use generic filled pastel cards as the main visual language;
-- Do not treat scripted vector rendering plus a handwriting font as an acceptable substitute for `imagegen` tutorial art in any visual mode;
-- Do not let colored hatching or fill extend outside matrices, boxes, or semantic regions;
-- Do not pack a long sentence into a thin bottom strip;
-- Do not place text close to borders. Keep at least 24-32 px padding inside boxes at 1600x900 scale;
-- Do not use one-line labels that collide with arrows, matrices, or borders;
-- Do not use clean vector arrows with filled triangular heads in `handdrawn` mode;
-- Do not draw matrices as plain empty grids with one mechanically perfect diagonal slash per cell when the reference calls for soft shaded hand hatching;
-- Do not make a "handdrawn" figure by merely switching to a handwriting font while keeping a dashboard layout.
+- Do not use generic filled cards, decorative stickers, dashboard chrome, or visual effects as the main language;
+- Do not make "handdrawn" mean only a handwriting-like label style while the layout remains mechanical;
+- Do not let highlights, hatching, fills, arrows, or labels escape the semantic object they describe;
+- Do not squeeze long sentences into thin strips or place text close to borders;
+- Do not use decorative sketchiness that makes technical structure harder to read.
 
 Prompt skeleton for image exploration:
 
 ```text
-Refined hand-drawn technical teaching diagram on near-white paper, careful black marker title, colored marker section headings, exact matrix grids, clean arrows, generous white space, blue/green/orange/purple semantic accents, Chinese helper labels with English technical terms, no decorative doodles, no yellow paper, no dense paragraphs, no cramped bottom strips, no hatching outside matrix boundaries.
+Refined hand-drawn technical teaching diagram, clean light background, human-authored teaching-board composition, readable ink-like lines, restrained semantic color, short Chinese helper labels with stable English technical terms, clear arrows, generous spacing, no decorative doodles, no dense paragraphs, no cramped labels, no highlight or fill outside its semantic object.
 ```
-
-Deterministic rendering checklist:
-
-- Draw hatching inside each matrix cell or clip it to the matrix rectangle;
-- Use outlines and sparse marker fills instead of full-card fills;
-- Keep font sizes large enough for 1600px-wide images;
-- Use fonts that cover Chinese, English technical terms, numbers, and punctuation. Reject missing-glyph boxes in labels such as `Column Parallel`, `all-reduce`, `rank`, and `shard`;
-- Add a reference-style smoke test for arrowheads, matrix hatching, hand borders, and text weight before batch-rendering the whole figure set;
-- Inspect whether the result looks hand-authored at the level of strokes, not merely at the level of typography;
-- Inspect at display size and at 50% scale;
-- If a text block wraps more than two lines inside a figure, shorten it or move it to prose;
-- Reserve bottom strips for one compact mental model only.
 
 ## 2. `paper`
 
-Use for mechanisms that need authority, exactness, and a professional paper-figure feel.
+Use for mechanisms that need authority, exactness, and a professional paper-figure feel. This mode covers both sparse mechanism figures and denser inspection figures; choose the density according to the teaching job instead of switching to a separate style.
 
 Canonical visual DNA:
 
-- White background, thin black or gray linework, no paper texture;
-- Balanced panels with clear labels such as `(a)` and `(b)`;
-- Matrix shapes and dimensions are precise;
-- Use very pale blue/green fills for shards and one subtle orange dashed line for partition or communication boundaries;
-- Use a restrained academic font style;
-- Keep explanations sparse, preferably one sentence per panel plus a small legend;
-- Use shadow only if extremely subtle; no glossy or card-heavy styling.
+- Use a white or near-white background, thin black or gray linework, restrained color, and clear panel structure;
+- Make shapes, labels, formulas, and data-flow/state-flow relationships precise enough for technical inspection;
+- Use subtle color only to distinguish semantic categories, boundaries, stages, or comparisons;
+- Keep the composition calm and academic: balanced panels, small legends, concise notes, and no visual drama;
+- A denser `paper` figure may include formula summaries, shape tables, legends, bilingual notes, or recap strips when they help slow inspection;
+- Keep every text block purposeful and readable. Move broad explanation to nearby prose.
 
 Hard bans:
 
-- No saturated poster colors;
-- No marketing badges;
-- No handwritten fonts;
-- No decorative icons;
-- No dense prose blocks.
+- No saturated poster colors, marketing badges, decorative icons, glossy cards, or handwritten styling;
+- Do not mix many unrelated mechanisms in one figure;
+- Do not use dense recap strips as a substitute for explanation in the tutorial body;
+- Do not make the first figure for a new concept so dense that it overwhelms the reader.
 
-## 3. `paper-detailed`
-
-Use when a figure must carry more technical payload than `paper`, such as formula summaries, shape tables, legends, and bilingual notes.
-
-Canonical visual DNA:
-
-- White or near-white background;
-- Black/gray linework with pale blue/green shard fills and restrained orange partition lines;
-- Two large mechanism panels plus a bottom formula/legend strip are acceptable;
-- Text can be bilingual, but every text block must be purposeful and readable;
-- Use this mode for recap diagrams, mechanism maps, and figures that readers may inspect slowly after reading the prose.
-
-Hard bans:
-
-- Do not use this as the first figure for a brand-new concept if density would overwhelm the reader;
-- Do not add formula strips that are too low or too cramped;
-- Do not mix many unrelated mechanisms in one figure.
-
-## 4. `dark-system`
+## 3. `dark-system`
 
 Use for runtime, deployment, topology, communication hotspots, observability, and performance-cost diagrams.
 
@@ -137,9 +75,9 @@ Canonical visual DNA:
 
 - Dark charcoal or near-black background, not pure decorative neon;
 - Horizontal pipeline layout with clean stage cards;
-- Blue = Column Parallel or no-communication stage;
-- Green = local compute;
-- Orange = Row Parallel or communication hotspot;
+- Blue = stable path, baseline flow, or no-coordination stage;
+- Green = local compute, local state, or successful handoff;
+- Orange = coordination boundary, bottleneck, or communication hotspot;
 - Red = risk only;
 - Use compact cost card and optional topology strip;
 - Use English technical terms freely, with short Chinese helper labels for key teaching points;
@@ -153,25 +91,25 @@ Hard bans:
 - No tiny labels;
 - No dense dashboard chrome.
 
-## 5. Anti-Pattern A: Spillover Highlight
+## 4. Anti-Pattern A: Spillover Highlight
 
 Problem:
 
-- A matrix, shard, highlight, or diagonal hatching visually extends beyond the object it is supposed to represent;
-- The reader can no longer tell whether the colored area is the actual tensor slice or just decoration.
+- A highlight, fill, hatching, glow, or emphasis region visually extends beyond the object it is supposed to represent;
+- The reader can no longer tell whether the colored area is the actual semantic region or just decoration.
 
 Fix:
 
-- Clip hatching and fills to the exact matrix rectangle or to individual cells;
-- If using a deterministic renderer, draw hatching per cell or use a clipping mask;
-- If using `imagegen`, explicitly forbid fill/hatching outside matrix boundaries and inspect the result;
+- Clip hatching and fills to the exact object, region, cell, or boundary they represent;
+- If using a deterministic post-processing renderer, draw repeated fills within each object or use a clipping mask;
+- If using `imagegen`, explicitly forbid fill/hatching outside semantic boundaries and inspect the result;
 - Prefer sparse internal hatching over large translucent overlays.
 
 Review question:
 
-- "Can the reader identify the exact rows/columns covered by this shard without guessing?"
+- "Can the reader identify the exact object, region, or state covered by this visual emphasis without guessing?"
 
-## 6. Anti-Pattern B: Cramped Layout
+## 5. Anti-Pattern B: Cramped Layout
 
 Problem:
 
@@ -192,27 +130,9 @@ Review question:
 
 - "Does the figure feel like a careful teaching note with breathing room, or like content squeezed into a template?"
 
-## 7. Anti-Pattern C: Missing Glyphs
-
-Problem:
-
-- A CJK-only or Han-only font renders English terms, formulas, or punctuation as square boxes;
-- The figure may look hand-drawn at a glance but becomes unusable as a technical teaching asset.
-
-Fix:
-
-- Choose a font family with complete Chinese, Latin, number, and punctuation coverage;
-- Render one visual smoke-test image before batch generation when the figure contains bilingual labels;
-- Inspect titles, section labels, formulas, and legends after rendering. Any tofu square is a blocker.
-
-Review question:
-
-- "Can every Chinese label, English technical term, formula, and punctuation mark be read without missing-glyph artifacts?"
-
-## 8. Mode Selection
+## 6. Mode Selection
 
 - Prefer `handdrawn` for first intuition and conceptual contrast;
-- Prefer `paper` for exact mathematical mechanisms;
-- Prefer `paper-detailed` for dense recap and inspection-heavy diagrams;
+- Prefer `paper` for exact mechanisms, professional paper-style summaries, and inspection-heavy diagrams;
 - Prefer `dark-system` for communication, profiling, topology, and deployment trade-off diagrams;
 - Do not force one mode onto every figure if a different mode better serves the local teaching purpose, but keep style consistent within a section or figure family.

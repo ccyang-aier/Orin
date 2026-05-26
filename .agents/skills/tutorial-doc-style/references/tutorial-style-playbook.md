@@ -32,7 +32,7 @@ Use this structure as a starting point, then adapt to the target repository, doc
    - Use a callout only when the target platform supports it and it improves the reading experience.
 4. Context and problem:
    - Give enough runway before the central problem;
-   - Avoid abrupt openings like jumping directly into "why single GPU is not enough" without a concrete learning setup;
+   - Avoid abrupt openings, such as jumping into a narrow problem or starting the knowledge-system exposition before the reader has a concrete learning setup;
    - Explain what practical or conceptual problem forces this idea to exist;
    - Avoid starting with a dictionary definition.
 5. Definition:
@@ -44,7 +44,7 @@ Use this structure as a starting point, then adapt to the target repository, doc
    - Pair formulas with prose explanation and small examples.
 7. Deep dive:
    - Give central ideas enough space;
-   - If a topic is structurally important, such as communication in TP, make it a full section rather than a brief aside;
+   - If a topic is structurally important, such as a required dependency, cost model, coordination mechanism, or operational constraint, make it a full section rather than a brief aside;
    - Discuss costs, edge cases, variants, and operational consequences when they affect real decisions.
 8. Engineering practice:
    - Show how the concept appears in mainstream tools, commands, code paths, or deployment patterns;
@@ -65,7 +65,7 @@ Use this structure as a starting point, then adapt to the target repository, doc
 
 Keep top-level teaching chapters to 6-7 or fewer, excluding references and `学习测评`. Too many major teaching chapters make the tutorial fragmented and make the article map harder to grasp.
 
-Keep headings short, formal, and durable. A heading should be a navigation handle, not a compressed paragraph or casual aside. Avoid sentence-length headings such as "TP usually shards hidden dimension, output dimension, head dimension, or vocab dimension"; avoid casual headings such as "读懂 TP 的第一张图"; use short headings like "切分对象" and move detail into body text.
+Keep headings short, formal, and durable. A heading should be a navigation handle, not a compressed paragraph or casual aside. Avoid sentence-length headings that try to explain the whole mechanism; avoid casual headings that depend on the current draft's figure order or conversational framing; use short conceptual labels and move detail into body text.
 
 ## 3. Visual Strategy
 
@@ -89,17 +89,17 @@ Figure rules:
 - The prose should drive the learning path; figures should support the prose, not the other way around;
 - For long technical tutorials, three figures is usually too sparse unless the note is short;
 - A figure must have one clear teaching intent. If the reader cannot tell what the figure is proving or comparing, redesign it;
-- Matrix, tensor, and communication diagrams must show enough shape information to make the computation checkable;
+- Diagrams that explain computation, data flow, state flow, or coordination must show enough structural information to make the mechanism checkable;
 - Use Chinese for reader-facing explanatory labels that reduce comprehension cost;
-- Keep professional terms and standard phrases in English when they are the terms readers will see in docs or code, for example `Tensor Parallelism`, `all-reduce`, `hidden states`, `input activations`, `Column Parallel`, `Row Parallel`;
+- Keep professional terms and standard phrases in English when they are the terms readers will see in papers, docs, code, APIs, model cards, or framework logs;
 - Avoid all-English diagrams in Chinese tutorials unless the figure is a screenshot or external source image;
-- When a diagram teaches implementation mechanics, make output layout and communication semantics explicit, for example `all-reduce -> replicated output` versus `reduce-scatter -> sharded output`;
+- When a diagram teaches implementation mechanics, make before/after state, ownership, data layout, communication, and boundary conditions explicit. If collective operations or distributed coordination are involved, distinguish the resulting state rather than only naming the operation;
 - Treat generated figure text as technical content, not decoration;
 - Prefer paper-level clarity: clean layout, readable labels, precise arrows, restrained color, and no ornamental noise.
 
 Use generated raster diagrams via `imagegen` when the goal is visual intuition, architecture, conceptual comparison, or polished didactic imagery.
 
-Use deterministic SVG/HTML/canvas/Python-rendered figures when exact text, matrix shapes, formulas, or dimensions must be reliable. For exact figures, clarity and style fidelity both matter; do not fall back to generic filled cards.
+Use deterministic SVG/HTML/canvas/Python-rendered figures only when the user explicitly asks for code-native diagrams, when the publishing system requires source-controlled vector output, or when exact post-processing is needed after an `imagegen` draft. For exact figures, clarity and style fidelity both matter; do not fall back to generic filled cards.
 
 Use Mermaid or PlantUML only for deterministic flow charts, state machines, source-controlled diagrams, or quick local sketches where visual polish is not important.
 
@@ -170,16 +170,16 @@ Learning assessments should be professional, not perfunctory.
 - Source-backed explanations are preferred over unsupported confidence;
 - When a note is empty or outline-like, expand it into a complete artifact rather than creating a separate side document;
 - AI-era tutorials should treat high-quality diagrams as first-class educational assets;
-- Figure captions or nearby explanations are required when a diagram introduces unfamiliar objects such as `shard`, `hidden states`, `input activations`, or communication collectives;
-- Bilingual diagram labels should be deliberate: Chinese lowers reading cost, English preserves standard technical terminology;
+- Figure captions or nearby explanations are required when a diagram introduces unfamiliar objects, intermediate states, implementation roles, or domain-specific operations;
+- Bilingual diagram labels should be deliberate: Chinese lowers reading cost, English preserves standard technical terminology when those terms are what readers will encounter in papers, docs, or code;
 - Top-level teaching chapters should normally stay within 6-7 content sections, excluding references and `学习测评`;
 - Content accuracy plus reader experience should exceed 190/200 in the quality gate, with no visual or assessment blockers;
 - If reviewers find formula-to-concept jumps, add a tiny worked example instead of more abstract prose;
-- For TP and similar systems tutorials, explicitly state where communication happens, what layout the output has after each collective, and what the communication volume implies;
+- For distributed, parallel, or multi-component systems tutorials, explicitly state where coordination happens, what state or layout exists after each boundary crossing, and what the cost or reliability implication is;
 - At least one realistic deployment or usage scenario should connect theory to operational judgment when the topic is engineering-facing;
 - Reader-experience review must explicitly judge narrative continuity, setup, transitions, and whether the tutorial feels like a coherent article instead of a sequence of figure explanations;
 - Learning assessments are part of high-quality tutorials and should be written and reviewed as their own artifact;
-- Generated diagrams must be reviewed for factual labels as carefully as prose, especially when they name sharding directions, communication operators, or framework relationships;
-- For handdrawn diagrams, match the user's reference-board style rather than generic sketch effects: clean board-like composition, exact matrix hatching, generous spacing, and no cramped strips.
+- Generated diagrams must be reviewed for factual labels as carefully as prose, especially when they name data ownership, state transitions, operators, protocols, or framework relationships;
+- For handdrawn diagrams, prioritize a careful teaching-board feel: human-authored composition, legible labels, consistent semantic color, generous spacing, and no generic sketch effects.
 
 When the user gives new correction, append only durable preferences here. Do not add transient task details.
