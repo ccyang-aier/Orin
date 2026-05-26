@@ -34,6 +34,7 @@ Use this skill when creating or revising a tutorial document that should become 
 4. Use AI-era visuals deliberately:
    - Prefer high-quality visual assets for spatial, architectural, conceptual, or comparison-heavy explanations;
    - Use `imagegen` for polished conceptual diagrams, architectural maps, and visually rich explainers;
+   - If the user invokes a visual mode such as `/tutorial-doc-style handdrawn`, `/tutorial-doc-style paper`, `/tutorial-doc-style paper-detailed`, or `/tutorial-doc-style dark-system`, follow the visual mode library in `references/tutorial-style-playbook.md`;
    - Use deterministic SVG/HTML/canvas/Python-rendered figures when exact dimensions, formulas, labels, or coordinate relationships must be guaranteed;
    - External figures from papers, docs, or blogs may be used only when they are clearly sourced and materially better than a new diagram. If a source figure is close but not ideal, use it as inspiration and redraw or improve it instead of blindly screenshotting;
    - Copy final project-bound images into a local image/assets folder before referencing them;

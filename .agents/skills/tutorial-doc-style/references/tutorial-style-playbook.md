@@ -113,6 +113,59 @@ Use generated raster diagrams via `imagegen` when the goal is visual intuition, 
 
 Use deterministic SVG/HTML/canvas/Python-rendered figures when exact text, matrix shapes, formulas, or dimensions must be reliable. For exact figures, clarity beats generative aesthetics.
 
+### 3.1 Visual Mode Library
+
+When the user invokes this skill with a visual mode, for example `/tutorial-doc-style handdrawn`, use the corresponding baseline style below. Modes are defaults, not cages: adapt them to the specific knowledge point while preserving their visual DNA.
+
+#### `handdrawn`
+
+Use for intuition-building diagrams, concept comparisons, and step-by-step mechanism sketches where a human teaching presence helps comprehension.
+
+- Style: refined hand-drawn lecture note, clean ink and marker lines, visually comfortable, not childish；
+- Background: near-white or very light warm paper only. Avoid yellow, kraft-paper, sepia, aged-paper, or stained notebook backgrounds；
+- Palette: black ink plus restrained blue, green, orange, and occasional purple marker accents；
+- Layout: two-panel comparisons, hand-drawn matrices, arrows, circled operators, and a compact mental-model strip work well；
+- Text: Chinese-first explanatory labels with English technical terms in parentheses；
+- Avoid: messy scribbles, decorative doodles, overly playful icons, dense paragraphs, or low-contrast handwriting；
+
+#### `paper`
+
+Use for mechanisms that need authority, exactness, and a professional paper-figure feel.
+
+- Style: academic systems-paper figure, austere and calm, white background, thin black or gray linework；
+- Palette: grayscale with very pale blue/green fills for shards and one subtle orange accent for partition or communication boundaries；
+- Layout: balanced panels, visible matrix shapes, exact dimension labels, minimal legend, generous whitespace；
+- Text: sparse English technical terms plus short Chinese helper labels only when useful；
+- Avoid: glossy cards, saturated colors, shadows, poster-like infographics, marketing-style badges, or excessive explanatory boxes；
+
+#### `paper-detailed`
+
+Use when a figure must carry more technical payload than `paper`, such as formulas, shape summaries, legends, and bilingual notes.
+
+- Style: detailed academic explainer figure, still paper-like and controlled；
+- Palette: mostly black/gray with pale shard fills and restrained orange partition lines；
+- Layout: two large mechanism panels plus a bottom formula/legend strip is acceptable；
+- Text: allow bilingual labels and formula snippets, but keep every text block purposeful and readable；
+- Use this mode for复盘图、mechanism maps, or figures that readers may inspect slowly after reading the prose；
+- Avoid using this as the first figure for a brand-new concept if the density would overwhelm the reader；
+
+#### `dark-system`
+
+Use for runtime, deployment, topology, communication hotspot, observability, and performance-cost diagrams.
+
+- Style: dark engineering systems figure, charcoal/near-black background, clean pipeline cards, profiler-like but not noisy；
+- Palette: blue for Column Parallel or non-communication stages, green for local compute, orange for Row Parallel communication hotspots, red only for risk；
+- Layout: horizontal pipeline, highlighted hotspots, compact side cost card, optional topology strip；
+- Text: English technical terms are acceptable, with short Chinese helper labels for key teaching points；
+- Avoid: cyberpunk decoration, neon overload, random code, dense dashboard chrome, or tiny labels；
+
+Mode selection guidance:
+
+- Prefer `handdrawn` for first intuition and conceptual contrast；
+- Prefer `paper` for exact mathematical mechanisms；
+- Prefer `paper-detailed` for summary figures and inspection-heavy diagrams；
+- Prefer `dark-system` for communication, profiling, topology, and deployment trade-off diagrams；
+
 External figure policy:
 
 - Use paper, docs, or blog figures only when they are clearly relevant and the source is linked；
