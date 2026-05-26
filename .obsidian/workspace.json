@@ -240,6 +240,8 @@
   },
   "active": "06f7e0a28c1c301d",
   "lastOpenFiles": [
+    "notes/LLM/大纲.md",
+    "notes/LLM/大模型精讲系列_01：什么是TP？.md",
     "notes/LLM/imgs/tp-column-row-parallel-cn.png",
     "notes/LLM/imgs/tp-megatron-mlp-flow-cn.png",
     "notes/LLM/imgs/tp-sharding-dimensions-semantics-cn.png",
@@ -250,9 +252,7 @@
     "notes/LLM/imgs/tp-mental-model-cn.png",
     "notes/LLM/imgs/tp-dp-pp-decision-map.png",
     "notes/LLM/imgs/tp-megatron-mlp-column-row.png",
-    "notes/LLM/imgs/tp-overview-tp1-vs-tp4.png",
     "notes/AICoding/codex最佳实践/4.codex内置插件和skills介绍.md",
-    "notes/LLM/大模型精讲系列_01：什么是TP？.md",
     "notes/LLM/未命名.md",
     "notes/AICoding/codex最佳实践/3.如何用codex设计精美且炫酷的UI.md",
     "notes/AICoding/codex最佳实践/oh_my_codex架构设计与使用教程.md",
