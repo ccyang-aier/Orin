@@ -240,6 +240,7 @@
   },
   "active": "355c39dd8741f2da",
   "lastOpenFiles": [
+    "notes/LLM/imgs/attention-mask-types-handdrawn-cn-v2.png",
     "notes/LLM/imgs/transformer-training-inference-flow-handdrawn-cn.png",
     "notes/LLM/imgs/transformer-block-residual-ffn-handdrawn-cn.png",
     "notes/LLM/imgs/transformer-positional-encoding-handdrawn-cn.png",
@@ -250,7 +251,6 @@
     "notes/LLM/imgs/attention-soft-addressing-handdrawn-cn.png",
     "notes/LLM/imgs/llm-weights-activations-context-handdrawn-cn.png",
     "notes/LLM/imgs/llm-scale-dimensions-handdrawn-cn.png",
-    "notes/LLM/imgs/llm-basic-token-pipeline-handdrawn-cn.png",
     "notes/LLM/大模型精讲系列_00：深入理解Attention机制.md",
     "notes/LLM/大模型精讲系列_00：Transformer架构及原理.md",
     "notes/LLM/大模型精讲系列_00：理解GPU架构及其原理.md",
