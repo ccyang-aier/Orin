@@ -55,12 +55,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "notes/LLM/大模型精讲系列_02：什么是DP？.md",
+                "file": "notes/LLM/大模型精讲系列_00：Transformer架构及原理.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "大模型精讲系列_02：什么是DP？"
+              "title": "大模型精讲系列_00：Transformer架构及原理"
             }
           }
         ],
@@ -121,7 +121,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 365.5
+    "width": 387.5
   },
   "right": {
     "id": "ff6822fa7b405a4a",
@@ -199,13 +199,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "notes/LLM/大模型精讲系列_02：什么是DP？.md",
+                "file": "notes/LLM/大模型精讲系列_00：Transformer架构及原理.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "大模型精讲系列_02：什么是DP？ 的大纲"
+              "title": "大模型精讲系列_00：Transformer架构及原理 的大纲"
             }
           },
           {
@@ -238,28 +238,35 @@
       "bases:新建数据库": false
     }
   },
-  "active": "06f7e0a28c1c301d",
+  "active": "355c39dd8741f2da",
   "lastOpenFiles": [
-    "notes/LLM/imgs/dp-parallelism-decision-map-cn.png",
-    "notes/LLM/imgs/dp-training-sync-cn.png",
-    "notes/LLM/imgs/dp-serving-capacity-cn.png",
-    "notes/LLM/imgs/dp-inference-routing-cn.png",
-    "notes/LLM/imgs/dp-serving-replicas-cn.png",
+    "notes/LLM/imgs/llm-weights-activations-context-handdrawn-cn.png",
+    "notes/LLM/imgs/llm-scale-dimensions-handdrawn-cn.png",
+    "notes/LLM/imgs/llm-basic-token-pipeline-handdrawn-cn.png",
+    "notes/LLM/imgs/llm-pre-transformer-bottlenecks-handdrawn-cn.png",
+    "notes/LLM/imgs/llm-pretraining-inference-handdrawn-cn.png",
+    "notes/LLM/大模型精讲系列_00：深入理解Attention机制.md",
+    "notes/LLM/大模型精讲系列_00：Transformer架构及原理.md",
+    "notes/LLM/大模型精讲系列_00：理解GPU架构及其原理.md",
+    "notes/LLM/大模型精讲系列_00：大模型基础速通.md",
+    "notes/LLM/imgs/gpu-performance-bottlenecks-handdrawn-cn.png",
+    "notes/LLM/imgs/gpu-install-verification-flow-handdrawn-cn.png",
+    "notes/LLM/imgs/gpu-vs-npu-ecosystem-handdrawn-cn.png",
+    "notes/LLM/imgs/gpu-nvidia-ecosystem-stack-handdrawn-cn.png",
+    "notes/LLM/imgs/gpu-cuda-execution-model-handdrawn-cn.png",
+    "notes/LLM/imgs/gpu-throughput-mental-model-handdrawn-cn.png",
+    "notes/LLM/01_从CNN、RNN到Attention.md",
+    "notes/LLM/大模型精讲系列_05：什么是CP？.md",
+    "notes/LLM/大模型精讲系列_03：什么是PP？.md",
+    "notes/LLM/大模型精讲系列_04：什么是EP？.md",
     "notes/LLM/大模型精讲系列_01：什么是TP？.md",
+    "notes/LLM/大纲.md",
     "notes/LLM/大模型精讲系列_02：什么是DP？.md",
     "tmp/overlay_dp_figures.py",
     "tmp",
-    "notes/LLM/imgs/dp-zero-fsdp-state-sharding-cn.png",
-    "notes/LLM/imgs/dp-bucket-allreduce-overlap-cn.png",
-    "notes/LLM/imgs/dp-gradient-accumulation-cn.png",
-    "notes/LLM/imgs/dp-training-mental-model-cn.png",
-    "notes/LLM/大纲.md",
-    "notes/LLM/01_从CNN、RNN到Attention.md",
     "notes/LLM/imgs/__pycache__/generate_tp_handdrawn_figures.cpython-312.pyc",
     "notes/LLM/imgs/__pycache__",
     "notes/LLM/imgs/generate_tp_handdrawn_figures.py",
-    "notes/LLM/imgs/_font_probe.png",
-    "notes/LLM/imgs/tp-column-row-parallel-cn.png",
     "notes/AICoding/codex最佳实践/4.codex内置插件和skills介绍.md",
     "notes/LLM/未命名.md",
     "notes/AICoding/codex最佳实践/3.如何用codex设计精美且炫酷的UI.md",
@@ -278,13 +285,6 @@
     "opc",
     "notes/AICoding/iFile/界面原型效果.md",
     "notes/AICoding/iFile/imgs",
-    "notes/AICoding/iFile/未命名 2.md",
-    "notes/AICoding/提示词篇/Karpathy的编码准则.md",
-    "notes/AICoding/iFile/未命名.md",
-    "notes/AICoding/iFile/未命名 1.md",
-    "notes/AICoding/iFile/原始需求提取.md",
-    "notes/AICoding/iFile/题目说明.md",
-    "notes/AICoding/iFile/IP设计.md",
     "notes/AICoding/iFile",
     "未命名.canvas"
   ]
