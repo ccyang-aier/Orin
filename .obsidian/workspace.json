@@ -69,12 +69,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "notes/LLM/大模型精讲系列_05：深入理解分布式推理：CP.md",
+                "file": "notes/LLM/大模型精讲系列_04：深入理解分布式推理：EP.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "大模型精讲系列_05：深入理解分布式推理：CP"
+              "title": "大模型精讲系列_04：深入理解分布式推理：EP"
             }
           }
         ],
@@ -213,13 +213,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "notes/LLM/大模型精讲系列_05：深入理解分布式推理：CP.md",
+                "file": "notes/LLM/大模型精讲系列_04：深入理解分布式推理：EP.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "大模型精讲系列_05：深入理解分布式推理：CP 的大纲"
+              "title": "大模型精讲系列_04：深入理解分布式推理：EP 的大纲"
             }
           },
           {
@@ -254,6 +254,7 @@
   },
   "active": "2ca9d2f3714b4f24",
   "lastOpenFiles": [
+    "notes/LLM/大模型精讲系列_05：深入理解分布式推理：CP.md",
     "notes/LLM/imgs/cp-parallelism-decision-map-handdrawn-cn-v2.png",
     "notes/LLM/imgs/pp-decision-map-cn-v2.png",
     "notes/LLM/imgs/pp-inference-prefill-decode-cn-v2.png",
@@ -267,13 +268,11 @@
     "notes/LLM/大模型精讲系列_00：深入理解Attention机制.md",
     "notes/LLM/大模型精讲系列_00：大模型基础速通.md",
     "notes/LLM/大模型精讲系列_00：理解GPU架构及其原理.md",
-    "notes/LLM/大模型精讲系列_05：深入理解分布式推理：CP.md",
     "notes/LLM/imgs/cp-parallelism-decision-map-cn.png",
     "notes/LLM/imgs/cp-decode-dcp-kv-sharding-cn.png",
     "notes/LLM/imgs/cp-ring-attention-pass-kv-cn.png",
     "notes/LLM/imgs/cp-context-sharding-mental-model-cn.png",
     "notes/LLM/imgs/cp-long-context-pressure-cn.png",
-    "notes/LLM/imgs/pp-decision-map-cn.png",
     "notes/LLM/01_从CNN、RNN到Attention.md",
     "notes/LLM/大纲.md",
     "tmp/overlay_dp_figures.py",
