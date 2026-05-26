@@ -364,7 +364,7 @@ KV cache 可以避免每一步重复计算所有历史 token 的 Key/Value。它
 
 当 $n$ 较短时，FFN 和线性层可能占据大量计算；当上下文变长时，$n^2$ 的 Attention 成本会迅速凸显。现代长上下文模型的许多优化都围绕这一点展开。
 
-这张表更接近训练或 prefill 阶段的全序列计算。进入 decode 阶段后，如果使用 KV cache，历史 token 的 K/V 会被缓存；单步主要计算当前 token 的 Q、输出投影和 FFN，并对长度为 $t$ 的历史 K/V 做 $O(td)$ 级别的注意力读取。
+这张表更接近训练或 prefill 阶段的全序列计算。进入 decode 阶段后，如果使用 KV cache，历史 token 的 K/V 会被缓存；单步主要计算当前 token 的 Q/K/V、输出投影和 FFN，把当前 K/V 写入 cache，并对长度为 $t$ 的历史 K/V 做 $O(td)$ 级别的注意力读取。
 
 ### 6.4 工程上要分清三个瓶颈
 
@@ -463,11 +463,11 @@ Transformer 可以被压缩成一个循环堆叠的表示更新过程：
    C. 完全取消矩阵乘法；
    D. 只让模型参数更少；
 
-2. 不加位置编码的 Self-Attention 更准确地具有什么性质？
+2. 不加任何位置相关信号的双向 Self-Attention 更准确地具有什么性质？
    A. 置换等变：输入打乱，输出也按同样方式打乱；
    B. 天然知道绝对位置；
-   C. 只能处理长度为 1 的序列；
-   D. 只能用于图像；
+   C. 只要加入 FFN 就能自动恢复顺序；
+   D. 会把所有 token 压缩成单个向量；
 
 3. 原始 Transformer 的正弦位置编码为什么有价值？
    A. 它让所有位置向量完全相同；
@@ -537,8 +537,8 @@ Transformer 可以被压缩成一个循环堆叠的表示更新过程：
 
 14. 下列哪项最能概括 Transformer block 的分工？
     A. Attention 路由跨 token 信息，FFN 改写逐 token 表示，残差与归一化稳定训练；
-    B. Attention 只负责读文件，FFN 只负责写文件；
-    C. Encoder 只做推理，Decoder 只做训练；
+    B. Attention 负责全部非线性容量，FFN 只是输出投影；
+    C. Encoder 和 Decoder 的区别只在是否共享参数；
     D. 位置编码负责优化器更新；
 
 15. RoPE、ALiBi 等现代位置编码方案主要关注什么问题？
@@ -557,7 +557,7 @@ Transformer 可以被压缩成一个循环堆叠的表示更新过程：
     A. FFN 和线性投影也有 $O(nd^2)$ 或 $O(ndd_{\text{ff}})$ 成本；
     B. causal mask 会删除所有计算；
     C. 位置编码占据全部显存；
-    D. tokenizer 会执行矩阵乘法；
+    D. Cross-Attention 会让 FFN 参数归零；
 
 ### 9.2 答案与题解
 
