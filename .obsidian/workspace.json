@@ -55,12 +55,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "notes/LLM/大模型精讲系列_01：什么是TP？.md",
+                "file": "notes/LLM/大模型精讲系列_02：什么是DP？.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "大模型精讲系列_01：什么是TP？"
+              "title": "大模型精讲系列_02：什么是DP？"
             }
           }
         ],
@@ -199,13 +199,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "notes/LLM/大模型精讲系列_01：什么是TP？.md",
+                "file": "notes/LLM/大模型精讲系列_02：什么是DP？.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "大模型精讲系列_01：什么是TP？ 的大纲"
+              "title": "大模型精讲系列_02：什么是DP？ 的大纲"
             }
           },
           {
@@ -240,8 +240,9 @@
   },
   "active": "06f7e0a28c1c301d",
   "lastOpenFiles": [
-    "notes/LLM/大纲.md",
     "notes/LLM/大模型精讲系列_01：什么是TP？.md",
+    "notes/LLM/大模型精讲系列_02：什么是DP？.md",
+    "notes/LLM/大纲.md",
     "notes/LLM/01_从CNN、RNN到Attention.md",
     "notes/LLM/imgs/__pycache__/generate_tp_handdrawn_figures.cpython-312.pyc",
     "notes/LLM/imgs/__pycache__",
