@@ -18,6 +18,13 @@ If the user supplies actual reference images in the conversation, treat those im
 
 Use for intuition-building diagrams, concept comparisons, and step-by-step mechanism sketches where a human teaching presence helps comprehension.
 
+Generation route:
+
+- Every visual mode in this file is `imagegen`-first unless the user explicitly asks for a code-native/vector artifact;
+- Generate `handdrawn`, `paper`, `paper-detailed`, `dark-system`, and future style modes with `imagegen` as the primary visual source;
+- Do not use Python/PIL/SVG/canvas as the primary renderer for tutorial figures governed by this skill. These tools may be used only as an explicitly disclosed correction or annotation layer after an `imagegen` draft exists;
+- If technical labels or matrix shapes need correction after generation, use prompt iteration, reference images, selective editing, or post-processing after the `imagegen` draft. Do not silently change the generation medium.
+
 Canonical visual DNA:
 
 - The image should look like a careful human-drawn teaching note, not a generic UI dashboard and not a sloppy doodle;
@@ -34,6 +41,16 @@ Canonical visual DNA:
 - Use Chinese for reader-facing explanation and English for stable technical terms such as `Column Parallel`, `Row Parallel`, `all-reduce`, `concat`, `hidden states`, `rank`, `shard`;
 - Dense paragraphs do not belong inside the figure. Move long explanations to nearby prose.
 
+Reference-board micro-anatomy:
+
+- Lines are not perfectly geometric. Borders, underlines, dividers, arrows, and matrix grids should have tiny deterministic wobble, double-pass marker thickness, or slight pressure variation;
+- Arrows should use open, hand-drawn arrowheads made from two strokes. Avoid filled triangular vector arrowheads;
+- Matrix cells should use light tinted cell backgrounds plus sparse diagonal hand hatching. The fill should feel like marker shading inside the cell, not like a flat UI rectangle and not like a single crisp slash;
+- Matrix outlines and grid lines should be slightly heavier than hatching, with enough contrast to preserve exact row/column counts;
+- Text should look like marker handwriting: modestly thick, slightly informal, and readable. Do not use a neat modern sans-serif look for a handdrawn mode;
+- Use marker-like emphasis by stroke weight and color, not by UI-card styling, shadows, gradients, or icons;
+- Bottom summary strips should look like annotated whiteboard callouts: hand border, ample vertical padding, and text centered with breathing room.
+
 Recommended layout patterns:
 
 - Two-panel comparison with a hand-drawn vertical separator;
@@ -45,10 +62,13 @@ Recommended layout patterns:
 Hard bans:
 
 - Do not use generic filled pastel cards as the main visual language;
+- Do not treat scripted vector rendering plus a handwriting font as an acceptable substitute for `imagegen` tutorial art in any visual mode;
 - Do not let colored hatching or fill extend outside matrices, boxes, or semantic regions;
 - Do not pack a long sentence into a thin bottom strip;
 - Do not place text close to borders. Keep at least 24-32 px padding inside boxes at 1600x900 scale;
 - Do not use one-line labels that collide with arrows, matrices, or borders;
+- Do not use clean vector arrows with filled triangular heads in `handdrawn` mode;
+- Do not draw matrices as plain empty grids with one mechanically perfect diagonal slash per cell when the reference calls for soft shaded hand hatching;
 - Do not make a "handdrawn" figure by merely switching to a handwriting font while keeping a dashboard layout.
 
 Prompt skeleton for image exploration:
@@ -63,6 +83,8 @@ Deterministic rendering checklist:
 - Use outlines and sparse marker fills instead of full-card fills;
 - Keep font sizes large enough for 1600px-wide images;
 - Use fonts that cover Chinese, English technical terms, numbers, and punctuation. Reject missing-glyph boxes in labels such as `Column Parallel`, `all-reduce`, `rank`, and `shard`;
+- Add a reference-style smoke test for arrowheads, matrix hatching, hand borders, and text weight before batch-rendering the whole figure set;
+- Inspect whether the result looks hand-authored at the level of strokes, not merely at the level of typography;
 - Inspect at display size and at 50% scale;
 - If a text block wraps more than two lines inside a figure, shorten it or move it to prose;
 - Reserve bottom strips for one compact mental model only.

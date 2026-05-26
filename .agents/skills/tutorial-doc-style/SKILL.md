@@ -33,9 +33,11 @@ Use this skill when a tutorial should become a polished long-term learning artif
 4. Design figures as first-class teaching assets:
    - Select a visual mode from `references/visual-style-baselines.md`;
    - If the user provides reference images, treat them as the canonical style target. If actual files are available, copy them into `assets/style-baselines/`; if they are only conversation images, encode their reusable visual rules in `references/visual-style-baselines.md`;
-   - Prefer `imagegen` for style exploration, polished conceptual art, and non-deterministic visual probes;
-   - Prefer deterministic SVG/HTML/canvas/Python rendering for final diagrams with exact formulas, matrix shapes, Chinese labels, or technical coordinates;
-   - When using deterministic rendering, preserve the chosen visual mode. Do not regress to generic UI cards, cramped boxes, or sterile dashboards;
+   - All named tutorial visual styles in this skill are `imagegen`-first. This includes `handdrawn`, `paper`, `paper-detailed`, `dark-system`, and future style modes unless the user explicitly says otherwise;
+   - When the user asks for AI-era tutorial diagrams, bitmap tutorial figures, image-rich Markdown tutorials, or any named visual style from this skill, use `imagegen` as the primary generation path for the final visual asset;
+   - Do not replace an `imagegen` request with Python/PIL, SVG, HTML/canvas, Mermaid, PlantUML, or other deterministic rendering because of convenience or fear of label drift;
+   - Deterministic rendering may be used only when the user explicitly asks for code-native diagrams, when the target format requires source-controlled vector output, or as a clearly disclosed post-processing/annotation aid after an `imagegen` draft exists;
+   - If exact formulas, matrix shapes, Chinese labels, or technical coordinates create risk for `imagegen`, solve it by prompt design, reference images, iterative generation, selective post-processing, or asking for confirmation. Do not silently change the generation medium;
    - Clip hatching, fills, highlights, and strokes to their true semantic object. Never let a matrix fill spill outside the actual matrix boundary;
    - Give figures generous internal padding and inter-object spacing. If text is cramped, shorten text, enlarge the canvas, or split the figure;
    - Review every figure for teaching purpose, factual labels, shape correctness, communication semantics, visual hierarchy, and style fidelity;
