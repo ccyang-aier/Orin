@@ -15,7 +15,7 @@ description: 以原始 Transformer 为主线解释位置编码、Encoder-Decoder
 >
 > 理解 Transformer，要把它看成一次架构设计评审：Attention 负责信息路由，位置编码补上顺序感，FFN 提供逐 token 的非线性变换，残差与 LayerNorm 让深层堆叠可训练，mask 决定信息边界，Encoder 与 Decoder 则把理解和生成组织成完整的数据流。
 
-阅读路径：建议先读 [[大模型精讲系列_03：深入理解Attention机制|00-A 深入理解 Attention 机制]]，再读本文；本文不重新推导 Attention 公式，而是解释 Attention 如何被组织成完整 Transformer 架构。
+阅读路径：建议先读 [[03_深入理解Attention机制|00-A 深入理解 Attention 机制]]，再读本文；本文不重新推导 Attention 公式，而是解释 Attention 如何被组织成完整 Transformer 架构。
 
 ## 1. 为什么需要 Transformer
 

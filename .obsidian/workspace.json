@@ -13,62 +13,6 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "notes/AICoding/codex最佳实践/oh_my_codex架构设计与使用教程.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "oh_my_codex架构设计与使用教程"
-            }
-          },
-          {
-            "id": "f9ce0f74defa923a",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "notes/AICoding/codex最佳实践/3.如何用codex设计精美且炫酷的UI.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "3.如何用codex设计精美且炫酷的UI"
-            }
-          },
-          {
-            "id": "63f2d053b72b53bd",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "notes/LLM/大模型精讲系列_01：什么是TP？.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "大模型精讲系列_01：什么是TP？"
-            }
-          },
-          {
-            "id": "06f7e0a28c1c301d",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "notes/LLM/大模型精讲系列_01：深入理解分布式推理：TP.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "大模型精讲系列_01：深入理解分布式推理：TP"
-            }
-          },
-          {
-            "id": "2ca9d2f3714b4f24",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
                 "file": "notes/vLLM/vLLM架构与原理精讲系列/03_vLLM引擎架构总览.md",
                 "mode": "source",
                 "source": false
@@ -77,8 +21,7 @@
               "title": "03_vLLM引擎架构总览"
             }
           }
-        ],
-        "currentTab": 4
+        ]
       }
     ],
     "direction": "vertical"
@@ -135,7 +78,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 387.5
+    "width": 406.5
   },
   "right": {
     "id": "ff6822fa7b405a4a",
@@ -252,8 +195,46 @@
       "bases:新建数据库": false
     }
   },
-  "active": "355c39dd8741f2da",
+  "active": "416caa18d6b34ef4",
   "lastOpenFiles": [
+    "notes/LLM/大模型与推理全栈精讲系列/01_理解GPU架构及其原理.md",
+    "notes/LLM/大模型与推理全栈精讲系列/01_从CNN、RNN到Attention.md",
+    "notes/LLM/大模型与推理全栈精讲系列/04_Transformer架构及原理.md",
+    "notes/vLLM/vLLM架构与原理精讲系列/03_vLLM引擎架构总览.md",
+    "notes/vLLM/vLLM架构与原理精讲系列/imgs/03_request_lifecycle.png",
+    "notes/vLLM/vLLM架构与原理精讲系列/imgs/03_engine_core_loop.png",
+    "notes/vLLM/vLLM架构与原理精讲系列/imgs/03_group_ranks_tp_pp_dp.png",
+    "notes/vLLM/vLLM架构与原理精讲系列/imgs/03_component_responsibility_map.png",
+    "notes/vLLM/vLLM架构与原理精讲系列/imgs/03_rank_coordinate_system.png",
+    "notes/vLLM/vLLM架构与原理精讲系列/imgs/03_batch_scheduling_view.png",
+    "notes/vLLM/vLLM架构与原理精讲系列/imgs/03_data_parallel_external_hybrid_lb.png",
+    "notes/vLLM/vLLM架构与原理精讲系列/imgs/03_data_parallel_internal_lb.png",
+    "notes/vLLM/vLLM架构与原理精讲系列/imgs/03_tensor_parallel_view.png",
+    "notes/vLLM/vLLM架构与原理精讲系列/imgs/03_expert_parallel_moe_view.png",
+    "notes/LLM/大模型与推理全栈精讲系列/09_深入理解分布式推理：CP.md",
+    "notes/LLM/大模型与推理全栈精讲系列/02_大模型基础速通.md",
+    "notes/AICoding/codex最佳实践/oh_my_codex架构设计与使用教程.md",
+    "notes/LLM/大纲.md",
+    "notes/LLM/大模型与推理全栈精讲系列/imgs",
+    "notes/LLM/大模型与推理全栈精讲系列/08_深入理解分布式推理：EP.md",
+    "notes/LLM/大模型与推理全栈精讲系列/07_深入理解分布式推理：PP.md",
+    "notes/LLM/大模型与推理全栈精讲系列/06_深入理解分布式推理：DP.md",
+    "notes/LLM/大模型与推理全栈精讲系列/05_深入理解分布式推理：TP.md",
+    "notes/LLM/大模型与推理全栈精讲系列/03_深入理解Attention机制.md",
+    "notes/LLM/大模型与推理全栈精讲系列/大纲.md",
+    "notes/LLM/大模型与推理全栈精讲系列/未命名.md",
+    "notes/LLM/大模型精讲系列_01：理解GPU架构及其原理.md",
+    "notes/LLM/大模型与推理全栈精讲系列",
+    "notes/vLLM/vLLM架构与原理精讲系列/02_初识vLLM推理引擎.md",
+    "notes/vLLM/vLLM架构与原理精讲系列/01_推理系统导论.md",
+    "notes/maas/aibrix架构与实现/00.架构初探及教程大纲规划.md",
+    "notes/AICoding/codex最佳实践/3.如何用codex设计精美且炫酷的UI.md",
+    "notes/maas/未命名.md",
+    "notes/maas/易用性设计2.0.md",
+    "notes/maas/易用性设计.md",
+    "notes/maas/未命名 9.md",
+    "notes/maas/未命名 8.md",
+    "notes/maas/aibrix架构与实现",
     "code/opensource/aibrix/test/regression/v0.4.0/templates/_helpers.tpl",
     "code/opensource/aibrix/test/regression/v0.4.0/templates/vllm-non-disaggregated.yaml",
     "code/opensource/aibrix/test/regression/v0.4.0/templates/vllm-disaggregated.yaml",
@@ -261,45 +242,6 @@
     "code/opensource/aibrix/test/regression/v0.4.0/templates/sglang-disaggregated.yaml",
     "code/opensource/aibrix/test/regression/v0.4.0/multi-engine/vllm-llama-8b.yaml",
     "code/opensource/aibrix/test/regression/v0.4.0/multi-engine/sglang-llama-8b.yaml",
-    "code/opensource/aibrix/test/regression/v0.4.0/dynamo/disagg_router.yaml",
-    "code/opensource/aibrix/test/regression/v0.4.0/configs/vllm-non-disagg-base.yaml",
-    "code/opensource/aibrix/test/regression/v0.4.0/dynamo/disagg.yaml",
-    "code/opensource/aibrix/test/regression/v0.4.0/configs/vllm-disagg-base.yaml",
-    "code/opensource/aibrix/test/integration/engine/lora/README.md",
-    "code/opensource/aibrix/test/regression/v0.4.0/README.md",
-    "code/opensource/aibrix/test/regression/v0.3.0/README.md",
-    "code/opensource/aibrix/test/regression/v0.3.0/figure_ttft_generation_time.png",
-    "code/opensource/aibrix/test/regression/v0.2.1/README.md",
-    "code/opensource/aibrix/test/README.md",
-    "code/opensource/aibrix/samples/multimodality/xDiT/README.md",
-    "code/opensource/aibrix/samples/multimodality/vllm/README.md",
-    "code/opensource/aibrix/samples/disaggregation/vllm/README.md",
-    "code/opensource/aibrix/samples/disaggregation/sglang/README.md",
-    "code/opensource/aibrix/samples/deepseek-r1/static/deepseek-deployment.png",
-    "code/opensource/aibrix/samples/deepseek-r1/static/deepseek-dashboard.png",
-    "code/opensource/aibrix/samples/ai-gateway-integration/disaggregation/README.md",
-    "code/opensource/aibrix/samples/volcano-engine/README.md",
-    "code/opensource/aibrix/samples/vllm-ascend/README.md",
-    "code/opensource/aibrix/samples/semantic-router/README.md",
-    "code/opensource/aibrix/samples/semantic-router/DESIGN.md",
-    "code/opensource/aibrix/samples/deepseek-r1/README.md",
-    "code/opensource/aibrix/samples/ai-gateway-integration/README.md",
-    "code/opensource/aibrix/python/aibrix/aibrix/gpu_optimizer/optimizer/solver/melange/README.md",
-    "code/opensource/aibrix/python/aibrix_kvcache/aibrix_kvcache/l2/connectors/eic/README.md",
-    "code/opensource/aibrix/python/aibrix/aibrix/gpu_optimizer/optimizer/profiling/README.md",
-    "code/opensource/aibrix/python/aibrix_kvcache/integration/vllm/docker/README.md",
-    "code/opensource/aibrix/python/aibrix_kvcache/integration/sglang/docker/README.md",
-    "code/opensource/aibrix/python/aibrix/tests/storage/README.md",
-    "code/opensource/aibrix/python/aibrix/tests/e2e/README.md",
-    "code/opensource/aibrix/python/aibrix/aibrix/gpu_optimizer/README.md",
-    "code/opensource/aibrix/python/aibrix/aibrix/batch/README.md",
-    "code/opensource/aibrix/docs/source/assets/images/stormservice/aibrix-stormservice-illustration.png",
-    "code/opensource/aibrix/docs/source/assets/images/slo_routing/variation_comparison.png",
-    "code/opensource/aibrix/docs/source/assets/images/slo_routing/motivation.png",
-    "code/opensource/aibrix/docs/source/assets/images/slo_routing/evaluation.png",
-    "code/opensource/aibrix/docs/source/assets/images/cloud/lambda-cloud-verify-installation.png",
-    "code/opensource/aibrix/docs/source/assets/images/cloud/lambda-cloud-ssh.png",
-    "code/opensource/aibrix/docs/source/assets/images/cloud/lambda-cloud-instance.png",
     "未命名.canvas"
   ]
 }
