@@ -4,13 +4,14 @@
 
 本文件只补充视觉风格和 prompt 规则。最终教程图的生成流程以 `SKILL.md` 为准：所有基于本 skill 处理的教程文档，最终教学图必须使用 `imagegen`。
 
-当前基线包含三种正向风格和两类反模式：
+当前基线包含三种正向风格和三类反模式：
 
 1. `handdrawn`：精致手绘教学板；
 2. `paper`：专业论文风格插图；
 3. `dark-paper`：暗色系专业论文风格插图；
 4. 反模式 A：文本不清晰，或高亮、色块、斜线填充等溢出真实语义对象；
 5. 反模式 B：内容过度拥挤，边距不足，文字贴边或碰撞。
+6. 反模式 C：图片内部出现大标题，挤占主体内容空间。
 
 如果用户提供参考图，以参考图为最高优先级风格目标。若图像文件可落盘，复制到 `assets/style-baselines/`；若只在会话中可见，则把可复用视觉规则写入本文件，但写入前需要说明目的和内容并获得用户授权。
 
@@ -47,7 +48,7 @@
 Prompt skeleton：
 
 ```text
-Refined hand-drawn Chinese technical tutorial diagram. Clean warm-white teaching-board background, careful human-authored composition, readable ink-like linework, restrained semantic colors, generous margins, clear arrows and state boundaries. Use short Chinese labels plus stable English technical terms. Show concrete objects, relationships, state ownership, before/after transitions, or small worked examples according to the teaching goal. Professional, information-rich, accurate, easy to understand, lively but not decorative. No dense paragraphs, no tiny text, no cramped labels, no UI dashboard cards, no stickers, no watermark, no highlight or fill outside its semantic object.
+Refined hand-drawn Chinese technical tutorial diagram. Clean warm-white teaching-board background, careful human-authored composition, readable ink-like linework, restrained semantic colors, generous margins, clear arrows and state boundaries. Use short Chinese labels plus stable English technical terms. Show concrete objects, relationships, state ownership, before/after transitions, or small worked examples according to the teaching goal. Professional, information-rich, accurate, easy to understand, lively but not decorative. No large standalone title inside the image, no dense paragraphs, no tiny text, no cramped labels, no UI dashboard cards, no stickers, no watermark, no highlight or fill outside its semantic object.
 ```
 
 ## 2. `paper`
@@ -73,7 +74,7 @@ Refined hand-drawn Chinese technical tutorial diagram. Clean warm-white teaching
 Prompt skeleton：
 
 ```text
-Professional paper-style technical tutorial figure. White or near-white background, thin black and gray linework, restrained semantic colors, precise panel layout, clear labels, shape/table snippets only when useful, concise bilingual notes, accurate arrows and boundaries, calm academic composition. Use visual density appropriate to the teaching goal. No saturated poster colors, no decorative icons, no glossy cards, no handwritten style, no cramped labels.
+Professional paper-style technical tutorial figure. White or near-white background, thin black and gray linework, restrained semantic colors, precise panel layout, clear labels, shape/table snippets only when useful, concise bilingual notes, accurate arrows and boundaries, calm academic composition. Use visual density appropriate to the teaching goal. No large standalone title inside the image, no saturated poster colors, no decorative icons, no glossy cards, no handwritten style, no cramped labels.
 ```
 
 ## 3. `dark-paper`
@@ -102,7 +103,7 @@ Professional paper-style technical tutorial figure. White or near-white backgrou
 Prompt skeleton：
 
 ```text
-Dark paper-style technical tutorial figure. Charcoal or near-black background, precise academic linework, restrained semantic colors, clean panel or topology composition, readable labels, concise bilingual notes, accurate arrows and boundaries. Use blue for baseline or stable paths, green for local compute or successful state, orange for coordination boundary or bottleneck, red only for risk. Professional, rigorous, calm, high-contrast, generous spacing. No cyberpunk decoration, no neon overload, no random code texture, no dashboard chrome, no tiny labels.
+Dark paper-style technical tutorial figure. Charcoal or near-black background, precise academic linework, restrained semantic colors, clean panel or topology composition, readable labels, concise bilingual notes, accurate arrows and boundaries. Use blue for baseline or stable paths, green for local compute or successful state, orange for coordination boundary or bottleneck, red only for risk. Professional, rigorous, calm, high-contrast, generous spacing. No large standalone title inside the image, no cyberpunk decoration, no neon overload, no random code texture, no dashboard chrome, no tiny labels.
 ```
 
 ## 4. 反模式 A：文本不清晰或语义高亮溢出
@@ -139,7 +140,23 @@ Dark paper-style technical tutorial figure. Charcoal or near-black background, p
 - 按最终显示尺寸检查，拒绝任何贴边或碰撞文本；
 - 生成后检查：“这张图像认真教学笔记，还是像被模板硬塞进去？”
 
-## 6. 模式选择
+## 6. 反模式 C：图片内部大标题
+
+问题：
+
+- 图片顶部或内部出现一行占据视觉重心的大标题；
+- 大标题承担了文档标题或章节标题功能，却没有增加图内教学信息；
+- 大标题压缩主体图解空间，让读者先看到标题而不是机制、结构、流程或对比关系。
+
+修复：
+
+- 把标题放在正文标题、图注或图片前后的解释中，不放进最终教学图内部；
+- 图片内部只保留必要的短标签、分区名、对象名、箭头说明和局部注释；
+- 生成 prompt 中明确禁止 large standalone title / headline inside the image；
+- 需要说明图的主题时，用正文图注完成，例如“图 X：GPU 内部并行执行结构”，而不是把这句话画进图片顶部；
+- 生成后检查：“去掉图片顶部大标题后，主体内容是否仍然完整表达教学目的？”
+
+## 7. 模式选择
 
 - `handdrawn`：优先用于第一直觉、概念对比、步骤机制；
 - `paper`：优先用于精确机制、论文风总结、检查型图；
