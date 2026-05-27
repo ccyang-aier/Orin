@@ -69,12 +69,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "notes/LLM/大模型精讲系列_01：理解GPU架构及其原理.md",
+                "file": "notes/vLLM/vLLM架构与原理精讲系列/01_推理系统导论.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "大模型精讲系列_01：理解GPU架构及其原理"
+              "title": "01_推理系统导论"
             }
           }
         ],
@@ -135,7 +135,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 389.5
+    "width": 387.5
   },
   "right": {
     "id": "ff6822fa7b405a4a",
@@ -213,13 +213,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "notes/LLM/大模型精讲系列_01：理解GPU架构及其原理.md",
+                "file": "notes/vLLM/vLLM架构与原理精讲系列/01_推理系统导论.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "大模型精讲系列_01：理解GPU架构及其原理 的大纲"
+              "title": "01_推理系统导论 的大纲"
             }
           },
           {
@@ -254,13 +254,22 @@
   },
   "active": "2ca9d2f3714b4f24",
   "lastOpenFiles": [
-    "notes/LLM/大模型精讲系列_04：Transformer架构及原理.md",
-    "notes/LLM/大模型精讲系列_03：深入理解Attention机制.md",
-    "notes/LLM/大模型精讲系列_01：理解GPU架构及其原理.md",
+    "notes/vLLM/vLLM架构与原理精讲系列/02_初识vLLM推理引擎.md",
+    "notes/vLLM/vLLM架构与原理精讲系列/01_推理系统导论.md",
+    "notes/vLLM/01_初识vLLM推理引擎.md",
+    "notes/vLLM/vLLM架构与原理精讲系列/imgs",
+    "notes/vLLM/vLLM架构与原理精讲系列",
+    "notes/vLLM/未命名.md",
+    "notes/vLLM/未命名 1.md",
+    "notes/vLLM/未命名 2.md",
+    "notes/vLLM/未命名 3.md",
     "notes/LLM/大模型精讲系列_06：深入理解分布式推理：DP.md",
+    "notes/LLM/大模型精讲系列_05：深入理解分布式推理：TP.md",
+    "notes/LLM/大模型精讲系列_03：深入理解Attention机制.md",
+    "notes/LLM/大模型精讲系列_04：Transformer架构及原理.md",
+    "notes/LLM/大模型精讲系列_01：理解GPU架构及其原理.md",
     "notes/LLM/大模型精讲系列_09：深入理解分布式推理：CP.md",
     "notes/LLM/大模型精讲系列_07：深入理解分布式推理：PP.md",
-    "notes/LLM/大模型精讲系列_05：深入理解分布式推理：TP.md",
     "notes/LLM/大模型精讲系列_02：大模型基础速通.md",
     "notes/LLM/大模型精讲系列_08：深入理解分布式推理：EP.md",
     "notes/LLM/imgs/cp-parallelism-decision-map-handdrawn-cn-v2.png",
@@ -286,19 +295,11 @@
     "notes/AICoding/codex最佳实践/oh_my_codex架构设计与使用教程.md",
     "notes/AICoding/codex最佳实践/2.在codex使用或开发自己的宠物.md",
     "notes/AICoding/codex最佳实践/1.codex安装与使用.md",
-    "notes/vLLM/未命名 3.md",
-    "notes/vLLM/未命名 2.md",
-    "notes/vLLM/01_初识vLLM推理引擎.md",
     "AGENTS.md",
     "notes/AICoding/vibecoding/taste-skill的详细使用教程.md",
-    "opc/games/ji/未命名.md",
     "opc/games/ji",
     "opc/games",
-    "README.md",
     "opc",
-    "notes/AICoding/iFile/界面原型效果.md",
-    "notes/AICoding/iFile/imgs",
-    "notes/AICoding/iFile",
     "未命名.canvas"
   ]
 }

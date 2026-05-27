@@ -10,7 +10,8 @@ Turn tutorials into durable learning artifacts, not one-off answers. Use English
 ## 1. Non-Negotiable Rules
 
 - When the user explicitly invokes this skill, or the task clearly involves high-quality tutorial writing, revision, expansion, structural rewriting, or image-rich tutorial design, follow this workflow;
-- Every tutorial document handled with this skill must complete direction-setting and produce a teaching brief before drafting, rewriting, or expanding; the user must confirm the brief before document writing continues;
+- Brief confirmation is a hard execution gate: after only the minimal orientation needed to identify the target artifact, series position, and obvious repository constraints, output the teaching brief and stop; do not continue the same turn into evidence gathering, detailed figure design, `imagegen`, drafting, rewriting, expansion, target-document edits, learning-assessment work, or quality-gate execution;
+- Every tutorial document handled with this skill must complete direction-setting and produce a teaching brief before drafting, rewriting, expanding, or generating teaching assets; the user must explicitly confirm or revise the brief before any downstream work continues;
 - The teaching brief must include at least audience, boundaries, depth, visual style, exclusions, content outline, figure plan, and assessment focus;
 - Every tutorial document handled with this skill must use `imagegen` for final teaching figures, and must complete figure planning, generation, review, local saving, and document references before finalization;
 - `imagegen` teaching figures are first-class tutorial assets; mechanisms, flows, structures, comparisons, state changes, and decision paths that can be explained or supported visually should receive high-quality figure planning wherever possible;
@@ -20,12 +21,15 @@ Turn tutorials into durable learning artifacts, not one-off answers. Use English
 ## 2. Workflow
 
 1. Set direction and confirm the brief:
-   - Ask 2-4 high-value questions to lock the target reader, exclusions, article boundaries, depth, narrative angle, figure style, assessment focus, and user authorization for the Multi-Agent Quality Gate;
+   - Before the brief, do only minimal orientation: read the user request, repository instructions, target path, target document header or short excerpt, and series filenames or index if needed; do not perform broad research, source tracing, detailed outline expansion, final figure prompting, image generation, or document edits;
+   - Ask 2-4 high-value questions when answers are necessary to avoid a risky assumption; if the user already provided enough direction, state reasonable assumptions inside the brief instead of blocking;
    - Produce a teaching brief: target reader, exclusions, content boundary, depth standard, central question, distinctive teaching promise, content outline, visually explainable knowledge points, figure density and figure plan, assessment focus, and quality gate execution plan;
-   - The user must confirm the brief before tutorial writing, rewriting, or expansion continues;
+   - End the response by asking the user to confirm or revise the brief, then stop work for that turn;
+   - The user must explicitly confirm the brief before tutorial writing, rewriting, expansion, evidence gathering beyond orientation, detailed figure design, `imagegen`, learning-assessment work, quality-gate execution, or target-document edits continue;
+   - Treat ambiguous replies as not yet confirmed; clarify or update the brief and wait again;
    - Honor the user's exclusions and do not make unrelated subdomains, toolchains, or workflows the article spine.
 
-2. Load context:
+2. After confirmation, load context:
    - Read repository, project, `AGENTS.md`, or equivalent instructions;
    - Open the target document and preserve the user's existing structure unless it clearly harms tutorial quality;
    - If the target document belongs to a series, first inspect the directory structure, index, or filenames; do not read the full series context by default;

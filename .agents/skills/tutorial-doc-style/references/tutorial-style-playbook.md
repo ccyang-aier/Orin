@@ -24,7 +24,7 @@ Target experience:
 
 Treat these as teaching moves, not a fixed outline. Select, merge, reorder, or omit them according to the topic's learning problem, reader background, and publishing environment.
 
-Before writing, rewriting, or expanding, build a teaching brief and continue only after user confirmation:
+Before writing, rewriting, expanding, researching beyond minimal orientation, designing final figures, generating images, editing the target artifact, or running quality gates, build a teaching brief and stop. Continue only after the user explicitly confirms or revises the brief. Minimal orientation before the brief is limited to reading the user request, repository instructions, target path, target document header or short excerpt, and series filenames or index when needed.
 
 - Target reader and prior knowledge;
 - Content boundary, depth standard, and explicit excluded readers, scenarios, or subdomains;
