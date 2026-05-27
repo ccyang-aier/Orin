@@ -1,117 +1,123 @@
 ---
-name: "tutorial-doc-style"
-description: "Write, revise, and iteratively improve source-backed technical tutorial documents, especially Chinese AI/LLM engineering tutorials that need clear narrative structure, rigorous concepts, high-quality educational diagrams, professional learning assessments, explicit sources, and user-feedback-driven style refinement. Use for Markdown notes, knowledge-base articles, repo docs, or long-form tutorials; adapt to the target project's conventions instead of assuming any specific workspace or editor."
+name: tutorial-doc-style
+description: "Write, revise, and iteratively improve source-backed technical tutorials, especially for AI/LLM engineering tutorials, long-term knowledge-base articles, Markdown notes, repository docs, image-rich tutorials, learning assessments, multi-agent quality gates, and user-feedback-driven style refinement."
 ---
 
-# Tutorial Document Style
+# Technical Tutorial Style
 
-Use this skill when a tutorial should become a polished long-term learning artifact rather than a one-off answer.
+Turn tutorials into durable learning artifacts, not one-off answers. Use English by default unless the user or target document requires another language.
 
-## Workflow
+## 1. Non-Negotiable Rules
 
-0. Apply hard gates for substantial tutorials:
-   - Treat this workflow as mandatory, not advisory, when the user invokes this skill or the task clearly matches it;
-   - Before drafting a substantial tutorial, run a brief direction-setting exchange with the user unless the request already specifies audience, topic boundary, desired depth, visual style, and exclusions;
-   - For Chinese AI/LLM tutorial work, plan project-bound tutorial figures before finalizing the prose, and use `imagegen` as the only generation path for final figure assets;
-   - Never use Python/PIL, SVG, HTML/canvas, Mermaid, PlantUML, plotting libraries, scripts, or other deterministic/local rendering to generate, redraw, reconstruct, typeset, annotate, or post-process final tutorial images. These tools may be used only for non-visual file operations such as copying, renaming, path checks, or metadata inspection;
-   - For substantial revisions, run the Multi-Agent Quality Gate before completion whenever sub-agent tools are available and permitted;
-   - If tool policy requires explicit user authorization for sub-agents and the user has not provided it, pause and ask for that authorization instead of silently skipping the gate;
-   - Do not send a final answer while any required figure generation, image-path verification, reviewer integration, assessment review, or Markdown validation gate is unmet.
+- When the user explicitly invokes this skill, or the task clearly involves high-quality tutorial writing, revision, expansion, structural rewriting, or image-rich tutorial design, follow this workflow;
+- Every tutorial document handled with this skill must complete direction-setting and produce a teaching brief before drafting, rewriting, or expanding; the user must confirm the brief before document writing continues;
+- The teaching brief must include at least audience, boundaries, depth, visual style, exclusions, content outline, figure plan, and assessment focus;
+- Every tutorial document handled with this skill must use `imagegen` for final teaching figures, and must complete figure planning, generation, review, local saving, and document references before finalization;
+- `imagegen` teaching figures are first-class tutorial assets; mechanisms, flows, structures, comparisons, state changes, and decision paths that can be explained or supported visually should receive high-quality figure planning wherever possible;
+- Every tutorial document handled with this skill must run the Multi-Agent Quality Gate; if tool policy requires user authorization, request it during the teaching brief stage; if tools are unavailable or authorization is denied, report the blocker explicitly and do not silently skip it;
+- Do not send a final completion response while required image assets, path checks, multi-agent review, learning assessment, or Markdown validation gates remain unmet;
 
-1. Set direction before drafting:
-   - Ask 2-4 concise questions when the tutorial direction is under-specified. Prefer questions that determine audience, scope exclusions, narrative angle, diagram style, and the article's role in a broader learning path;
-   - Explicitly confirm excluded audiences or domains. If the user says the tutorial is not for training engineers, do not center training workflows, optimizer state, backward pass, or training-only frameworks unless they are needed for a brief contrast;
-   - If the document belongs to a series, preserve continuity in terminology, notation, tone, and quality bar while designing the current article's structure from its own teaching goal, conceptual tension, and reader journey;
-   - Produce a short teaching brief before writing substantial content: target reader, excluded scope, central question, distinctive narrative shape, figure plan, and assessment focus.
+## 2. Workflow
+
+1. Set direction and confirm the brief:
+   - Ask 2-4 high-value questions to lock the target reader, exclusions, article boundaries, depth, narrative angle, figure style, assessment focus, and user authorization for the Multi-Agent Quality Gate;
+   - Produce a teaching brief: target reader, exclusions, content boundary, depth standard, central question, distinctive teaching promise, content outline, visually explainable knowledge points, figure density and figure plan, assessment focus, and quality gate execution plan;
+   - The user must confirm the brief before tutorial writing, rewriting, or expansion continues;
+   - Honor the user's exclusions and do not make unrelated subdomains, toolchains, or workflows the article spine.
 
 2. Load context:
-   - Read repository or project instructions when present;
-   - Open the target document and preserve the user's existing structure unless it clearly harms the tutorial;
-   - Open related series documents only to understand continuity, vocabulary, and quality expectations; choose the current chapter architecture from the topic's explanatory needs rather than a default formula;
-   - For substantial work, style complaints, visual modes, or repeat iterations, read `references/tutorial-style-playbook.md`;
-   - For diagram style work, AI/LLM tutorial figures, image-rich tutorials, or any `/tutorial-doc-style <mode>` request, also read `references/visual-style-baselines.md`.
+   - Read repository, project, `AGENTS.md`, or equivalent instructions;
+   - Open the target document and preserve the user's existing structure unless it clearly harms tutorial quality;
+   - If the target document belongs to a series, first inspect the directory structure, index, or filenames; do not read the full series context by default;
+   - For substantial writing, style revisions, repeat iterations, or reader-experience issues, read `references/tutorial-style-playbook.md`;
+   - For figure-heavy work, tutorial figures, named visual modes, or `/tutorial-doc-style <mode>` requests, read `references/visual-style-baselines.md`.
 
-3. Build evidence before writing:
-   - Use web search when the topic depends on external technical facts;
-   - Prefer a balanced source set: papers/arXiv, official docs, GitHub repositories or community docs, and high-quality blogs/tutorials;
-   - Keep official facts, paper claims, community practice, and local interpretation clearly separated;
-   - Verify framework/API capabilities against current official documentation when they may drift.
+3. Build evidence:
+   - Search for sources when the tutorial depends on external technical facts;
+   - Prefer a balanced source set: papers/arXiv, official documentation, GitHub/source documentation, and high-quality community tutorials;
+   - Keep paper claims, official capabilities, community practice, and local interpretation separate;
+   - Verify drift-prone framework/API capabilities against current official sources.
 
-4. Plan the teaching path:
-   - Start with enough context and narrative runway before naming the central problem;
-   - Give a compact definition after the reader has a mental hook;
-   - Move from intuition to mechanism, then to implementation details and decision rules;
-   - Use natural transitions so the tutorial feels like one coherent article, not a sequence of figure captions;
-   - Avoid formulaic series structure. Reuse a chapter sequence only when it is pedagogically justified for the current topic; otherwise vary the opening, mechanism order, examples, figure strategy, and decision framework according to the concept;
-   - Treat central mechanisms as full teaching objects. Do not compress prerequisite reasoning, cost models, constraints, or failure modes into shallow asides;
-   - Keep top-level teaching chapters to 6-7 or fewer, excluding references and learning assessment;
+4. Refine the teaching path:
+   - Use the user-confirmed teaching brief and content outline as the basis for the teaching path;
+   - Do not apply a fixed chapter template, fixed opening pattern, fixed definition order, or fixed figure rhythm to every tutorial;
+   - Choose the narrative form that best fits the current topic, such as conceptual contrast, mechanism breakdown, system lifecycle, failure-mode investigation, decision tree, source-code path, or engineering case;
+   - Select the necessary teaching layers from intuition, mechanism, implementation details, cost model, constraints, failure modes, and decision rules, then reorder them for the current topic;
+   - Treat central mechanisms as full teaching objects and do not compress them into shallow asides;
+   - Avoid formulaic tutorial series structure. Chapter order, examples, figure strategy, and decision framework must serve the current concept;
+   - Keep top-level teaching chapters to 6-7 or fewer, excluding references and `Learning Assessment`;
    - Keep headings short, formal, and durable.
 
-5. Design figures as first-class teaching assets:
-   - Select a visual mode from `references/visual-style-baselines.md`;
-   - For substantial tutorials, create a figure plan with each figure's teaching purpose, chosen visual mode, required labels, and target workspace path before generating final assets;
-   - If the user provides reference images, treat them as the canonical style target. If actual files are available, copy them into `assets/style-baselines/`; if they are only conversation images, encode their reusable visual rules in `references/visual-style-baselines.md`;
-   - All named tutorial visual styles in this skill are `imagegen`-only for final figures. This includes `handdrawn`, `paper`, `dark-system`, and future style modes;
-   - When the user asks for AI-era tutorial diagrams, bitmap tutorial figures, image-rich Markdown tutorials, or any named visual style from this skill, use `imagegen` as the primary generation path for the final visual asset;
-   - Do not replace an `imagegen` request with Python/PIL, SVG, HTML/canvas, Mermaid, PlantUML, plotting libraries, scripts, or other deterministic rendering because of convenience, text-control concerns, or fear of label drift;
-   - Do not use deterministic/local rendering as a post-processing or annotation layer for final tutorial images. If a generated figure has incorrect labels, cramped text, or layout problems, regenerate with a better `imagegen` prompt or split the figure;
-   - If a user explicitly requests source-controlled vector/code-native diagrams, pause and clarify that this is a different deliverable mode outside this skill's final tutorial-image workflow. Do not silently switch the tutorial's figure workflow away from `imagegen`;
-   - If exact formulas, matrix shapes, Chinese labels, or technical coordinates create risk for `imagegen`, solve it by prompt design, reference images, iterative generation, shortening labels, splitting figures, or asking the user to confirm a different visual strategy. Do not silently change the generation medium;
-   - Clip hatching, fills, highlights, and strokes to their true semantic object. Never let a matrix fill spill outside the actual matrix boundary;
-   - Give figures generous internal padding and inter-object spacing. If text is cramped, shorten text, enlarge the canvas, or split the figure;
-   - Review every figure for teaching purpose, factual labels, shape correctness, communication semantics, visual hierarchy, and style fidelity;
-   - Store final project-bound images in the local image/assets folder before referencing them.
+5. Generate and review teaching figures:
+   - Treat teaching figures as first-class tutorial assets; a logically clear, vivid, visually comfortable figure often motivates readers better than long prose;
+   - Plan figures wherever an image can directly explain or support the explanation, while ensuring every figure has a clear teaching job;
+   - Define each figure's teaching purpose, visual mode, required labels, and target path;
+   - Named visual modes include `handdrawn`, `paper`, `dark-paper`, and future modes; final assets always use `imagegen`;
+   - If the user provides reference images, treat them as the highest-priority style target; copy available files into `assets/style-baselines/`, and encode chat-only images as text rules;
+   - If generated figures have wrong labels, cramped text, layout issues, or incorrect structure, fix them with clearer `imagegen` prompts, reference images, shorter labels, split figures, or regeneration;
+   - Review every figure for teaching purpose, factual labels, structural boundaries, semantic highlighting, visual hierarchy, whitespace, style consistency, and reject large visually dominant titles inside the image;
+   - Save final images into the project image/assets folder and reference them correctly from the target document.
 
-6. Write in the target document style:
-   - Use Simplified Chinese unless the user asks otherwise;
-   - Follow the target repository or publishing environment for frontmatter, heading numbering, callouts, and punctuation;
-   - Make the note self-contained outside the current conversation;
-   - Avoid process narration, excessive quotation marks, repetitive caption templates, and unnecessary blank lines around LaTeX;
-   - Use Chinese for reader-helping labels and English for stable professional terms from the target domain, such as framework concepts, operators, APIs, model names, and paper terms.
+6. Write and finalize:
+   - The document must be self-contained outside the current conversation;
+   - Follow the target repository or publishing environment for frontmatter, numbered headings, callouts, punctuation, and citation style;
+   - Use English to reduce reader friction, and preserve stable professional terms such as framework concepts, operators, APIs, model names, and paper terms;
+   - Avoid process narration, chat traces, excessive quotation marks, repetitive caption templates, meaningless blank lines, and decorative horizontal rules.
 
-7. Add learning assessment for substantial tutorials:
-   - Add a fixed final chapter named `学习测评` after references;
-   - Include at least 10 customized questions, mostly single-choice or multiple-choice;
-   - Present all questions first, then answers and explanations;
-   - Use plausible technical distractors. Do not use absurd or unrelated joke options;
-   - Give richer explanations for difficult or trap questions.
+## 3. Learning Assessment
 
-8. Validate:
-   - Verify local image paths exist;
-   - Run `git diff --check -- <target-file>` for edited Markdown files;
-   - Run the skill validator when this skill changes;
-   - Before finalizing, explicitly check that required project-bound image assets exist, every generated figure is referenced from the target document, the Multi-Agent Quality Gate has passed or was blocked by an explicitly reported tool-policy/user-authorization issue, and the assessment has been reviewed.
+Substantial tutorials must add a fixed final chapter named `Learning Assessment` after references.
 
-## Multi-Agent Quality Gate
+- Include at least 10 customized questions;
+- Mostly use single-choice and multiple-choice questions;
+- List all questions first, then answers and explanations;
+- Wrong options must be plausible misconceptions, adjacent strategies, or subtle traps;
+- Do not use absurd, jokey, or unrelated distractors;
+- Give richer explanations for difficult or trap questions.
 
-When sub-agent tools are available and the revision is substantial, run a quality gate after the main draft is ready.
+## 4. Multi-Agent Quality Gate
 
-This gate is required for substantial tutorials. If the current environment exposes sub-agent tools only after discovery, discover them. If sub-agent tools exist but tool policy says they can only be used after an explicit user request, ask the user for authorization and do not silently downgrade to a solo review.
+Every tutorial document handled with this skill must run the quality gate after the main draft is ready. If the current environment requires explicit user authorization for multi-agent tools, request it during the teaching brief stage.
 
 1. Spawn these agents in parallel:
    - Content accuracy reviewer: factual accuracy, source support, terminology, conceptual order;
-   - Reader experience reviewer: clarity, continuity, transitions, depth, and whether the article feels exceptional;
-   - Visual quality reviewer: figure purpose, technical correctness, visual style fidelity, spacing, labels, and anti-patterns;
-   - Assessment author: draft the `学习测评` chapter.
+   - Reader experience reviewer: clarity, continuity, transitions, depth, and whether the article is excellent enough;
+   - Visual quality reviewer: figure purpose, technical correctness, style consistency, spacing, labels, and anti-patterns;
+   - Assessment author: draft the `Learning Assessment` chapter.
 
-2. Ask reviewers to return score out of 100, top risks, concrete suggestions, and pass/fail.
+2. Ask reviewers to return:
+   - Score out of 100;
+   - Top risks;
+   - Concrete revision suggestions;
+   - Pass/fail.
 
-3. After integrating assessment questions, spawn a separate assessment reviewer for correctness, coverage, ambiguity, and difficulty balance.
+3. After integrating assessment questions, spawn an assessment reviewer to check correctness, coverage, ambiguity, and difficulty balance.
 
-4. Treat the tutorial as passing only when content accuracy plus reader experience exceeds 190/200 and the visual reviewer has no blockers.
+4. Passing standard:
+   - Content accuracy + reader experience + visual reviewer must exceed 285/300;
+   - Assessment reviewer must report no correctness blocker.
 
-5. Treat the assessment as passing only when the assessment reviewer gives no correctness blockers.
+## 5. Validation
 
-## Style Refinement Loop
+Before completion, explicitly check:
 
-When the user critiques the output:
+- Final project image assets exist;
+- Every generated figure is referenced from the target document;
+- `git diff --check -- <target-file>` passes;
+- If this skill was modified, run the skill validator;
+- Multi-Agent Quality Gate has passed, or a tool/authorization blocker has been explicitly reported;
+- `Learning Assessment` is complete and has passed assessment review.
+
+## 6. Feedback Capture
+
+When the user criticizes or requests changes:
 
 1. Classify feedback as structure, depth, tone, visual strategy, source standard, format, assessment, or examples;
-2. Apply the feedback to the current artifact first;
-3. If the feedback should become reusable, update `references/tutorial-style-playbook.md` or `references/visual-style-baselines.md`;
-4. Keep this `SKILL.md` concise and put detailed evolving style rules in references.
+2. Fix the current artifact first;
+3. If the feedback is reusable, update `references/tutorial-style-playbook.md` or `references/visual-style-baselines.md`; before updating, explain the purpose and content to the user and request authorization;
+4. Keep this `SKILL.md` concise and place evolving detail rules in references.
 
 ## References
 
-- `references/tutorial-style-playbook.md`: writing structure, reader experience, source standards, assessment standards, and durable user preferences;
-- `references/visual-style-baselines.md`: visual modes, canonical style references, prompt rules, and diagram anti-patterns.
+- `references/tutorial-style-playbook.md`: teaching structure, reader experience, source standards, assessment standards, and durable user preferences;
+- `references/visual-style-baselines.md`: visual modes, reference styles, prompt rules, and figure anti-patterns.

@@ -1,6 +1,6 @@
 # 视觉风格基线
 
-当用户请求 `/tutorial-doc-style-zh handdrawn`、`/tutorial-doc-style-zh paper`、`/tutorial-doc-style-zh dark-paper`，或教程需要高质量教学图时，读取本文件。若历史上下文中出现 `dark-system`，按 `dark-paper` 处理。
+当用户请求 `/tutorial-doc-style-zh handdrawn`、`/tutorial-doc-style-zh paper`、`/tutorial-doc-style-zh dark-paper`，或教程需要高质量教学图时，读取本文件。
 
 本文件只补充视觉风格和 prompt 规则。最终教程图的生成流程以 `SKILL.md` 为准：所有基于本 skill 处理的教程文档，最终教学图必须使用 `imagegen`。
 
