@@ -23,7 +23,7 @@ description: 本文从 vLLM 的定位、早期推理框架演进与 KV Cache 管
 
 vLLM 的关键价值，不只是让模型“能跑”，而是让模型在真实服务场景下更高效地跑。它把模型执行、请求队列、动态批处理、KV Cache 管理、流式返回和服务接口组织到同一个推理系统里。理解这一点之后，再看 PagedAttention，就不会把它误解成“又一个注意力公式优化”，而会看到它背后真正改变的是推理系统的内存管理方式。
 
-## 1 vLLM 是什么
+## 1. vLLM 是什么
 
 vLLM 官方文档将它定位为一个用于 LLM inference and serving 的快速、易用库。这个表述看起来很轻，但里面包含两层含义。
 
@@ -46,7 +46,7 @@ vLLM 官方文档将它定位为一个用于 LLM inference and serving 的快速
 
 接下来会先用 Transformers 和 TGI 说明“服务化”为什么仍然没有完全解决推理系统问题，再把主线收束到 KV Cache 的显存管理，最后进入 PagedAttention。为了避免把机制讲散，可以先记住一个贯穿例子：请求 A 是短 prompt 短输出，请求 B 是长 prompt 长输出，请求 C 与 A 共享相同的 System Prompt。后文的静态 batch、连续 batch、连续预留、block 分配和前缀复用，都可以放回这三个请求中理解。
 
-## 2 LLM 推理的核心挑战
+## 2. LLM 推理的核心挑战
 
 理解 vLLM 之前，仍然需要把 LLM 推理的基本矛盾再压缩回顾一遍。上一篇已经展开过细节，这里只保留对 vLLM 最关键的几条线索。
 
@@ -62,7 +62,7 @@ vLLM 官方文档将它定位为一个用于 LLM inference and serving 的快速
 
 这四点合在一起，就构成了 vLLM 所面对的核心系统问题：**模型权重基本固定，但请求和 KV Cache 状态持续变化；GPU 显存很贵，而推理服务又必须尽量提高并发和吞吐**。
 
-## 3 服务化为什么还不够
+## 3. 服务化为什么还不够
 
 vLLM 的出现不是凭空发生的。为了教学清晰，本文把推理系统能力拆成三层：先解决“能生成”，再解决“能服务”，最后解决“如何高效服务大量动态请求”。这是一条概念分层路线，不是严格的版本时间线。现实中 TGI、vLLM、SGLang 等系统的能力会相互影响并持续重叠，例如当前 TGI 文档也列出了 Continuous Batching、Paged Attention、Streaming、Prometheus 和 OpenTelemetry 等 serving 能力，同时提示 TGI 进入 maintenance mode，并建议新项目优先关注 vLLM、SGLang 等新一代 serving 框架。
 
@@ -116,7 +116,7 @@ PagedAttention 论文的摘要明确指出，高吞吐 LLM serving 需要同时 
 
 这句话基本就是 vLLM 的历史入口：它把“推理吞吐问题”重新表述成“KV Cache 内存管理问题”。
 
-## 4 KV Cache 管理为什么成为瓶颈
+## 4. KV Cache 管理为什么成为瓶颈
 
 KV Cache 的作用很直接：保存历史 token 在每层注意力中的 Key/Value 状态，避免 Decode 时反复计算历史上下文。Hugging Face Transformers 文档也将 KV Cache 描述为自回归生成优化的关键机制，因为每次预测都依赖历史 token，而缓存可以复用这些中间结果。
 
@@ -177,7 +177,7 @@ LLM 在线推理天然是动态的。
 
 这就是矛盾所在：**工作负载越动态，连续大块预留越容易浪费；并发越高，浪费越会直接挤压吞吐**。
 
-## 5 PagedAttention 的核心直觉
+## 5. 引入PagedAttention
 
 PagedAttention 的名字里有 Attention，但它真正想借鉴的是操作系统里的 Paging。
 

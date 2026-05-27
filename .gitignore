@@ -23,3 +23,6 @@ dist/
 notes/howtolearn/
 notes/drafts/
 notes/third_documents/
+
+# External source checkouts
+code/opensource/
