@@ -121,6 +121,7 @@ Text-figure rules:
 - Every figure must have one clear teaching purpose;
 - Figures explaining computation, data flow, state flow, or coordination must show enough structure to make the mechanism checkable;
 - In English tutorials, reader-facing labels should be in English; stable professional terms should match the form readers encounter in papers, code, APIs, model cards, or framework logs;
+- In non-English tutorials, use the target document language for reader-facing labels, notes, and explanations inside generated figures, while preserving standard English terms, phrases, APIs, model names, framework concepts, and identifiers;
 - Avoid all-Chinese figures in English tutorials unless the figure is a screenshot or external source image;
 - When a figure teaches implementation mechanics, make before/after state, ownership, data layout, communication boundaries, and constraints explicit;
 - Collective operations or distributed coordination figures should show the resulting state, not merely name the operation;
@@ -195,7 +196,7 @@ Learning assessment is part of tutorial quality, not filler.
 - AI-era tutorials treat high-quality figures as first-class learning assets;
 - When figures introduce unfamiliar objects, intermediate states, implementation roles, or domain operations, include nearby explanation;
 - Wherever an image can explain or support the explanation, plan an `imagegen` teaching figure where possible, while ensuring every figure has a clear teaching job;
-- Bilingual labels should be intentional: the target language lowers reading cost, while English preserves standard terms readers will see in papers, docs, and code;
+- Mixed-language labels should be intentional: the target language lowers reading cost for explanations and helper notes, while English preserves standard terms readers will see in papers, docs, code, logs, and APIs;
 - Distributed, parallel, and multi-component system tutorials should explain where coordination happens, what state or layout exists after a boundary crossing, and what the cost or reliability implication is;
 - Engineering-facing topics should connect theory to at least one realistic deployment or usage scenario;
 - Reader-experience review must judge narrative continuity, setup, transitions, and whether the article reads like a complete tutorial rather than a collection of figure explanations;

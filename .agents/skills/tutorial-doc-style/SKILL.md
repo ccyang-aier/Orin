@@ -5,7 +5,7 @@ description: "Write, revise, and iteratively improve source-backed technical tut
 
 # Technical Tutorial Style
 
-Turn tutorials into durable learning artifacts, not one-off answers. Use English by default unless the user or target document requires another language.
+Turn tutorials into durable learning artifacts, not one-off answers. Resolve the target language from the user request or target document; default to English only when neither indicates another language. Preserve stable professional English terms in any target language.
 
 ## 1. Non-Negotiable Rules
 
@@ -65,7 +65,7 @@ Turn tutorials into durable learning artifacts, not one-off answers. Use English
 6. Write and finalize:
    - The document must be self-contained outside the current conversation;
    - Follow the target repository or publishing environment for frontmatter, numbered headings, callouts, punctuation, and citation style;
-   - Use English to reduce reader friction, and preserve stable professional terms such as framework concepts, operators, APIs, model names, and paper terms;
+   - Use the target document language for reader-facing prose, captions, and generated-figure helper labels; preserve stable professional English terms such as framework concepts, operators, APIs, model names, paper terms, and standard technical phrases;
    - Avoid process narration, chat traces, excessive quotation marks, repetitive caption templates, meaningless blank lines, and decorative horizontal rules.
 
 ## 3. Learning Assessment

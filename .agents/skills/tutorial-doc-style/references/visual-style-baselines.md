@@ -26,7 +26,7 @@ Visual DNA:
 - Object boundaries, arrows, labels, and small examples should be easy to inspect at reading size;
 - Colors should map to real semantics, not decoration;
 - Prefer short labels and small worked examples, not long paragraphs inside the figure;
-- Reader-facing explanations should be in the target language, while stable English terms keep the form used in professional contexts;
+- Reader-facing explanations, notes, and helper labels should be in the target document language, while standard English technical terms, phrases, and identifiers keep the form used in professional contexts;
 - Leave generous spacing between panels, arrows, labels, and objects.
 
 Hard negatives:
@@ -41,14 +41,14 @@ Default tutorial style:
 
 - When the user does not specify a visual style, prefer `handdrawn`;
 - The figure should be professional, information-rich, and teachable, not childish or casual;
-- Use a teaching-board metaphor: carefully drawn boxes, arrows, timelines, state changes, small examples, and concise bilingual labels when useful;
-- Use the target language for reader-facing helper labels, and preserve stable English terms;
+- Use a teaching-board metaphor: carefully drawn boxes, arrows, timelines, state changes, small examples, and concise target-language helper labels paired with standard English terms when useful;
+- Use the target document language for reader-facing helper labels, notes, and explanations; preserve standard English technical terms, phrases, APIs, model names, and framework identifiers;
 - Each figure should perform one teaching job. If crowded, split it into multiple `imagegen` figures instead of compressing labels.
 
 Prompt skeleton:
 
 ```text
-Refined hand-drawn technical tutorial diagram. Clean warm-white teaching-board background, careful human-authored composition, readable ink-like linework, restrained semantic colors, generous margins, clear arrows and state boundaries. Use short reader-facing labels plus stable English technical terms. Show concrete objects, relationships, state ownership, before/after transitions, or small worked examples according to the teaching goal. Professional, information-rich, accurate, easy to understand, lively but not decorative. No large standalone title inside the image, no dense paragraphs, no tiny text, no cramped labels, no UI dashboard cards, no stickers, no watermark, no highlight or fill outside its semantic object.
+Refined hand-drawn technical tutorial diagram. Clean warm-white teaching-board background, careful human-authored composition, readable ink-like linework, restrained semantic colors, generous margins, clear arrows and state boundaries. Use short reader-facing labels and helper notes in the target document language, while keeping standard English technical terms, phrases, APIs, model names, and framework identifiers in English. Show concrete objects, relationships, state ownership, before/after transitions, or small worked examples according to the teaching goal. Professional, information-rich, accurate, easy to understand, lively but not decorative. No large standalone title inside the image, no dense paragraphs, no tiny text, no cramped labels, no UI dashboard cards, no stickers, no watermark, no highlight or fill outside its semantic object.
 ```
 
 ## 2. `paper`
@@ -61,7 +61,7 @@ Visual DNA:
 - Shapes, labels, formulas, and data-flow/state-flow relationships should be precise enough for technical inspection;
 - Use color only to distinguish semantic categories, boundaries, stages, or comparisons;
 - Keep the composition calm and academic: balanced panels, small legends, short notes, no visual drama;
-- Dense `paper` figures may include formula summaries, shape tables, legends, bilingual notes, or recap strips, but only when they support slow inspection;
+- Dense `paper` figures may include formula summaries, shape tables, legends, target-language notes with standard English terms, or recap strips, but only when they support slow inspection;
 - Every text block inside the figure must have a purpose; move broad explanation to the prose.
 
 Hard negatives:
@@ -74,7 +74,7 @@ Hard negatives:
 Prompt skeleton:
 
 ```text
-Professional paper-style technical tutorial figure. White or near-white background, thin black and gray linework, restrained semantic colors, precise panel layout, clear labels, shape/table snippets only when useful, concise bilingual notes, accurate arrows and boundaries, calm academic composition. Use visual density appropriate to the teaching goal. No large standalone title inside the image, no saturated poster colors, no decorative icons, no glossy cards, no handwritten style, no cramped labels.
+Professional paper-style technical tutorial figure. White or near-white background, thin black and gray linework, restrained semantic colors, precise panel layout, clear labels, shape/table snippets only when useful, concise notes in the target document language with standard English technical terms preserved, accurate arrows and boundaries, calm academic composition. Use visual density appropriate to the teaching goal. No large standalone title inside the image, no saturated poster colors, no decorative icons, no glossy cards, no handwritten style, no cramped labels.
 ```
 
 ## 3. `dark-paper`
@@ -88,7 +88,7 @@ Visual DNA:
 - Use a small set of semantic colors to distinguish paths, stages, boundaries, bottlenecks, risks, or comparison groups;
 - Keep color semantics consistent, e.g. blue for stable path or baseline, green for local compute or successful state, orange for coordination boundary or bottleneck, red only for risk;
 - Compact legends, cost cards, topology strips, or recap strips may appear, but must not compress away prose explanation;
-- English technical terms can be used more freely, with short helper labels in the target language for key teaching points;
+- Standard English technical terms can be used more freely, with short helper labels, notes, and explanations in the target document language for key teaching points;
 - On dark backgrounds, text must remain clear, hierarchy explicit, and whitespace generous.
 
 Hard negatives:
@@ -103,7 +103,7 @@ Hard negatives:
 Prompt skeleton:
 
 ```text
-Dark paper-style technical tutorial figure. Charcoal or near-black background, precise academic linework, restrained semantic colors, clean panel or topology composition, readable labels, concise bilingual notes, accurate arrows and boundaries. Use blue for baseline or stable paths, green for local compute or successful state, orange for coordination boundary or bottleneck, red only for risk. Professional, rigorous, calm, high-contrast, generous spacing. No large standalone title inside the image, no cyberpunk decoration, no neon overload, no random code texture, no dashboard chrome, no tiny labels.
+Dark paper-style technical tutorial figure. Charcoal or near-black background, precise academic linework, restrained semantic colors, clean panel or topology composition, readable labels, concise notes in the target document language with standard English technical terms preserved, accurate arrows and boundaries. Use blue for baseline or stable paths, green for local compute or successful state, orange for coordination boundary or bottleneck, red only for risk. Professional, rigorous, calm, high-contrast, generous spacing. No large standalone title inside the image, no cyberpunk decoration, no neon overload, no random code texture, no dashboard chrome, no tiny labels.
 ```
 
 ## 4. Anti-Pattern A: Unclear Text Or Semantic Highlight Spillover
