@@ -14,6 +14,7 @@ Turn tutorials into durable learning artifacts, not one-off answers. Resolve the
 - Every tutorial document handled with this skill must complete direction-setting and produce a teaching brief before drafting, rewriting, expanding, or generating teaching assets; the user must explicitly confirm or revise the brief before any downstream work continues;
 - The teaching brief must include at least audience, boundaries, depth, visual style, exclusions, content outline, figure plan, and assessment focus;
 - Every tutorial document handled with this skill must use `imagegen` for final teaching figures, and must complete figure planning, generation, review, local saving, and document references before finalization;
+- Teaching-figure creation and correction must rely only on the `imagegen` skill; do not use scripts, drawing tools, image editors, SVG/HTML/canvas reconstruction, raster/vector cleanup, or any other post-generation processing to repair imperfect generated figures;
 - `imagegen` teaching figures are first-class tutorial assets; mechanisms, flows, structures, comparisons, state changes, and decision paths that can be explained or supported visually should receive high-quality figure planning wherever possible;
 - Every tutorial document handled with this skill must run the Multi-Agent Quality Gate; if tool policy requires user authorization, request it during the teaching brief stage; if tools are unavailable or authorization is denied, report the blocker explicitly and do not silently skip it;
 - Do not send a final completion response while required image assets, path checks, multi-agent review, learning assessment, or Markdown validation gates remain unmet;
@@ -58,7 +59,7 @@ Turn tutorials into durable learning artifacts, not one-off answers. Resolve the
    - Define each figure's teaching purpose, visual mode, required labels, and target path;
    - Named visual modes include `handdrawn`, `paper`, `dark-paper`, and future modes; final assets always use `imagegen`;
    - If the user provides reference images, treat them as the highest-priority style target; copy available files into `assets/style-baselines/`, and encode chat-only images as text rules;
-   - If generated figures have wrong labels, cramped text, layout issues, or incorrect structure, fix them with clearer `imagegen` prompts, reference images, shorter labels, split figures, or regeneration;
+   - If generated figures have wrong labels, cramped text, layout issues, or incorrect structure, fix them only with clearer `imagegen` prompts, reference images, shorter labels, split figures, or full regeneration; never repair a generated figure through post-processing or external editing;
    - Review every figure for teaching purpose, factual labels, structural boundaries, semantic highlighting, visual hierarchy, whitespace, style consistency, and reject large visually dominant titles inside the image;
    - Save final images into the project image/assets folder and reference them correctly from the target document.
 

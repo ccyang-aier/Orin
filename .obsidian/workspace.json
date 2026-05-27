@@ -69,12 +69,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "notes/vLLM/vLLM架构与原理精讲系列/01_推理系统导论.md",
+                "file": "notes/LLM/大模型精讲系列_04：Transformer架构及原理.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "01_推理系统导论"
+              "title": "大模型精讲系列_04：Transformer架构及原理"
             }
           }
         ],
@@ -213,13 +213,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "notes/vLLM/vLLM架构与原理精讲系列/01_推理系统导论.md",
+                "file": "notes/LLM/大模型精讲系列_04：Transformer架构及原理.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "01_推理系统导论 的大纲"
+              "title": "大模型精讲系列_04：Transformer架构及原理 的大纲"
             }
           },
           {
@@ -254,8 +254,9 @@
   },
   "active": "2ca9d2f3714b4f24",
   "lastOpenFiles": [
-    "notes/vLLM/vLLM架构与原理精讲系列/02_初识vLLM推理引擎.md",
+    "notes/vLLM/01_初识vLLM推理引擎.md",
     "notes/vLLM/vLLM架构与原理精讲系列/01_推理系统导论.md",
+    "notes/vLLM/vLLM架构与原理精讲系列/02_初识vLLM推理引擎.md",
     "notes/vLLM/vLLM架构与原理精讲系列/imgs/01_inference_engine_roles.png",
     "notes/vLLM/vLLM架构与原理精讲系列/imgs/01_scheduling_batching.png",
     "notes/vLLM/vLLM架构与原理精讲系列/imgs/01_bottleneck_shifts.png",
@@ -264,7 +265,6 @@
     "notes/vLLM/vLLM架构与原理精讲系列/imgs/01_prefill_decode_timeline.png",
     "notes/vLLM/vLLM架构与原理精讲系列/imgs/01_training_vs_inference.png",
     "notes/vLLM/vLLM架构与原理精讲系列/imgs/01_inference_request_flow.png",
-    "notes/vLLM/01_初识vLLM推理引擎.md",
     "notes/vLLM/vLLM架构与原理精讲系列/imgs",
     "notes/vLLM/vLLM架构与原理精讲系列",
     "notes/vLLM/未命名.md",

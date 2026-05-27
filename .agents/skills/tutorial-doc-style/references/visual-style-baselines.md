@@ -4,6 +4,8 @@ Read this file when the user requests `/tutorial-doc-style handdrawn`, `/tutoria
 
 This file only supplements visual style and prompt rules. The final figure generation workflow is defined in `SKILL.md`: every tutorial document handled with this skill must use `imagegen` for final teaching figures.
 
+Mandatory generation boundary: create, revise, and correct teaching figures only through the `imagegen` skill. Do not generate a rough or imperfect figure and then repair it with scripts, drawing tools, image editors, SVG/HTML/canvas reconstruction, raster or vector cleanup, compositing, relabeling, cropping-as-repair, or any other post-generation processing. If a figure fails visual, text, layout, or factual review, improve the `imagegen` prompt, simplify labels, split the figure, add or refine reference images, or regenerate the figure from scratch.
+
 The current baselines include three positive styles and three anti-patterns:
 
 1. `handdrawn`: refined hand-drawn teaching board;
