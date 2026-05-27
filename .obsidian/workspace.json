@@ -69,12 +69,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "notes/LLM/大模型精讲系列_04：Transformer架构及原理.md",
+                "file": "notes/vLLM/vLLM架构与原理精讲系列/02_初识vLLM推理引擎.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "大模型精讲系列_04：Transformer架构及原理"
+              "title": "02_初识vLLM推理引擎"
             }
           }
         ],
@@ -213,13 +213,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "notes/LLM/大模型精讲系列_04：Transformer架构及原理.md",
+                "file": "notes/vLLM/vLLM架构与原理精讲系列/02_初识vLLM推理引擎.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "大模型精讲系列_04：Transformer架构及原理 的大纲"
+              "title": "02_初识vLLM推理引擎 的大纲"
             }
           },
           {
@@ -254,17 +254,20 @@
   },
   "active": "2ca9d2f3714b4f24",
   "lastOpenFiles": [
-    "notes/vLLM/01_初识vLLM推理引擎.md",
     "notes/vLLM/vLLM架构与原理精讲系列/01_推理系统导论.md",
     "notes/vLLM/vLLM架构与原理精讲系列/02_初识vLLM推理引擎.md",
-    "notes/vLLM/vLLM架构与原理精讲系列/imgs/01_inference_engine_roles.png",
-    "notes/vLLM/vLLM架构与原理精讲系列/imgs/01_scheduling_batching.png",
-    "notes/vLLM/vLLM架构与原理精讲系列/imgs/01_bottleneck_shifts.png",
-    "notes/vLLM/vLLM架构与原理精讲系列/imgs/01_metrics_map.png",
-    "notes/vLLM/vLLM架构与原理精讲系列/imgs/01_kv_cache_growth.png",
-    "notes/vLLM/vLLM架构与原理精讲系列/imgs/01_prefill_decode_timeline.png",
-    "notes/vLLM/vLLM架构与原理精讲系列/imgs/01_training_vs_inference.png",
-    "notes/vLLM/vLLM架构与原理精讲系列/imgs/01_inference_request_flow.png",
+    "notes/LLM/大模型精讲系列_04：Transformer架构及原理.md",
+    "notes/vLLM/vLLM架构与原理精讲系列/imgs/02_vllm_value_summary.png",
+    "notes/vLLM/vLLM架构与原理精讲系列/imgs/02_os_paging_analogy.png",
+    "notes/vLLM/vLLM架构与原理精讲系列/imgs/02_on_demand_block_allocation.png",
+    "notes/vLLM/vLLM架构与原理精讲系列/imgs/02_paged_attention_blocks.png",
+    "notes/vLLM/vLLM架构与原理精讲系列/imgs/02_contiguous_kv_waste.png",
+    "notes/vLLM/vLLM架构与原理精讲系列/imgs/02_kv_cache_memory_pressure.png",
+    "notes/vLLM/vLLM架构与原理精讲系列/imgs/02_static_vs_continuous_batching.png",
+    "notes/vLLM/vLLM架构与原理精讲系列/imgs/02_framework_evolution.png",
+    "notes/vLLM/vLLM架构与原理精讲系列/imgs/02_inference_challenges_recap.png",
+    "notes/vLLM/vLLM架构与原理精讲系列/imgs/02_vllm_is_engine.png",
+    "notes/vLLM/01_初识vLLM推理引擎.md",
     "notes/vLLM/vLLM架构与原理精讲系列/imgs",
     "notes/vLLM/vLLM架构与原理精讲系列",
     "notes/vLLM/未命名.md",
@@ -274,14 +277,11 @@
     "notes/LLM/大模型精讲系列_06：深入理解分布式推理：DP.md",
     "notes/LLM/大模型精讲系列_05：深入理解分布式推理：TP.md",
     "notes/LLM/大模型精讲系列_03：深入理解Attention机制.md",
-    "notes/LLM/大模型精讲系列_04：Transformer架构及原理.md",
     "notes/LLM/大模型精讲系列_01：理解GPU架构及其原理.md",
     "notes/LLM/大模型精讲系列_09：深入理解分布式推理：CP.md",
     "notes/LLM/大模型精讲系列_07：深入理解分布式推理：PP.md",
     "notes/LLM/大模型精讲系列_02：大模型基础速通.md",
     "notes/LLM/大模型精讲系列_08：深入理解分布式推理：EP.md",
-    "notes/LLM/imgs/cp-parallelism-decision-map-handdrawn-cn-v2.png",
-    "notes/LLM/imgs/pp-decision-map-cn-v2.png",
     "notes/LLM/01_从CNN、RNN到Attention.md",
     "notes/LLM/大纲.md",
     "tmp/overlay_dp_figures.py",
