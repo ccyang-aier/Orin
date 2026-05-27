@@ -10,9 +10,6 @@ tags:
 updated: 2026-05-27
 description: 从大模型计算需求出发，解释 GPU 架构、CUDA 执行模型、NVIDIA 软件生态、NPU/AI 加速器生态，以及可验证的安装与基本使用路径。
 ---
-
-# 大模型精讲系列 00：理解 GPU 架构及其原理
-
 > [!Quote] 本篇导读
 > 大模型不是只被算法推动，也被硬件推动。Transformer 之所以能在今天的规模上训练和推理，离不开 GPU 把海量矩阵计算铺成并行任务的能力。理解 GPU，不需要一开始就写 CUDA kernel，但必须先明白三件事：GPU 为什么适合 LLM，CUDA 如何把计算组织成 Grid、Block、Warp，NVIDIA 与 NPU 生态分别把“硬件能力”包装成了怎样的软件路径。
 

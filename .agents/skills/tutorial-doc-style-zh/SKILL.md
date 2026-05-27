@@ -1,0 +1,120 @@
+---
+name: tutorial-doc-style-zh
+description: "撰写、修订并迭代优化有来源支撑的中文技术教程，尤其适用于 AI/LLM 工程教程、长期知识库文章、Markdown 笔记、仓库文档、图文密集教程、学习测评、多代理质量门控和用户反馈驱动的风格沉淀。"
+---
+
+# 中文技术教程风格
+
+将教程写成可长期复用的学习资产，而不是一次性回答。默认使用简体中文，除非用户或目标文档另有要求。
+
+## 1. 不可降级的硬规则
+
+- 用户显式调用本 skill，或任务明显属于高质量技术教程写作、修订、扩写、结构重编、图文教程设计时，必须执行本工作流；
+- substantial tutorials 在正式起草前必须完成方向确认；若用户已明确受众、边界、深度、视觉风格和排除范围，可直接形成 teaching brief；
+- 中文 AI/LLM 教程的最终教学图必须使用 `imagegen` 生成，并在定稿前完成图像规划、生成、审查、落盘和引用；
+- 不得使用 Python/PIL、SVG、HTML/canvas、Mermaid、PlantUML、绘图库、脚本或其他确定性/本地渲染方式生成、重绘、重构、排版、标注或后处理最终教程图片；
+- Python/PIL、SVG、HTML/canvas、Mermaid、PlantUML、绘图库、脚本等工具只可用于非视觉内容操作，例如复制、重命名、路径检查、尺寸检查、元数据检查；
+- substantial tutorials / substantial revisions 必须执行 Multi-Agent Quality Gate；若工具不可用或策略要求用户授权，必须明确报告阻塞，不得静默跳过；
+- 不得在图像资产、路径校验、多代理评审、学习测评、Markdown 校验等必要门控未完成时给出最终完成答复；
+- 原有量化指标不得弱化：顶层教学章节 6-7 个以内，学习测评至少 10 题，content accuracy + reader experience 必须超过 190/200，visual reviewer 无 blocker，assessment reviewer 无 correctness blocker。
+
+## 2. 工作流
+
+1. 明确教学方向：
+   - 问 2-4 个高价值问题，锁定目标读者、排除范围、文章边界、叙事角度、图表风格和学习测评重点；
+   - 输出简短 teaching brief：目标读者、排除范围、中心问题、文章独特教学承诺、图表计划、测评重点；
+   - 尊重用户给出的排除范围，不把无关子领域、工具链或工作流作为文章主线。
+
+2. 加载上下文：
+   - 阅读仓库、项目、AGENTS.md 或同类说明；
+   - 打开目标文档，保留用户已有结构，除非它明显损害教程质量；
+   - 系列文档只用于继承术语、语气、符号和质量标准，不机械复用章节模板；
+   - 实质性写作、风格修订、重复迭代或学习体验问题，读取 `references/tutorial-style-playbook.md`；
+   - 图表密集、AI/LLM 教程图、命名视觉模式或 `/tutorial-doc-style-zh <mode>` 请求，读取 `references/visual-style-baselines.md`。
+
+3. 建立证据：
+   - 涉及外部技术事实时必须检索来源；
+   - 优先组合论文/arXiv、官方文档、GitHub/源码文档、高质量社区教程；
+   - 区分论文主张、官方能力、社区实践和本地解释；
+   - 对可能漂移的框架/API 能力，使用当前官方资料核验。
+
+4. 设计教学路径：
+   - 先建立问题语境，再给定义；
+   - 从直觉进入机制，再进入实现细节、代价模型、约束、故障模式和决策规则；
+   - 中心机制必须作为完整教学对象展开，不压缩成浅层旁白；
+   - 避免系列文章公式化。章节顺序、示例、图表策略和决策框架必须服务当前概念；
+   - 顶层教学章节控制在 6-7 个以内，不含参考资料与 `学习测评`；
+   - 标题短、正式、可长期导航。
+
+5. 生成并审查教学图：
+   - 为每张图明确教学目的、视觉模式、必要标签和目标路径；
+   - 命名视觉模式包括 `handdrawn`、`paper`、`dark-system` 以及未来加入的模式，最终资产一律通过 `imagegen` 生成；
+   - 若用户提供参考图，以参考图为最高优先级风格目标；可落盘的参考图复制到 `assets/style-baselines/`，不可落盘的会话图像则沉淀为文字规则；
+   - 若生成图出现标签错误、文字拥挤、布局问题或结构不准，使用更清晰的 `imagegen` prompt、参考图、短标签、拆图或重新生成解决，不得改用本地确定性渲染；
+   - 审查每张图的教学目的、事实标签、结构边界、语义高亮、视觉层级、留白和风格一致性；
+   - 最终图片必须保存到项目内图片/资产目录，并从目标文档正确引用。
+
+6. 写作与定稿：
+   - 文档必须脱离当前对话也能自洽阅读；
+   - 遵循目标仓库或发布环境的 frontmatter、编号标题、callout、标点和引用习惯；
+   - 使用中文降低理解成本，保留稳定英文专业术语，如框架概念、算子、API、模型名、论文术语；
+   - 避免过程叙事、聊天痕迹、过度引号、重复图注模板、无意义空行和装饰性分割线。
+
+## 3. 学习测评
+
+实质性教程必须在参考资料之后添加固定最终章节 `学习测评`。
+
+- 至少 10 道定制题；
+- 以单选题和多选题为主；
+- 先集中列出所有题目，再给答案与解析；
+- 错误选项必须是可信误区、相邻策略或细微陷阱；
+- 不使用荒谬、玩笑式或无关干扰项；
+- 难题和陷阱题给出更充分解释。
+
+## 4. Multi-Agent Quality Gate
+
+substantial tutorials / substantial revisions 在主稿完成后必须运行质量门。
+
+1. 并行启动：
+   - Content accuracy reviewer：事实准确性、来源支撑、术语、概念顺序；
+   - Reader experience reviewer：清晰度、连续性、转场、深度、文章是否足够优秀；
+   - Visual quality reviewer：图表目的、技术正确性、风格一致性、间距、标签、反模式；
+   - Assessment author：起草 `学习测评` 章节。
+
+2. 要求评审返回：
+   - 100 分制评分；
+   - top risks；
+   - 具体修改建议；
+   - pass/fail。
+
+3. 整合测评题后，再启动 assessment reviewer，检查正确性、覆盖度、歧义和难度平衡。
+
+4. 通过标准：
+   - content accuracy + reader experience 超过 190/200；
+   - visual reviewer 无 blocker；
+   - assessment reviewer 无 correctness blocker。
+
+## 5. 验证
+
+完成前必须显式检查：
+
+- 项目内最终图片资产存在；
+- 每张生成图都已被目标文档引用；
+- `git diff --check -- <target-file>` 通过；
+- 若本 skill 被修改，运行 skill validator；
+- Multi-Agent Quality Gate 已通过，或因工具/授权问题被明确报告阻塞；
+- `学习测评` 已完成并通过测评审查。
+
+## 6. 反馈沉淀
+
+当用户批评或要求调整输出时：
+
+1. 将反馈分类为结构、深度、语气、视觉策略、来源标准、格式、测评或示例；
+2. 先修正当前 artifact；
+3. 若反馈具有复用价值，更新 `references/tutorial-style-playbook.md` 或 `references/visual-style-baselines.md`；
+4. 保持本 `SKILL.md` 简洁，把演化中的细节规则放入 references。
+
+## References
+
+- `references/tutorial-style-playbook.md`：教学结构、读者体验、来源标准、测评标准和长期用户偏好；
+- `references/visual-style-baselines.md`：视觉模式、参考风格、prompt 规则和图表反模式。

@@ -1,0 +1,7 @@
+interface:
+  display_name: "Tutorial Doc Style ZH"
+  short_description: "中文技术教程写作、图表生成、学习测评与质量门控规范。"
+  default_prompt: "Use $tutorial-doc-style-zh to draft or revise a source-backed Chinese technical tutorial."
+
+policy:
+  allow_implicit_invocation: true
