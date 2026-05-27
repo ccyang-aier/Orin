@@ -252,8 +252,10 @@
       "bases:新建数据库": false
     }
   },
-  "active": "355c39dd8741f2da",
+  "active": "2ca9d2f3714b4f24",
   "lastOpenFiles": [
+    "notes/vLLM/vLLM架构与原理精讲系列/02_初识vLLM推理引擎.md",
+    "notes/vLLM/vLLM架构与原理精讲系列/01_推理系统导论.md",
     "notes/vLLM/vLLM架构与原理精讲系列/imgs/01_inference_engine_roles.png",
     "notes/vLLM/vLLM架构与原理精讲系列/imgs/01_scheduling_batching.png",
     "notes/vLLM/vLLM架构与原理精讲系列/imgs/01_bottleneck_shifts.png",
@@ -262,8 +264,6 @@
     "notes/vLLM/vLLM架构与原理精讲系列/imgs/01_prefill_decode_timeline.png",
     "notes/vLLM/vLLM架构与原理精讲系列/imgs/01_training_vs_inference.png",
     "notes/vLLM/vLLM架构与原理精讲系列/imgs/01_inference_request_flow.png",
-    "notes/vLLM/vLLM架构与原理精讲系列/02_初识vLLM推理引擎.md",
-    "notes/vLLM/vLLM架构与原理精讲系列/01_推理系统导论.md",
     "notes/vLLM/01_初识vLLM推理引擎.md",
     "notes/vLLM/vLLM架构与原理精讲系列/imgs",
     "notes/vLLM/vLLM架构与原理精讲系列",
@@ -282,7 +282,6 @@
     "notes/LLM/大模型精讲系列_08：深入理解分布式推理：EP.md",
     "notes/LLM/imgs/cp-parallelism-decision-map-handdrawn-cn-v2.png",
     "notes/LLM/imgs/pp-decision-map-cn-v2.png",
-    "notes/LLM/imgs/pp-inference-prefill-decode-cn-v2.png",
     "notes/LLM/01_从CNN、RNN到Attention.md",
     "notes/LLM/大纲.md",
     "tmp/overlay_dp_figures.py",
