@@ -198,8 +198,8 @@
   "active": "c7bf82e12c53caaf",
   "lastOpenFiles": [
     "notes/vLLM/vLLM架构与原理精讲系列/03_vLLM引擎架构总览.md",
-    "notes/vLLM/vLLM架构与原理精讲系列/02_初识vLLM推理引擎.md",
     "notes/vLLM/vLLM架构与原理精讲系列/04_深入KVCacheManager.md",
+    "notes/vLLM/vLLM架构与原理精讲系列/02_初识vLLM推理引擎.md",
     "notes/vLLM/vLLM架构与原理精讲系列/05_Scheduler.md",
     "notes/vLLM/vLLM架构与原理精讲系列/imgs/04_prefix_cache_lru.png",
     "notes/vLLM/vLLM架构与原理精讲系列/imgs/04_warmup_capacity.png",
