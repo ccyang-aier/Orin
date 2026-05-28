@@ -4,21 +4,21 @@
     "type": "split",
     "children": [
       {
-        "id": "eda24c4b84bb5279",
+        "id": "894eae3fad6a36cd",
         "type": "tabs",
         "children": [
           {
-            "id": "416caa18d6b34ef4",
+            "id": "c7bf82e12c53caaf",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "notes/LLM/大模型与推理全栈精讲系列/01_理解GPU架构及其原理.md",
+                "file": "notes/vLLM/vLLM架构与原理精讲系列/04_深入KVCacheManager.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "01_理解GPU架构及其原理"
+              "title": "04_深入KVCacheManager"
             }
           }
         ]
@@ -156,13 +156,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "notes/LLM/大模型与推理全栈精讲系列/01_理解GPU架构及其原理.md",
+                "file": "notes/vLLM/vLLM架构与原理精讲系列/04_深入KVCacheManager.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "01_理解GPU架构及其原理 的大纲"
+              "title": "04_深入KVCacheManager 的大纲"
             }
           },
           {
@@ -195,22 +195,25 @@
       "bases:新建数据库": false
     }
   },
-  "active": "416caa18d6b34ef4",
+  "active": "c7bf82e12c53caaf",
   "lastOpenFiles": [
-    "notes/LLM/大模型与推理全栈精讲系列/02_大模型基础速通.md",
-    "notes/LLM/大模型与推理全栈精讲系列/01_理解GPU架构及其原理.md",
-    "notes/LLM/大模型与推理全栈精讲系列/imgs/gpu-cpu-design-philosophy-handdrawn-cn-v3.png",
-    "notes/LLM/大模型与推理全栈精讲系列/imgs/gpu-bottleneck-diagnosis-prefill-decode-handdrawn-cn-v3.png",
-    "notes/LLM/大模型与推理全栈精讲系列/imgs/gpu-sm-warp-tensorcore-handdrawn-cn-v2.png",
-    "notes/LLM/大模型与推理全栈精讲系列/imgs/gpu-memory-hierarchy-yxw-handdrawn-cn-v2.png",
-    "notes/LLM/大模型与推理全栈精讲系列/imgs/gpu-yxw-tile-running-example-handdrawn-cn-v2.png",
-    "notes/LLM/大模型与推理全栈精讲系列/imgs/gpu-sm-warp-tensorcore-handdrawn-cn.png",
-    "notes/LLM/大模型与推理全栈精讲系列/imgs/gpu-memory-hierarchy-yxw-handdrawn-cn.png",
-    "notes/LLM/大模型与推理全栈精讲系列/imgs/gpu-cuda-execution-mapping-handdrawn-cn-v2.png",
-    "notes/LLM/大模型与推理全栈精讲系列/imgs/gpu-yxw-tile-running-example-handdrawn-cn.png",
-    "notes/LLM/大模型与推理全栈精讲系列/imgs/gpu-cpu-design-philosophy-handdrawn-cn-v2.png",
-    "notes/LLM/大模型与推理全栈精讲系列/01_从CNN、RNN到Attention（废弃）.md",
     "notes/vLLM/vLLM架构与原理精讲系列/03_vLLM引擎架构总览.md",
+    "notes/vLLM/vLLM架构与原理精讲系列/02_初识vLLM推理引擎.md",
+    "notes/vLLM/vLLM架构与原理精讲系列/04_深入KVCacheManager.md",
+    "notes/vLLM/vLLM架构与原理精讲系列/05_Scheduler.md",
+    "notes/vLLM/vLLM架构与原理精讲系列/imgs/04_prefix_cache_lru.png",
+    "notes/vLLM/vLLM架构与原理精讲系列/imgs/04_warmup_capacity.png",
+    "notes/vLLM/vLLM架构与原理精讲系列/imgs/04_write_read_maps.png",
+    "notes/vLLM/vLLM架构与原理精讲系列/imgs/04_address_translation.png",
+    "notes/vLLM/vLLM架构与原理精讲系列/imgs/04_scheduler_admission.png",
+    "notes/vLLM/vLLM架构与原理精讲系列/imgs/04_request_lifecycle.png",
+    "notes/vLLM/vLLM架构与原理精讲系列/imgs/04_manager_layers.png",
+    "notes/vLLM/vLLM架构与原理精讲系列/imgs/04_block_model.png",
+    "notes/vLLM/vLLM架构与原理精讲系列/imgs/04_state_hub.png",
+    "notes/LLM/大模型与推理全栈精讲系列/01_理解GPU架构及其原理.md",
+    "notes/LLM/大模型与推理全栈精讲系列/02_大模型基础速通.md",
+    "notes/LLM/大模型与推理全栈精讲系列/imgs/gpu-cpu-design-philosophy-handdrawn-cn-v3.png",
+    "notes/LLM/大模型与推理全栈精讲系列/01_从CNN、RNN到Attention（废弃）.md",
     "notes/LLM/大模型与推理全栈精讲系列/04_Transformer架构及原理.md",
     "notes/LLM/大模型与推理全栈精讲系列/09_深入理解分布式推理：CP.md",
     "notes/AICoding/codex最佳实践/oh_my_codex架构设计与使用教程.md",
@@ -225,15 +228,12 @@
     "notes/LLM/大模型与推理全栈精讲系列/未命名.md",
     "notes/LLM/大模型精讲系列_01：理解GPU架构及其原理.md",
     "notes/LLM/大模型与推理全栈精讲系列",
-    "notes/vLLM/vLLM架构与原理精讲系列/02_初识vLLM推理引擎.md",
     "notes/vLLM/vLLM架构与原理精讲系列/01_推理系统导论.md",
     "notes/maas/aibrix架构与实现/00.架构初探及教程大纲规划.md",
     "notes/AICoding/codex最佳实践/3.如何用codex设计精美且炫酷的UI.md",
     "notes/maas/未命名.md",
     "notes/maas/易用性设计2.0.md",
     "notes/maas/易用性设计.md",
-    "notes/maas/未命名 9.md",
-    "notes/maas/未命名 8.md",
     "notes/maas/aibrix架构与实现",
     "code/opensource/aibrix/test/regression/v0.4.0/templates/_helpers.tpl",
     "code/opensource/aibrix/test/regression/v0.4.0/templates/vllm-non-disaggregated.yaml",
