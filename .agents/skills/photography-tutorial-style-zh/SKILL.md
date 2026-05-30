@@ -1,6 +1,6 @@
 ---
 name: photography-tutorial-style-zh
-description: Use when writing, revising, or polishing high-value Chinese photography tutorials, photography knowledge-base notes, image-based lessons, shooting practice guides, photo critique articles, composition/light/color/exposure/depth-of-field tutorials, and photography learning paths that rely on real photographs, visual judgment, shooting decisions, and practice review.
+description: Use when writing, revising, or polishing high-value Chinese photography tutorials, source-grounded photography knowledge-base notes, image-based lessons, shooting practice guides, photo critique articles, composition/light/color/exposure/depth-of-field tutorials, and photography learning paths that rely on visual judgment, shooting decisions, image assets, and practice review.
 ---
 
 # 中文摄影精品教程风格
@@ -10,14 +10,16 @@ description: Use when writing, revising, or polishing high-value Chinese photogr
 ## 1. 核心原则
 
 - 摄影教程从画面问题进入，而不是从抽象定义进入；
-- 真实样张、作品案例、拍摄场景、参数和前后对比优先；`imagegen` 只用于辅助示意，不冒充真实摄影作品或证据；
+- 先建立必要证据和外部资料上下文，再给出器材、技术、风格、后期流程或摄影史判断；
+- 真实样张、作品案例、拍摄场景、参数和前后对比优先；用户没有提供必要教学图片时，可以用 `imagegen` 生成拟真教学样张、器材图、不同场景拍摄效果、拍摄案例模拟和对比图；
+- 任何图片类操作默认使用 `imagegen`，包括生图、图片编辑、基于用户图片的改图、拟真模拟、示意图和前后对比图；
 - 每个重要概念都要落到可观察画面线索、拍摄选择和复盘方法；
 - 审美判断必须具体：说明光线、主体、背景、色彩、构图、距离、时机、层次、情绪如何成立；
 - 参数解释必须连接画面效果：光圈、快门、ISO、焦距、白平衡、测光、对焦和后期调整都不能脱离画面；
 - 教程要给读者可执行练习：拍什么、怎么拍、比较什么、如何复盘；
 - 不把摄影教程写成工程教程，不默认套用论文、API、源码、成本模型、复杂质量门或技术测评流程。
 
-## 2. 轻量工作流
+## 2. 工作流
 
 1. 先判断任务形态：
    - 新写长教程、系列文章或精品课：先给一个短 teaching brief，包含目标读者、核心画面问题、样张需求、文章路径和练习目标；
@@ -29,12 +31,19 @@ description: Use when writing, revising, or polishing high-value Chinese photogr
    - 再解释背后的摄影选择，例如站位、焦距、光线方向、曝光取舍、构图边界、色彩控制、后期节奏；
    - 最后给出练习和复盘标准，让读者能在下一次拍摄中验证。
 
-3. 处理图像资产：
-   - 如果用户提供真实照片，优先围绕这些照片做观察、标注说明、对比分析和练习设计；
-   - 如果没有真实照片，可以写教程结构和样张需求清单，但不要虚构具体作品细节；
-   - 使用 `imagegen` 时，只生成光线方向、构图骨架、景深关系、拍摄站位、色彩关系等示意图，并明确其教学目的。
+3. 建立证据和外部资料上下文：
+   - 涉及器材能力、镜头特性、软件功能、后期流程、摄影史、摄影师作品或风格流派时，先查找可靠资料；
+   - 优先使用摄影书籍、摄影师访谈、作品集/展览资料、厂商官方手册、软件官方文档、权威教学资料、可信评测和真实拍摄测试；
+   - 对相机、镜头、手机影像、后期软件、AI 修图能力等可能变化的内容，使用当前官方资料或近期可靠来源核验；
+   - 写作时区分事实、画面观察、合理推测和个人审美判断，不把推测写成事实。
 
-4. 写作与修订：
+4. 处理图像资产：
+   - 如果用户提供真实照片，优先围绕这些照片做观察、标注说明、对比分析和练习设计；对用户提供图片的二次加工默认使用 `imagegen`，不要用脚本或其他图像工具替代；
+   - 如果没有真实照片，根据教学目标主动规划 `imagegen` 资产，例如真实相机器材、不同光线/焦段/景深/快门效果的拟真场景、拍摄案例模拟、前后对比图和构图/站位示意；
+   - `imagegen` 生成的拟真样张可以作为教学案例使用，但必须标注为模拟教学图，不声称是真实拍摄作品、真实 EXIF、真实摄影师作品或真实现场记录；
+   - 所有图片生成、编辑、局部修改、风格尝试、前后对比和示意图默认走 `imagegen`。
+
+5. 写作与修订：
    - 实质性摄影写作、作品分析或练习设计时，读取 `references/photography-playbook.md`；
    - 涉及样张、作品引用、前后对比或示意图时，读取 `references/visual-assets.md`；
    - 保持文章自洽，避免“如图所示”但没有附近解释，也避免只有感受没有观察依据。
@@ -56,14 +65,15 @@ description: Use when writing, revising, or polishing high-value Chinese photogr
 完成前做一次轻量摄影自检：
 
 - 是否有清晰的画面问题或创作目标；
+- 是否为事实性、时效性或作品相关判断建立了可靠外部资料上下文；
 - 是否把抽象审美词翻译成可观察线索；
 - 是否把参数、器材或后期步骤连接到画面效果；
-- 是否优先使用真实样张或明确说明样张需求；
-- 是否把生成图限制为辅助示意；
+- 是否优先使用真实样张；若缺少真实样张，是否合理规划或使用 `imagegen` 拟真教学图；
+- 是否把 `imagegen` 资产清楚标注为模拟、示意或生成案例；
 - 是否提供可执行、可比较、可复盘的练习；
 - 是否避免空泛夸赞、器材崇拜、参数堆砌和无依据作品评价。
 
 ## References
 
-- `references/photography-playbook.md`：摄影教程结构、作品分析、技术解释、练习设计和常见误区；
-- `references/visual-assets.md`：真实样张、作品案例、前后对比、示意图和引用边界。
+- `references/photography-playbook.md`：摄影教程结构、外部资料、作品分析、技术解释、练习设计和常见误区；
+- `references/visual-assets.md`：真实样张、作品案例、`imagegen` 拟真教学图、前后对比、图片编辑和引用边界。
