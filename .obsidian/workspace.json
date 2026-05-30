@@ -210,8 +210,9 @@
       "bases:新建数据库": false
     }
   },
-  "active": "075a0288115e18eb",
+  "active": "355c39dd8741f2da",
   "lastOpenFiles": [
+    "notes/未命名",
     "notes/LLM/大模型与推理全栈精讲系列/01_理解GPU架构及其原理.md",
     "notes/LLM/大模型与推理全栈精讲系列/01_从CNN、RNN到Attention（废弃）.md",
     "AGENTS.md",
@@ -249,7 +250,6 @@
     "notes/LLM/大模型与推理全栈精讲系列",
     "notes/maas/aibrix架构与实现/00.架构初探及教程大纲规划.md",
     "notes/AICoding/codex最佳实践/3.如何用codex设计精美且炫酷的UI.md",
-    "notes/maas/未命名.md",
     "notes/maas/aibrix架构与实现",
     "code/opensource/aibrix/test/regression/v0.4.0/templates/_helpers.tpl",
     "code/opensource/aibrix/test/regression/v0.4.0/templates/vllm-non-disaggregated.yaml",
