@@ -27,12 +27,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "notes/LLM/大模型与推理全栈精讲系列/未命名.md",
+                "file": "notes/从0开始学摄影/0 课程总纲.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "未命名"
+              "title": "0 课程总纲"
             }
           }
         ],
@@ -171,13 +171,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "notes/LLM/大模型与推理全栈精讲系列/未命名.md",
+                "file": "notes/从0开始学摄影/0 课程总纲.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "未命名 的大纲"
+              "title": "0 课程总纲 的大纲"
             }
           },
           {
@@ -212,6 +212,8 @@
   },
   "active": "075a0288115e18eb",
   "lastOpenFiles": [
+    "notes/LLM/大模型与推理全栈精讲系列/未命名.md",
+    "notes/从0开始学摄影/0 课程总纲.md",
     "notes/从0开始学摄影",
     "notes/LLM/大模型与推理全栈精讲系列/01_理解GPU架构及其原理.md",
     "notes/LLM/大模型与推理全栈精讲系列/01_从CNN、RNN到Attention（废弃）.md",
@@ -245,7 +247,6 @@
     "notes/LLM/大模型与推理全栈精讲系列/05_深入理解分布式推理：TP.md",
     "notes/LLM/大模型与推理全栈精讲系列/03_深入理解Attention机制.md",
     "notes/LLM/大模型与推理全栈精讲系列/大纲.md",
-    "notes/LLM/大模型与推理全栈精讲系列/未命名.md",
     "notes/LLM/大模型精讲系列_01：理解GPU架构及其原理.md",
     "notes/LLM/大模型与推理全栈精讲系列",
     "notes/maas/aibrix架构与实现/00.架构初探及教程大纲规划.md",
@@ -257,7 +258,6 @@
     "code/opensource/aibrix/test/regression/v0.4.0/templates/sglang-non-disaggregated.yaml",
     "code/opensource/aibrix/test/regression/v0.4.0/templates/sglang-disaggregated.yaml",
     "code/opensource/aibrix/test/regression/v0.4.0/multi-engine/vllm-llama-8b.yaml",
-    "code/opensource/aibrix/test/regression/v0.4.0/multi-engine/sglang-llama-8b.yaml",
     "未命名.canvas"
   ]
 }
