@@ -210,8 +210,10 @@
       "bases:新建数据库": false
     }
   },
-  "active": "075a0288115e18eb",
+  "active": "355c39dd8741f2da",
   "lastOpenFiles": [
+    "notes/从0开始学摄影/1 摄影的底层认知/1.1 摄影是观察、判断、取舍和表达.md",
+    "notes/从0开始学摄影/1 摄影的底层认知",
     "notes/LLM/大模型与推理全栈精讲系列/未命名.md",
     "notes/从0开始学摄影/0 课程总纲.md",
     "notes/从0开始学摄影",
@@ -250,14 +252,12 @@
     "notes/LLM/大模型精讲系列_01：理解GPU架构及其原理.md",
     "notes/LLM/大模型与推理全栈精讲系列",
     "notes/maas/aibrix架构与实现/00.架构初探及教程大纲规划.md",
-    "notes/AICoding/codex最佳实践/3.如何用codex设计精美且炫酷的UI.md",
     "notes/maas/aibrix架构与实现",
     "code/opensource/aibrix/test/regression/v0.4.0/templates/_helpers.tpl",
     "code/opensource/aibrix/test/regression/v0.4.0/templates/vllm-non-disaggregated.yaml",
     "code/opensource/aibrix/test/regression/v0.4.0/templates/vllm-disaggregated.yaml",
     "code/opensource/aibrix/test/regression/v0.4.0/templates/sglang-non-disaggregated.yaml",
     "code/opensource/aibrix/test/regression/v0.4.0/templates/sglang-disaggregated.yaml",
-    "code/opensource/aibrix/test/regression/v0.4.0/multi-engine/vllm-llama-8b.yaml",
     "未命名.canvas"
   ]
 }
