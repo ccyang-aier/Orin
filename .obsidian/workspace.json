@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "notes/LLM/大模型与推理全栈精讲系列/01_理解GPU架构及其原理.md",
+                "file": "notes/从0开始学摄影/0 课程总纲.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "01_理解GPU架构及其原理"
+              "title": "0 课程总纲"
             }
           },
           {
@@ -27,12 +27,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "notes/vLLM/vLLM架构与原理精讲系列/00_vLLM架构与原理精讲系列后续教程规划.md",
+                "file": "notes/vLLM/vLLM架构与原理精讲系列/03_vLLM引擎架构总览.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "00_vLLM架构与原理精讲系列后续教程规划"
+              "title": "03_vLLM引擎架构总览"
             }
           }
         ],
@@ -171,13 +171,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "notes/vLLM/vLLM架构与原理精讲系列/00_vLLM架构与原理精讲系列后续教程规划.md",
+                "file": "notes/vLLM/vLLM架构与原理精讲系列/03_vLLM引擎架构总览.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "00_vLLM架构与原理精讲系列后续教程规划 的大纲"
+              "title": "03_vLLM引擎架构总览 的大纲"
             }
           },
           {
@@ -214,22 +214,23 @@
   "lastOpenFiles": [
     "notes/从0开始学摄影/0 课程总纲.md",
     "notes/vLLM/vLLM架构与原理精讲系列/00_vLLM架构与原理精讲系列后续教程规划.md",
-    "notes/从0开始学摄影/2 工具的最小必要认识/2.3 附件只讲能改变画面的工具.md",
-    "notes/从0开始学摄影/2 工具的最小必要认识/2.2 动态范围.md",
-    "notes/从0开始学摄影/2 工具的最小必要认识/imgs/2.4-three-copy-backup.png",
-    "notes/从0开始学摄影/2 工具的最小必要认识/imgs/2.1-camera-sensor-lens-raw-jpeg-comparison.png",
-    "notes/从0开始学摄影/2 工具的最小必要认识/2.1 相机、传感器、镜头、焦段、RAW与JPEG.md",
     "notes/从0开始学摄影/2 工具的最小必要认识/2.4 数据安全底线.md",
+    "notes/从0开始学摄影/2 工具的最小必要认识/2.3 附件只讲能改变画面的工具.md",
+    "notes/从0开始学摄影/2 工具的最小必要认识/2.1 相机、传感器、镜头、焦段、RAW与JPEG.md",
+    "notes/LLM/大模型与推理全栈精讲系列/01_理解GPU架构及其原理.md",
+    "notes/从0开始学摄影/2 工具的最小必要认识/imgs/2.2-exposure-choice-backlit-scene.png",
+    "notes/从0开始学摄影/2 工具的最小必要认识/imgs/2.3-cpl-reflection-control.png",
+    "notes/从0开始学摄影/2 工具的最小必要认识/imgs/2.3-tripod-stability-comparison.png",
+    "notes/从0开始学摄影/2 工具的最小必要认识/imgs/2.3-reflector-shadow-control.png",
+    "notes/从0开始学摄影/2 工具的最小必要认识/imgs/2.4-memory-card-risks.png",
+    "notes/从0开始学摄影/2 工具的最小必要认识/imgs/2.2-dynamic-range-highlight-shadow-comparison.png",
+    "notes/从0开始学摄影/2 工具的最小必要认识/imgs/2.4-data-safety-workflow.png",
+    "notes/从0开始学摄影/2 工具的最小必要认识/imgs/2.1-focal-length-space-comparison.png",
+    "notes/从0开始学摄影/2 工具的最小必要认识/imgs/2.3-nd-motion-and-exposure.png",
+    "notes/从0开始学摄影/2 工具的最小必要认识/imgs/2.3-accessories-change-the-image.png",
+    "notes/从0开始学摄影/2 工具的最小必要认识/2.2 动态范围.md",
     "notes/从0开始学摄影/1 摄影的底层认知/1.3 新手失败类型.md",
     "notes/从0开始学摄影/1 摄影的底层认知/1.4 手机计算摄影与相机光学摄影.md",
-    "notes/从0开始学摄影/1 摄影的底层认知/imgs/1.4-choose-tool-by-image-goal.png",
-    "notes/从0开始学摄影/1 摄影的底层认知/imgs/1.4-camera-raw-flat-to-finished.png",
-    "notes/从0开始学摄影/1 摄影的底层认知/imgs/1.4-phone-hdr-night-mode-effects.png",
-    "notes/从0开始学摄影/1 摄影的底层认知/imgs/1.4-phone-computational-vs-camera-optical.png",
-    "notes/从0开始学摄影/1 摄影的底层认知/imgs/1.3-overprocessed-vs-believable-edit.png",
-    "notes/从0开始学摄影/1 摄影的底层认知/imgs/1.3-scattered-to-focused-expression.png",
-    "notes/从0开始学摄影/1 摄影的底层认知/imgs/1.3-dirty-color-vs-clean-light.png",
-    "notes/从0开始学摄影/1 摄影的底层认知/imgs/1.3-flat-vs-dimensional-light.png",
     "notes/从0开始学摄影/2 工具的最小必要认识/imgs",
     "notes/从0开始学摄影/1 摄影的底层认知/1.2 好照片的基础.md",
     "notes/从0开始学摄影/2 工具的最小必要认识",
@@ -241,7 +242,6 @@
     "notes/从0开始学摄影/1 摄影的底层认知",
     "notes/LLM/大模型与推理全栈精讲系列/未命名.md",
     "notes/从0开始学摄影",
-    "notes/LLM/大模型与推理全栈精讲系列/01_理解GPU架构及其原理.md",
     "notes/LLM/大模型与推理全栈精讲系列/01_从CNN、RNN到Attention（废弃）.md",
     "AGENTS.md",
     "notes/vLLM/vLLM架构与原理精讲系列/01_推理系统导论.md",
@@ -254,7 +254,6 @@
     "notes/vLLM/vLLM架构与原理精讲系列/05_调度即吞吐：vLLM Scheduler 的核心架构与底层原理.md",
     "notes/vLLM/vLLM架构与原理精讲系列/04_显存管理的艺术，KVCacheManager架构与原理剖析.md",
     "notes/vLLM/vLLM架构与原理精讲系列/05_深入vLLM调度器.md",
-    "notes/vLLM/vLLM架构与原理精讲系列/03_vLLM引擎架构总览.md",
     "notes/LLM/大模型与推理全栈精讲系列/imgs",
     "notes/LLM/大模型与推理全栈精讲系列",
     "notes/maas/aibrix架构与实现",
