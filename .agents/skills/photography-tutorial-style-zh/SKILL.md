@@ -51,6 +51,7 @@ description: Use when writing, revising, or polishing image-first Chinese photog
 5. 写作与修订：
    - 实质性摄影写作、作品分析或练习设计时，读取 `references/photography-playbook.md`；
    - 涉及样张、作品引用、前后对比或示意图时，读取 `references/visual-assets.md`；
+   - 小节教程文档的正文标题使用局部编号，例如 `## 1`、`## 2`、`### 2.1`；文件标题可以保留课程编号，例如 `# 1.1 ...`，但正文内部不要写成 `## 1.1.1`、`### 1.1.2.1`；
    - 保持文章自洽，避免“如图所示”但没有附近解释，也避免只有感受没有观察依据。
 
 ## 3. 摄影文章结构
