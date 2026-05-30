@@ -1,0 +1,7 @@
+interface:
+  display_name: "Photography Tutorial Style ZH"
+  short_description: "中文摄影精品教程、真实样张分析与拍摄练习设计规范。"
+  default_prompt: "Use $photography-tutorial-style-zh to draft or revise a high-value Chinese photography tutorial."
+
+policy:
+  allow_implicit_invocation: true
