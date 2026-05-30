@@ -211,6 +211,14 @@
   },
   "active": "c7bf82e12c53caaf",
   "lastOpenFiles": [
+    "notes/从0开始学摄影/4 曝光与曝光意图/imgs/4.6-exposure-tradeoffs-scenes.png",
+    "notes/从0开始学摄影/4 曝光与曝光意图/imgs/4.5-av-tv-m-exposure-modes.png",
+    "notes/从0开始学摄影/4 曝光与曝光意图/imgs/4.4-highlight-shadow-ettr-restore.png",
+    "notes/从0开始学摄影/4 曝光与曝光意图/imgs/4.3-metering-histogram-highlight-warning.png",
+    "notes/从0开始学摄影/4 曝光与曝光意图/imgs/4.2-aperture-shutter-iso-effects.png",
+    "notes/从0开始学摄影/4 曝光与曝光意图/imgs/4.1-exposure-as-intention.png",
+    "notes/从0开始学摄影/4 曝光与曝光意图/imgs",
+    "notes/从0开始学摄影/4 曝光与曝光意图",
     "notes/从0开始学摄影/3 相机操作系统/3.8 新机推荐初始设置.md",
     "notes/从0开始学摄影/3 相机操作系统/3.7 自定义按钮与C1C2C3.md",
     "notes/从0开始学摄影/3 相机操作系统/3.6 对焦配置入门.md",
@@ -226,11 +234,6 @@
     "notes/vLLM/vLLM架构与原理精讲系列/imgs/07_data_plane_groups.png",
     "notes/vLLM/vLLM架构与原理精讲系列/imgs/07_executor_backend_shapes.png",
     "notes/vLLM/vLLM架构与原理精讲系列/imgs/07_control_plane_message_queue.png",
-    "notes/vLLM/vLLM架构与原理精讲系列/imgs/07_step_round_trip.png",
-    "notes/vLLM/vLLM架构与原理精讲系列/imgs/07_execution_boundary_map.png",
-    "notes/从0开始学摄影/3 相机操作系统/imgs/3.8-beginner-initial-settings.png",
-    "notes/从0开始学摄影/3 相机操作系统/imgs/3.7-custom-buttons-c-modes.png",
-    "notes/从0开始学摄影/3 相机操作系统/imgs/3.6-autofocus-configuration-cases.png",
     "notes/从0开始学摄影/3 相机操作系统/imgs",
     "notes/从0开始学摄影/3 相机操作系统",
     "notes/vLLM/vLLM架构与原理精讲系列/03_vLLM引擎架构总览.md",
@@ -253,10 +256,7 @@
     "media/从0开始学摄影",
     "notes/从0开始学摄影/1 摄影的底层认知",
     "notes/LLM/大模型与推理全栈精讲系列/未命名.md",
-    "notes/从0开始学摄影",
     "notes/LLM/大模型与推理全栈精讲系列/01_从CNN、RNN到Attention（废弃）.md",
-    "AGENTS.md",
-    "notes/LLM/大模型与推理全栈精讲系列/imgs",
     "未命名.canvas"
   ]
 }
