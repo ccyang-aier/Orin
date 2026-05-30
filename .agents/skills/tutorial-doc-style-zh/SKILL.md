@@ -82,25 +82,33 @@ description: "撰写、修订并迭代优化有来源支撑的中文技术教程
 
 ## 4. Multi-Agent Quality Gate
 
-所有基于本 skill 处理的教程文档，在主稿完成后必须运行质量门。若当前环境需要用户显式授权多代理工具，必须在 teaching brief 阶段请求授权。
+所有基于本 skill 处理的教程文档，在主稿完成后必须运行质量门。若当前环境需要用户显式授权多代理工具，必须在 teaching brief 阶段请求授权。启动 reviewer 前，先读取 `references/quality-gate.md`，并使用其中的评审材料包、提示词、一票否决项和输出格式。
 
-1. 并行启动：
+1. 建立评审材料包：
+   - 包含已确认的 teaching brief、目标读者、边界、目标文档全文、图片路径/图注/教学目的、来源说明，以及对应角色的评审提示词；
+   - 若 brief 未定义读者，使用默认读者：有基础认知和推导能力但首次接触该领域的大学生；
+   - 要求 reviewer 以真实读者身份从头到尾通读，并报告行/章节级问题。
+
+2. 并行启动：
    - Content accuracy reviewer：事实准确性、来源支撑、术语、概念顺序；
-   - Reader experience reviewer：清晰度、连续性、转场、深度、文章是否足够优秀；
+   - Reader experience reviewer：亲切度、铺垫、概念引入顺序、连续性、转场、深度、图文关系和记忆点；
    - Visual quality reviewer：图表目的、技术正确性、风格一致性、间距、标签、反模式；
-   - Assessment author：起草 `学习测评` 章节。
+   - Assessment author：只基于知识理解、迁移判断、常见误区和机制推理起草 `学习测评` 章节。
 
-2. 要求评审返回：
+3. 要求评审返回：
    - 100 分制评分；
-   - top risks；
-   - 具体修改建议；
+   - 阻塞问题；
+   - 行/章节级发现；
+   - 必要修改；
    - pass/fail。
 
-3. 整合测评题后，再启动 assessment reviewer，检查正确性、覆盖度、歧义和难度平衡。
+4. 整合测评题后，再启动 assessment reviewer，检查正确性、覆盖度、歧义、难度平衡和学习价值。assessment reviewer 必须拒绝关于文章边界、作者决策或排除主题原因的元问题。
 
-4. 通过标准：
+5. 通过标准：
    - content accuracy + reader experience + visual reviewer 超过 285/300；
-   - assessment reviewer 无 correctness blocker。
+   - 不得遗留任何 reader-blocking 问题，无论总分多高；
+   - assessment reviewer 无正确性、歧义或学习价值 blocker；
+   - 任一 reviewer 未通过时，必须修正 artifact 并重新运行未通过的评审角色后才能定稿。
 
 ## 5. 验证
 
@@ -125,4 +133,5 @@ description: "撰写、修订并迭代优化有来源支撑的中文技术教程
 ## References
 
 - `references/tutorial-style-playbook.md`：教学结构、读者体验、来源标准、测评标准和长期用户偏好；
+- `references/quality-gate.md`：评审材料包、提示词、通用阻塞项、输出格式和测评门控规则；
 - `references/visual-style-baselines.md`：视觉模式、参考风格、prompt 规则和图表反模式。

@@ -82,25 +82,33 @@ Substantial tutorials must add a fixed final chapter named `Learning Assessment`
 
 ## 4. Multi-Agent Quality Gate
 
-Every tutorial document handled with this skill must run the quality gate after the main draft is ready. If the current environment requires explicit user authorization for multi-agent tools, request it during the teaching brief stage.
+Every tutorial document handled with this skill must run the quality gate after the main draft is ready. If the current environment requires explicit user authorization for multi-agent tools, request it during the teaching brief stage. Before spawning reviewers, read `references/quality-gate.md` and use its review packet, prompts, blockers, and output schema.
 
-1. Spawn these agents in parallel:
+1. Build the review packet:
+   - Include the confirmed teaching brief, target reader, boundaries, full target document, image paths/captions/purposes, source notes, and the role-specific review prompt;
+   - If the brief does not define a reader, use this default: an undergraduate with basic cognitive and derivation ability who is encountering the field for the first time;
+   - Require reviewers to read the document end to end as a real reader and report line/section-level issues.
+
+2. Spawn these agents in parallel:
    - Content accuracy reviewer: factual accuracy, source support, terminology, conceptual order;
-   - Reader experience reviewer: clarity, continuity, transitions, depth, and whether the article is excellent enough;
+   - Reader experience reviewer: reader warmth, setup, concept introduction order, continuity, transitions, depth, figure-prose relationship, and memory hooks;
    - Visual quality reviewer: figure purpose, technical correctness, style consistency, spacing, labels, and anti-patterns;
-   - Assessment author: draft the `Learning Assessment` chapter.
+   - Assessment author: draft the `Learning Assessment` chapter using only knowledge-understanding, transfer-judgment, misconception, and mechanism-reasoning questions.
 
-2. Ask reviewers to return:
+3. Ask reviewers to return:
    - Score out of 100;
-   - Top risks;
-   - Concrete revision suggestions;
+   - Blocking issues;
+   - Line/section-level findings;
+   - Required revisions;
    - Pass/fail.
 
-3. After integrating assessment questions, spawn an assessment reviewer to check correctness, coverage, ambiguity, and difficulty balance.
+4. After integrating assessment questions, spawn an assessment reviewer to check correctness, coverage, ambiguity, difficulty balance, and learning value. The assessment reviewer must reject meta questions about article scope, author decisions, or why excluded topics are not covered.
 
-4. Passing standard:
+5. Passing standard:
    - Content accuracy + reader experience + visual reviewer must exceed 285/300;
-   - Assessment reviewer must report no correctness blocker.
+   - No reader-blocking issue may remain, regardless of score;
+   - Assessment reviewer must report no correctness, ambiguity, or learning-value blocker;
+   - If any reviewer fails, revise the artifact and rerun the failed review role before finalization.
 
 ## 5. Validation
 
@@ -125,4 +133,5 @@ When the user criticizes or requests changes:
 ## References
 
 - `references/tutorial-style-playbook.md`: teaching structure, reader experience, source standards, assessment standards, and durable user preferences;
+- `references/quality-gate.md`: reviewer packet, prompts, universal blockers, output schema, and assessment gate rules;
 - `references/visual-style-baselines.md`: visual modes, reference styles, prompt rules, and figure anti-patterns.
