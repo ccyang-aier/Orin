@@ -212,6 +212,10 @@
   },
   "active": "075a0288115e18eb",
   "lastOpenFiles": [
+    "notes/从0开始学摄影/1 摄影的底层认知/imgs/1.1-observe-decide-select-express.png",
+    "notes/从0开始学摄影/1 摄影的底层认知/imgs/1.1-four-panel-comparison.png",
+    "notes/从0开始学摄影/1 摄影的底层认知/imgs/1.1-beginner-failure-matrix.png",
+    "notes/从0开始学摄影/1 摄影的底层认知/imgs",
     "media/从0开始学摄影/1 摄影的底层认知/1.1-observe-decide-select-express.png",
     "media/从0开始学摄影/1 摄影的底层认知/1.1-four-panel-comparison.png",
     "media/从0开始学摄影/1 摄影的底层认知/1.1-beginner-failure-matrix.png",
@@ -239,9 +243,6 @@
     "notes/vLLM/vLLM架构与原理精讲系列/04_显存管理的艺术，KVCacheManager架构与原理剖析.md",
     "notes/vLLM/vLLM架构与原理精讲系列/imgs/06_feature_boundaries.png",
     "notes/vLLM/vLLM架构与原理精讲系列/imgs/06_async_dataflow.png",
-    "notes/vLLM/vLLM架构与原理精讲系列/imgs/06_placeholder_lifecycle.png",
-    "notes/vLLM/vLLM架构与原理精讲系列/imgs/06_evolution_map.png",
-    "notes/vLLM/vLLM架构与原理精讲系列/imgs/06_async_overlap_timeline.png",
     "notes/vLLM/vLLM架构与原理精讲系列/05_深入vLLM调度器.md",
     "notes/vLLM/vLLM架构与原理精讲系列/03_vLLM引擎架构总览.md",
     "notes/AICoding/codex最佳实践/oh_my_codex架构设计与使用教程.md",
@@ -257,7 +258,6 @@
     "notes/maas/aibrix架构与实现",
     "code/opensource/aibrix/test/regression/v0.4.0/templates/_helpers.tpl",
     "code/opensource/aibrix/test/regression/v0.4.0/templates/vllm-non-disaggregated.yaml",
-    "code/opensource/aibrix/test/regression/v0.4.0/templates/vllm-disaggregated.yaml",
     "未命名.canvas"
   ]
 }
