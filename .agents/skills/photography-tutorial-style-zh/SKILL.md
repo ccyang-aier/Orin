@@ -1,6 +1,6 @@
 ---
 name: photography-tutorial-style-zh
-description: Use when writing, revising, or polishing high-value Chinese photography tutorials, source-grounded photography knowledge-base notes, image-based lessons, shooting practice guides, photo critique articles, composition/light/color/exposure/depth-of-field tutorials, and photography learning paths that rely on visual judgment, shooting decisions, image assets, and practice review.
+description: Use when writing, revising, or polishing image-first Chinese photography tutorials, source-grounded photography knowledge-base notes, image-based lessons, shooting practice guides, photo critique articles, composition/light/color/exposure/depth-of-field tutorials, and photography learning paths that rely on visual judgment, shooting decisions, image assets, and practice review.
 ---
 
 # 中文摄影精品教程风格
@@ -10,6 +10,7 @@ description: Use when writing, revising, or polishing high-value Chinese photogr
 ## 1. 核心原则
 
 - 摄影教程从画面问题进入，而不是从抽象定义进入；
+- 把图片作为摄影教程的第一教学资产：能用样张、场景、前后对比或示意图讲清楚的地方，优先配图，再用文字解释图中的观察线索和拍摄决策；
 - 先建立必要证据和外部资料上下文，再给出器材、技术、风格、后期流程或摄影史判断；
 - 真实样张、作品案例、拍摄场景、参数和前后对比优先；用户没有提供必要教学图片时，可以用 `imagegen` 生成拟真教学样张、器材图、不同场景拍摄效果、拍摄案例模拟和对比图；
 - 任何图片类操作默认使用 `imagegen`，包括生图、图片编辑、基于用户图片的改图、拟真模拟、示意图和前后对比图；
@@ -27,6 +28,7 @@ description: Use when writing, revising, or polishing high-value Chinese photogr
    - 如果缺少关键样张、作品对象或拍摄场景，先说明缺口并给出可继续推进的假设。
 
 2. 组织教学路径：
+   - 先找出最适合配图的位置，例如开篇画面问题、关键概念、参数效果、拍摄动作、前后对比、练习样张和复盘案例；
    - 从读者能看到的画面现象开始，例如背景杂乱、主体不突出、肤色偏脏、光线太平、街拍缺少层次；
    - 再解释背后的摄影选择，例如站位、焦距、光线方向、曝光取舍、构图边界、色彩控制、后期节奏；
    - 最后给出练习和复盘标准，让读者能在下一次拍摄中验证。
@@ -39,7 +41,8 @@ description: Use when writing, revising, or polishing high-value Chinese photogr
 
 4. 处理图像资产：
    - 如果用户提供真实照片，优先围绕这些照片做观察、标注说明、对比分析和练习设计；对用户提供图片的二次加工默认使用 `imagegen`，不要用脚本或其他图像工具替代；
-   - 如果没有真实照片，根据教学目标主动规划 `imagegen` 资产，例如真实相机器材、不同光线/焦段/景深/快门效果的拟真场景、拍摄案例模拟、前后对比图和构图/站位示意；
+   - 如果没有真实照片，根据教学目标主动规划并生成 `imagegen` 资产，例如真实相机器材、不同光线/焦段/景深/快门效果的拟真场景、拍摄案例模拟、前后对比图和构图/站位示意；
+   - 新写或扩写摄影教程时，不要只在文末列“样张需求”；除非用户明确要求停在规划阶段，否则应把已生成或已有的图片插入到最靠近相关讲解的位置，并写清楚这张图承担的教学任务；
    - `imagegen` 生成的拟真样张可以作为教学案例使用，但必须标注为模拟教学图，不声称是真实拍摄作品、真实 EXIF、真实摄影师作品或真实现场记录；
    - 所有图片生成、编辑、局部修改、风格尝试、前后对比和示意图默认走 `imagegen`。
 
@@ -66,9 +69,10 @@ description: Use when writing, revising, or polishing high-value Chinese photogr
 
 - 是否有清晰的画面问题或创作目标；
 - 是否为事实性、时效性或作品相关判断建立了可靠外部资料上下文；
+- 能配图讲清楚的关键段落，是否已经配套真实样张、公开案例、`imagegen` 模拟教学图或示意图；
 - 是否把抽象审美词翻译成可观察线索；
 - 是否把参数、器材或后期步骤连接到画面效果；
-- 是否优先使用真实样张；若缺少真实样张，是否合理规划或使用 `imagegen` 拟真教学图；
+- 是否优先使用真实样张；若缺少真实样张，是否已经合理规划并使用 `imagegen` 拟真教学图；
 - 是否把 `imagegen` 资产清楚标注为模拟、示意或生成案例；
 - 是否提供可执行、可比较、可复盘的练习；
 - 是否避免空泛夸赞、器材崇拜、参数堆砌和无依据作品评价。
