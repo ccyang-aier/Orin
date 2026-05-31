@@ -197,6 +197,12 @@
   },
   "active": "3e7950d226fc8853",
   "lastOpenFiles": [
+    "notes/maas/aibrix架构与实现/02.CRD中心化架构.md",
+    "notes/maas/aibrix架构与实现/assets/02/03-crd-k8s-boundary.png",
+    "notes/maas/aibrix架构与实现/assets/02/04-controller-ownership-loop.png",
+    "notes/maas/aibrix架构与实现/assets/02/02-crd-map.png",
+    "notes/maas/aibrix架构与实现/assets/02/01-intent-to-crds.png",
+    "notes/maas/aibrix架构与实现/assets/02",
     "notes/maas/aibrix架构与实现/00.架构初探及教程大纲规划.md",
     "notes/maas/aibrix架构与实现/01.AIBrix要解决什么问题.md",
     "notes/vLLM/vLLM架构与原理精讲系列/08_vLLM 控制面通信机制：从 EngineCoreClient 到 Executor RPC.md",
@@ -211,10 +217,6 @@
     "notes/LLM/大模型与推理全栈精讲系列/01_理解GPU架构及其原理.md",
     "notes/vLLM/vLLM架构与原理精讲系列/05_调度即吞吐：vLLM Scheduler 的核心架构与底层原理.md",
     "notes/从0开始学摄影/7 色彩、视觉重量与构图/imgs/7.6-composition-methods.png",
-    "notes/从0开始学摄影/7 色彩、视觉重量与构图/imgs/7.5-gestalt-principles-real-scenes.png",
-    "notes/从0开始学摄影/7 色彩、视觉重量与构图/imgs/7.4-attention-distribution.png",
-    "notes/从0开始学摄影/7 色彩、视觉重量与构图/imgs/7.3-visual-weight-factors.png",
-    "notes/从0开始学摄影/7 色彩、视觉重量与构图/imgs/7.2-on-location-color-control.png",
     "notes/从0开始学摄影/7 色彩、视觉重量与构图/imgs",
     "notes/从0开始学摄影/7 色彩、视觉重量与构图",
     "notes/从0开始学摄影/6 光线与影调/imgs",
@@ -241,8 +243,6 @@
     "notes/从0开始学摄影/4 曝光与曝光意图/4.3 测光、曝光补偿、直方图、高光警告.md",
     "notes/从0开始学摄影/4 曝光与曝光意图/4.2 光圈、快门、ISO与画面效果.md",
     "notes/从0开始学摄影/4 曝光与曝光意图/4.1 曝光不是拍亮，而是决定保留什么.md",
-    "notes/从0开始学摄影/4 曝光与曝光意图/4 曝光与曝光意图.md",
-    "notes/从0开始学摄影/4 曝光与曝光意图",
     "未命名.canvas"
   ]
 }
