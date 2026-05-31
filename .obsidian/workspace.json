@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "notes/maas/aibrix架构与实现/00.架构初探及教程大纲规划.md",
+                "file": "notes/maas/aibrix架构与实现/01.AIBrix要解决什么问题.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "00.架构初探及教程大纲规划"
+              "title": "01.AIBrix要解决什么问题"
             }
           }
         ]
@@ -156,13 +156,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "notes/maas/aibrix架构与实现/00.架构初探及教程大纲规划.md",
+                "file": "notes/maas/aibrix架构与实现/01.AIBrix要解决什么问题.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "00.架构初探及教程大纲规划 的大纲"
+              "title": "01.AIBrix要解决什么问题 的大纲"
             }
           },
           {
@@ -195,24 +195,28 @@
       "bases:新建数据库": false
     }
   },
-  "active": "355c39dd8741f2da",
+  "active": "3e7950d226fc8853",
   "lastOpenFiles": [
+    "notes/maas/aibrix架构与实现/00.架构初探及教程大纲规划.md",
+    "notes/maas/aibrix架构与实现/01.AIBrix要解决什么问题.md",
+    "notes/vLLM/vLLM架构与原理精讲系列/08_vLLM 控制面通信机制：从 EngineCoreClient 到 Executor RPC.md",
+    "notes/maas/aibrix架构与实现/assets/01/05-two-flows.png",
+    "notes/maas/aibrix架构与实现/assets/01/04-aibrix-position.png",
+    "notes/maas/aibrix架构与实现/assets/01/03-k8s-boundary.png",
+    "notes/maas/aibrix架构与实现/assets/01/02-serving-problem-map.png",
+    "notes/maas/aibrix架构与实现/assets/01/01-capability-ladder.png",
+    "notes/maas/aibrix架构与实现/assets/01",
+    "notes/maas/aibrix架构与实现/assets",
     "notes/vLLM/vLLM架构与原理精讲系列/07_Executor、Worker 与 ModelRunner 的协同执行与通信机制.md",
     "notes/LLM/大模型与推理全栈精讲系列/01_理解GPU架构及其原理.md",
-    "notes/maas/aibrix架构与实现/00.架构初探及教程大纲规划.md",
     "notes/vLLM/vLLM架构与原理精讲系列/05_调度即吞吐：vLLM Scheduler 的核心架构与底层原理.md",
     "notes/从0开始学摄影/7 色彩、视觉重量与构图/imgs/7.6-composition-methods.png",
     "notes/从0开始学摄影/7 色彩、视觉重量与构图/imgs/7.5-gestalt-principles-real-scenes.png",
     "notes/从0开始学摄影/7 色彩、视觉重量与构图/imgs/7.4-attention-distribution.png",
     "notes/从0开始学摄影/7 色彩、视觉重量与构图/imgs/7.3-visual-weight-factors.png",
     "notes/从0开始学摄影/7 色彩、视觉重量与构图/imgs/7.2-on-location-color-control.png",
-    "notes/从0开始学摄影/7 色彩、视觉重量与构图/imgs/7.1-color-basics-relationships.png",
     "notes/从0开始学摄影/7 色彩、视觉重量与构图/imgs",
     "notes/从0开始学摄影/7 色彩、视觉重量与构图",
-    "notes/从0开始学摄影/6 光线与影调/imgs/6.6-advanced-lighting-directions.png",
-    "notes/从0开始学摄影/6 光线与影调/imgs/6.5-beginner-artificial-light.png",
-    "notes/从0开始学摄影/6 光线与影调/imgs/6.4-zone-exposure-tonal-structure.png",
-    "notes/从0开始学摄影/6 光线与影调/imgs/6.3-tonal-keys-and-range.png",
     "notes/从0开始学摄影/6 光线与影调/imgs",
     "notes/从0开始学摄影/6 光线与影调/6.6 扩展方向.md",
     "notes/从0开始学摄影/6 光线与影调/6.4 区域曝光系统入门.md",
@@ -239,10 +243,6 @@
     "notes/从0开始学摄影/4 曝光与曝光意图/4.1 曝光不是拍亮，而是决定保留什么.md",
     "notes/从0开始学摄影/4 曝光与曝光意图/4 曝光与曝光意图.md",
     "notes/从0开始学摄影/4 曝光与曝光意图",
-    "notes/从0开始学摄影/3 相机操作系统/imgs",
-    "notes/从0开始学摄影/3 相机操作系统/3.7 自定义按钮与C1C2C3.md",
-    "notes/从0开始学摄影/3 相机操作系统/3.8 新机推荐初始设置.md",
-    "notes/从0开始学摄影/3 相机操作系统",
     "未命名.canvas"
   ]
 }
