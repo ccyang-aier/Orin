@@ -4,35 +4,21 @@
     "type": "split",
     "children": [
       {
-        "id": "894eae3fad6a36cd",
+        "id": "84832e7d9be7b952",
         "type": "tabs",
         "children": [
           {
-            "id": "c7bf82e12c53caaf",
+            "id": "3e7950d226fc8853",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "notes/从0开始学摄影/0 课程总纲.md",
+                "file": "notes/maas/aibrix架构与实现/00.架构初探及教程大纲规划.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "0 课程总纲"
-            }
-          },
-          {
-            "id": "075a0288115e18eb",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "notes/vLLM/vLLM架构与原理精讲系列/03_vLLM引擎架构总览.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "03_vLLM引擎架构总览"
+              "title": "00.架构初探及教程大纲规划"
             }
           }
         ]
@@ -170,13 +156,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "notes/从0开始学摄影/0 课程总纲.md",
+                "file": "notes/maas/aibrix架构与实现/00.架构初探及教程大纲规划.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "0 课程总纲 的大纲"
+              "title": "00.架构初探及教程大纲规划 的大纲"
             }
           },
           {
@@ -209,54 +195,54 @@
       "bases:新建数据库": false
     }
   },
-  "active": "c7bf82e12c53caaf",
+  "active": "3e7950d226fc8853",
   "lastOpenFiles": [
-    "notes/从0开始学摄影/4 曝光与曝光意图/imgs/4.6-exposure-tradeoffs-scenes.png",
-    "notes/从0开始学摄影/4 曝光与曝光意图/imgs/4.5-av-tv-m-exposure-modes.png",
-    "notes/从0开始学摄影/4 曝光与曝光意图/imgs/4.4-highlight-shadow-ettr-restore.png",
-    "notes/从0开始学摄影/4 曝光与曝光意图/imgs/4.3-metering-histogram-highlight-warning.png",
-    "notes/从0开始学摄影/4 曝光与曝光意图/imgs/4.2-aperture-shutter-iso-effects.png",
-    "notes/从0开始学摄影/4 曝光与曝光意图/imgs/4.1-exposure-as-intention.png",
-    "notes/从0开始学摄影/4 曝光与曝光意图/imgs",
-    "notes/从0开始学摄影/4 曝光与曝光意图",
+    "notes/vLLM/vLLM架构与原理精讲系列/08_vLLM 控制面通信机制：从 EngineCoreClient 到 Executor RPC.md",
+    "notes/vLLM/vLLM架构与原理精讲系列/07_Executor、Worker 与 ModelRunner 的协同执行与通信机制.md",
+    "notes/vLLM/vLLM架构与原理精讲系列/03_vLLM引擎架构总览.md",
+    "notes/vLLM/vLLM架构与原理精讲系列/imgs/08_enginecore_client_modes.png",
+    "notes/vLLM/vLLM架构与原理精讲系列/imgs/08_multiproc_message_queue.png",
+    "notes/vLLM/vLLM架构与原理精讲系列/imgs/08_zmq_request_output_flow.png",
+    "notes/vLLM/vLLM架构与原理精讲系列/imgs/08_output_rank_reply_path.png",
+    "notes/vLLM/vLLM架构与原理精讲系列/imgs/08_executor_collective_rpc.png",
+    "notes/vLLM/vLLM架构与原理精讲系列/imgs/08_control_plane_two_segments.png",
+    "notes/从0开始学摄影/7 色彩、视觉重量与构图/imgs/7.6-composition-methods.png",
+    "notes/从0开始学摄影/7 色彩、视觉重量与构图/imgs/7.5-gestalt-principles-real-scenes.png",
+    "notes/从0开始学摄影/7 色彩、视觉重量与构图/imgs/7.4-attention-distribution.png",
+    "notes/从0开始学摄影/7 色彩、视觉重量与构图/imgs/7.3-visual-weight-factors.png",
     "notes/从0开始学摄影/3 相机操作系统/3.8 新机推荐初始设置.md",
+    "notes/从0开始学摄影/7 色彩、视觉重量与构图/imgs",
+    "notes/从0开始学摄影/7 色彩、视觉重量与构图",
     "notes/从0开始学摄影/3 相机操作系统/3.7 自定义按钮与C1C2C3.md",
     "notes/从0开始学摄影/3 相机操作系统/3.6 对焦配置入门.md",
     "notes/从0开始学摄影/3 相机操作系统/3.5 核心菜单配置.md",
-    "notes/从0开始学摄影/3 相机操作系统/3.4 Q快速菜单、主菜单、My Menu的分工.md",
     "notes/从0开始学摄影/3 相机操作系统/3.3 拍摄界面读图.md",
-    "notes/从0开始学摄影/3 相机操作系统/3.2 机身按钮地图.md",
-    "notes/从0开始学摄影/3 相机操作系统/3.1 拿起相机前.md",
-    "notes/从0开始学摄影/3 相机操作系统/3 相机操作系统.md",
-    "notes/vLLM/vLLM架构与原理精讲系列/07_Executor、Worker 与 ModelRunner 的协同执行与通信机制.md",
-    "notes/vLLM/vLLM架构与原理精讲系列/imgs/07_output_rank_pp_tp.png",
-    "notes/vLLM/vLLM架构与原理精讲系列/imgs/07_scheduleroutput_to_gpu_input.png",
-    "notes/vLLM/vLLM架构与原理精讲系列/imgs/07_data_plane_groups.png",
-    "notes/vLLM/vLLM架构与原理精讲系列/imgs/07_executor_backend_shapes.png",
-    "notes/vLLM/vLLM架构与原理精讲系列/imgs/07_control_plane_message_queue.png",
+    "notes/从0开始学摄影/4 曝光与曝光意图/4.6 运动、弱光、高反差中的曝光取舍.md",
+    "notes/从0开始学摄影/4 曝光与曝光意图/4.5 AAv、STv、M理解曝光后的操作映射.md",
+    "notes/从0开始学摄影/4 曝光与曝光意图/4.4 保高光、保暗部、ETTR、就地还原.md",
+    "notes/从0开始学摄影/4 曝光与曝光意图/4.3 测光、曝光补偿、直方图、高光警告.md",
+    "notes/从0开始学摄影/4 曝光与曝光意图/4.2 光圈、快门、ISO与画面效果.md",
+    "notes/从0开始学摄影/4 曝光与曝光意图/4.1 曝光不是拍亮，而是决定保留什么.md",
+    "notes/从0开始学摄影/4 曝光与曝光意图/4 曝光与曝光意图.md",
+    "notes/从0开始学摄影/5 焦距、距离、景深与空间感/5.5 人像变形、背景压缩、环境信息与虚化取舍.md",
+    "notes/从0开始学摄影/5 焦距、距离、景深与空间感/5.4 二维画面中的三维感.md",
+    "notes/从0开始学摄影/5 焦距、距离、景深与空间感/5.3 景深变量.md",
+    "notes/从0开始学摄影/5 焦距、距离、景深与空间感/5.2 广角、标准、长焦的空间性格.md",
+    "notes/从0开始学摄影/5 焦距、距离、景深与空间感/5.1 焦距改变视角，距离改变透视.md",
+    "notes/从0开始学摄影/5 焦距、距离、景深与空间感/5 焦距、距离、景深与空间感.md",
+    "notes/从0开始学摄影/6 光线与影调/6.6 扩展方向.md",
+    "notes/从0开始学摄影/6 光线与影调/6.5 人工光入门.md",
+    "notes/从0开始学摄影/6 光线与影调/6.4 区域曝光系统入门.md",
+    "notes/从0开始学摄影/6 光线与影调/6.3 影调.md",
+    "notes/从0开始学摄影/6 光线与影调/6.2 自然光.md",
+    "notes/从0开始学摄影/6 光线与影调/imgs",
+    "notes/从0开始学摄影/6 光线与影调",
+    "notes/从0开始学摄影/5 焦距、距离、景深与空间感/imgs",
+    "notes/从0开始学摄影/5 焦距、距离、景深与空间感",
+    "notes/从0开始学摄影/4 曝光与曝光意图/imgs",
+    "notes/从0开始学摄影/4 曝光与曝光意图",
     "notes/从0开始学摄影/3 相机操作系统/imgs",
     "notes/从0开始学摄影/3 相机操作系统",
-    "notes/vLLM/vLLM架构与原理精讲系列/03_vLLM引擎架构总览.md",
-    "notes/从0开始学摄影/0 课程总纲.md",
-    "notes/vLLM/vLLM架构与原理精讲系列/00_vLLM架构与原理精讲系列后续教程规划.md",
-    "notes/从0开始学摄影/2 工具的最小必要认识/2.4 数据安全底线.md",
-    "notes/从0开始学摄影/2 工具的最小必要认识/2.3 附件只讲能改变画面的工具.md",
-    "notes/从0开始学摄影/2 工具的最小必要认识/2.1 相机、传感器、镜头、焦段、RAW与JPEG.md",
-    "notes/LLM/大模型与推理全栈精讲系列/01_理解GPU架构及其原理.md",
-    "notes/从0开始学摄影/2 工具的最小必要认识/2.2 动态范围.md",
-    "notes/从0开始学摄影/1 摄影的底层认知/1.3 新手失败类型.md",
-    "notes/从0开始学摄影/1 摄影的底层认知/1.4 手机计算摄影与相机光学摄影.md",
-    "notes/从0开始学摄影/2 工具的最小必要认识/imgs",
-    "notes/从0开始学摄影/1 摄影的底层认知/1.2 好照片的基础.md",
-    "notes/从0开始学摄影/2 工具的最小必要认识",
-    "notes/从0开始学摄影/1 摄影的底层认知/1.1 摄影是观察、判断、取舍和表达.md",
-    "notes/AICoding/未命名.md",
-    "notes/从0开始学摄影/1 摄影的底层认知/imgs",
-    "media/从0开始学摄影/1 摄影的底层认知",
-    "media/从0开始学摄影",
-    "notes/从0开始学摄影/1 摄影的底层认知",
-    "notes/LLM/大模型与推理全栈精讲系列/未命名.md",
-    "notes/LLM/大模型与推理全栈精讲系列/01_从CNN、RNN到Attention（废弃）.md",
     "未命名.canvas"
   ]
 }
