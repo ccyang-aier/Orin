@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "notes/vLLM/vLLM架构与原理精讲系列/05_调度即吞吐：vLLM Scheduler 的核心架构与底层原理.md",
+                "file": "notes/maas/aibrix架构与实现/00.架构初探及教程大纲规划.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "05_调度即吞吐：vLLM Scheduler 的核心架构与底层原理"
+              "title": "00.架构初探及教程大纲规划"
             }
           }
         ]
@@ -156,13 +156,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "notes/vLLM/vLLM架构与原理精讲系列/05_调度即吞吐：vLLM Scheduler 的核心架构与底层原理.md",
+                "file": "notes/maas/aibrix架构与实现/00.架构初探及教程大纲规划.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "05_调度即吞吐：vLLM Scheduler 的核心架构与底层原理 的大纲"
+              "title": "00.架构初探及教程大纲规划 的大纲"
             }
           },
           {
@@ -195,8 +195,10 @@
       "bases:新建数据库": false
     }
   },
-  "active": "3e7950d226fc8853",
+  "active": "355c39dd8741f2da",
   "lastOpenFiles": [
+    "notes/vLLM/vLLM架构与原理精讲系列/07_Executor、Worker 与 ModelRunner 的协同执行与通信机制.md",
+    "notes/LLM/大模型与推理全栈精讲系列/01_理解GPU架构及其原理.md",
     "notes/maas/aibrix架构与实现/00.架构初探及教程大纲规划.md",
     "notes/vLLM/vLLM架构与原理精讲系列/05_调度即吞吐：vLLM Scheduler 的核心架构与底层原理.md",
     "notes/从0开始学摄影/7 色彩、视觉重量与构图/imgs/7.6-composition-methods.png",
@@ -240,8 +242,6 @@
     "notes/从0开始学摄影/3 相机操作系统/imgs",
     "notes/从0开始学摄影/3 相机操作系统/3.7 自定义按钮与C1C2C3.md",
     "notes/从0开始学摄影/3 相机操作系统/3.8 新机推荐初始设置.md",
-    "notes/从0开始学摄影/3 相机操作系统/3.6 对焦配置入门.md",
-    "notes/从0开始学摄影/3 相机操作系统/3.5 核心菜单配置.md",
     "notes/从0开始学摄影/3 相机操作系统",
     "未命名.canvas"
   ]
