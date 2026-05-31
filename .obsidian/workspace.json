@@ -197,9 +197,9 @@
   },
   "active": "3e7950d226fc8853",
   "lastOpenFiles": [
-    "notes/maas/aibrix架构与实现/00.架构初探及教程大纲规划.md",
     "notes/maas/aibrix架构与实现/01.AIBrix要解决什么问题.md",
     "notes/maas/aibrix架构与实现/02.CRD中心化架构.md",
+    "notes/maas/aibrix架构与实现/00.架构初探及教程大纲规划.md",
     "notes/maas/aibrix架构与实现/assets/02/03-crd-k8s-boundary.png",
     "notes/maas/aibrix架构与实现/assets/02/04-controller-ownership-loop.png",
     "notes/maas/aibrix架构与实现/assets/02/02-crd-map.png",
