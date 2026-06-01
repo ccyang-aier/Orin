@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "notes/maas/aibrix架构与实现/04.复杂推理部署形态.md",
+                "file": "notes/maas/aibrix架构与实现/07.路由系统.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "04.复杂推理部署形态"
+              "title": "07.路由系统"
             }
           }
         ]
@@ -156,13 +156,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "notes/maas/aibrix架构与实现/04.复杂推理部署形态.md",
+                "file": "notes/maas/aibrix架构与实现/07.路由系统.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "04.复杂推理部署形态 的大纲"
+              "title": "07.路由系统 的大纲"
             }
           },
           {
@@ -197,11 +197,11 @@
   },
   "active": "3e7950d226fc8853",
   "lastOpenFiles": [
+    "notes/maas/aibrix架构与实现/08.扩展能力与特殊架构.md",
+    "notes/maas/aibrix架构与实现/09.生产化设计.md",
+    "notes/maas/aibrix架构与实现/04.复杂推理部署形态.md",
     "notes/maas/aibrix架构与实现/03.模型生命周期与基础推理工作负载.md",
     "notes/maas/aibrix架构与实现/05.弹性机制.md",
-    "notes/maas/aibrix架构与实现/09.生产化设计.md",
-    "notes/maas/aibrix架构与实现/08.扩展能力与特殊架构.md",
-    "notes/maas/aibrix架构与实现/04.复杂推理部署形态.md",
     "notes/maas/aibrix架构与实现/06.KVCache系统.md",
     "notes/maas/aibrix架构与实现/07.路由系统.md",
     "notes/maas/aibrix架构与实现/00.架构初探及教程大纲规划.md",
