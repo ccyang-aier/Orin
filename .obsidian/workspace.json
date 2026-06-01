@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "notes/maas/aibrix架构与实现/00.架构初探及教程大纲规划.md",
+                "file": "notes/papers/arxiv-ai-daily/2026-05-31 arxiv ai papers.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "00.架构初探及教程大纲规划"
+              "title": "2026-05-31 arxiv ai papers"
             }
           }
         ]
@@ -156,13 +156,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "notes/maas/aibrix架构与实现/00.架构初探及教程大纲规划.md",
+                "file": "notes/papers/arxiv-ai-daily/2026-05-31 arxiv ai papers.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "00.架构初探及教程大纲规划 的大纲"
+              "title": "2026-05-31 arxiv ai papers 的大纲"
             }
           },
           {
@@ -197,6 +197,8 @@
   },
   "active": "3e7950d226fc8853",
   "lastOpenFiles": [
+    "code/arxiv_paper_radar/README.md",
+    "notes/maas/aibrix架构与实现/00.架构初探及教程大纲规划.md",
     "code/arxiv_paper_radar/__pycache__/orin_arxiv_radar.cpython-312.pyc",
     "code/arxiv_paper_radar/__pycache__",
     "code/arxiv_paper_radar/tests/__pycache__/test_orin_arxiv_radar.cpython-312-pytest-9.0.3.pyc",
@@ -204,12 +206,10 @@
     "code/arxiv_paper_radar/tests/__pycache__",
     "notes/papers/arxiv-ai-daily/2026-05-31 arxiv ai papers.md",
     "notes/papers/arxiv-ai-daily",
-    "code/arxiv_paper_radar/README.md",
     "rag/arxiv_papers/processed_papers.json",
     "rag/arxiv_papers",
     "code/arxiv_paper_radar/requirements.txt",
     "code/arxiv_paper_radar/orin_arxiv_radar.py",
-    "code/arxiv_paper_radar/tests/conftest.py",
     "notes/maas/aibrix架构与实现/10.全局串联.md",
     "notes/maas/aibrix架构与实现/assets/10/03-global-mental-model.png",
     "notes/maas/aibrix架构与实现/assets/10/02-request-hot-path.png",
@@ -221,7 +221,6 @@
     "notes/maas/aibrix架构与实现/04.复杂推理部署形态.md",
     "notes/maas/aibrix架构与实现/03.模型生命周期与基础推理工作负载.md",
     "notes/maas/aibrix架构与实现/05.弹性机制.md",
-    "notes/maas/aibrix架构与实现/00.架构初探及教程大纲规划.md",
     "notes/maas/aibrix架构与实现/assets/09/04-rollout-change-flow.png",
     "notes/maas/aibrix架构与实现/assets/09/02-observability-signal-map.png",
     "notes/maas/aibrix架构与实现/assets/09/03-troubleshooting-ladder.png",
