@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "notes/maas/aibrix架构与实现/03.模型生命周期与基础推理工作负载.md",
+                "file": "notes/maas/aibrix架构与实现/04.复杂推理部署形态.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "03.模型生命周期与基础推理工作负载"
+              "title": "04.复杂推理部署形态"
             }
           }
         ]
@@ -156,13 +156,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "notes/maas/aibrix架构与实现/03.模型生命周期与基础推理工作负载.md",
+                "file": "notes/maas/aibrix架构与实现/04.复杂推理部署形态.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "03.模型生命周期与基础推理工作负载 的大纲"
+              "title": "04.复杂推理部署形态 的大纲"
             }
           },
           {
@@ -197,6 +197,13 @@
   },
   "active": "3e7950d226fc8853",
   "lastOpenFiles": [
+    "notes/maas/aibrix架构与实现/05.弹性机制.md",
+    "notes/maas/aibrix架构与实现/assets/05/02-autoscaling-strategies.png",
+    "notes/maas/aibrix架构与实现/assets/05/04-health-recovery-layers.png",
+    "notes/maas/aibrix架构与实现/assets/05/03-scale-target-granularity.png",
+    "notes/maas/aibrix架构与实现/assets/05/01-elastic-closed-loop.png",
+    "notes/maas/aibrix架构与实现/assets/05",
+    "notes/maas/aibrix架构与实现/03.模型生命周期与基础推理工作负载.md",
     "notes/maas/aibrix架构与实现/04.复杂推理部署形态.md",
     "notes/maas/aibrix架构与实现/assets/04/04-stormservice-modes.png",
     "notes/maas/aibrix架构与实现/assets/04/03-pd-request-flow.png",
@@ -205,16 +212,11 @@
     "notes/maas/aibrix架构与实现/assets/04",
     "codex-x86_64-pc-windows-msvc.exe",
     "notes/maas/aibrix架构与实现/02.CRD中心化架构.md",
-    "notes/maas/aibrix架构与实现/03.模型生命周期与基础推理工作负载.md",
     "notes/maas/aibrix架构与实现/assets/03/02-readiness-routing-gate.png",
     "notes/maas/aibrix架构与实现/assets/03/03-single-vs-multi-replica.png",
-    "notes/maas/aibrix架构与实现/assets/03/01-basic-deployment-anatomy.png",
     "notes/maas/aibrix架构与实现/assets/03",
     "notes/maas/aibrix架构与实现/01.AIBrix要解决什么问题.md",
     "notes/maas/aibrix架构与实现/00.架构初探及教程大纲规划.md",
-    "notes/maas/aibrix架构与实现/assets/02/03-crd-k8s-boundary.png",
-    "notes/maas/aibrix架构与实现/assets/02/04-controller-ownership-loop.png",
-    "notes/maas/aibrix架构与实现/assets/02/02-crd-map.png",
     "notes/maas/aibrix架构与实现/assets/02",
     "notes/vLLM/vLLM架构与原理精讲系列/08_vLLM 控制面通信机制：从 EngineCoreClient 到 Executor RPC.md",
     "notes/maas/aibrix架构与实现/assets/01",
@@ -232,7 +234,6 @@
     "notes/从0开始学摄影/6 光线与影调/6.2 自然光.md",
     "notes/从0开始学摄影/6 光线与影调/6.1 观察光.md",
     "notes/从0开始学摄影/6 光线与影调/6 光线与影调.md",
-    "notes/从0开始学摄影/6 光线与影调",
     "notes/从0开始学摄影/5 焦距、距离、景深与空间感/5.5 人像变形、背景压缩、环境信息与虚化取舍.md",
     "notes/从0开始学摄影/5 焦距、距离、景深与空间感/5.4 二维画面中的三维感.md",
     "notes/从0开始学摄影/5 焦距、距离、景深与空间感/5.3 景深变量.md",
@@ -242,7 +243,6 @@
     "notes/从0开始学摄影/4 曝光与曝光意图/4.6 运动、弱光、高反差中的曝光取舍.md",
     "notes/从0开始学摄影/4 曝光与曝光意图/4.5 AAv、STv、M理解曝光后的操作映射.md",
     "notes/从0开始学摄影/4 曝光与曝光意图/4.4 保高光、保暗部、ETTR、就地还原.md",
-    "notes/从0开始学摄影/4 曝光与曝光意图/4.3 测光、曝光补偿、直方图、高光警告.md",
     "未命名.canvas"
   ]
 }
