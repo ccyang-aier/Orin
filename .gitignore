@@ -18,6 +18,8 @@
 out/
 build/
 dist/
+__pycache__/
+*.py[cod]
 
 # other
 notes/howtolearn/
@@ -26,3 +28,6 @@ notes/third_documents/
 
 # External source checkouts
 code/opensource/
+
+# Generated temporary paper-radar payloads
+code/arxiv_paper_radar/.tmp/
