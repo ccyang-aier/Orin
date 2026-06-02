@@ -20,6 +20,7 @@ from typing import Any
 
 
 API_URL = "https://export.arxiv.org/api/query"
+OAI_URL = "https://oaipmh.arxiv.org/oai"
 USER_AGENT = "OrinArxivPaperRadar/0.1 (https://github.com/ccyang-aier/Orin)"
 TIMEZONE = dt.timezone(dt.timedelta(hours=8))
 DEFAULT_STATE = Path("rag/arxiv_papers/processed_papers.json")
@@ -37,6 +38,24 @@ CORE_CATEGORIES = [
     "cs.AR",
     "stat.ML",
 ]
+
+OAI_SET_SPECS = {
+    "cs.AI": "cs:cs:AI",
+    "cs.CL": "cs:cs:CL",
+    "cs.LG": "cs:cs:LG",
+    "cs.CV": "cs:cs:CV",
+    "cs.NE": "cs:cs:NE",
+    "cs.IR": "cs:cs:IR",
+    "cs.DC": "cs:cs:DC",
+    "cs.PF": "cs:cs:PF",
+    "cs.AR": "cs:cs:AR",
+    "stat.ML": "stat:stat:ML",
+}
+
+OAI_NAMESPACES = {
+    "oai": "http://www.openarchives.org/OAI/2.0/",
+    "arxivraw": "http://arxiv.org/OAI/arXivRaw/",
+}
 
 KEYWORD_TERMS = [
     "AI",
@@ -142,6 +161,8 @@ CODE_HOSTS = [
 IGNORED_CODE_LINK_PATTERNS = [
     "github.com/arxiv/html_feedback",
     "github.com/brucemiller/latexml",
+    "huggingface.co/docs/",
+    "huggingface.co/huggingface",
 ]
 
 MONTHS = {
@@ -175,6 +196,26 @@ MONTHS = {
 def previous_day(now: dt.datetime | None = None) -> dt.date:
     current = now or dt.datetime.now(TIMEZONE)
     return (current.astimezone(TIMEZONE).date() - dt.timedelta(days=1))
+
+
+def parse_gmt_datetime(value: str) -> dt.datetime:
+    return dt.datetime.strptime(value, "%a, %d %b %Y %H:%M:%S GMT").replace(tzinfo=dt.timezone.utc)
+
+
+def gmt_to_shanghai_day(value: str) -> str:
+    return parse_gmt_datetime(value).astimezone(TIMEZONE).date().isoformat()
+
+
+def build_oai_query_days(
+    target_date: dt.date,
+    now: dt.datetime | None = None,
+    lookahead_days: int = 2,
+) -> list[dt.date]:
+    current = (now or dt.datetime.now(TIMEZONE)).astimezone(TIMEZONE).date()
+    end = min(current, target_date + dt.timedelta(days=lookahead_days))
+    if end < target_date:
+        return []
+    return [target_date + dt.timedelta(days=offset) for offset in range((end - target_date).days + 1)]
 
 
 def html_to_text(value: str) -> str:
@@ -361,6 +402,117 @@ def parse_api_feed(feed_xml: bytes) -> list[dict[str, Any]]:
     return papers
 
 
+def parse_oai_record(record: str | ET.Element) -> dict[str, Any]:
+    node = ET.fromstring(record) if isinstance(record, str) else record
+    meta = node.find("oai:metadata/arxivraw:arXivRaw", OAI_NAMESPACES)
+    if meta is None:
+        raise ValueError("OAI record missing arXivRaw metadata")
+
+    arxiv_id = normalize_arxiv_id(meta.findtext("arxivraw:id", default="", namespaces=OAI_NAMESPACES))
+    versions = meta.findall("arxivraw:version", OAI_NAMESPACES)
+    if not arxiv_id or not versions:
+        raise ValueError("OAI record missing id or version history")
+
+    first_version_gmt = versions[0].findtext("arxivraw:date", default="", namespaces=OAI_NAMESPACES)
+    categories = (meta.findtext("arxivraw:categories", default="", namespaces=OAI_NAMESPACES) or "").split()
+    authors_raw = html_to_text(meta.findtext("arxivraw:authors", default="", namespaces=OAI_NAMESPACES))
+    authors = [part.strip() for part in authors_raw.split(",") if part.strip()]
+    abstract = html_to_text(meta.findtext("arxivraw:abstract", default="", namespaces=OAI_NAMESPACES))
+    datestamp = node.findtext("oai:header/oai:datestamp", default="", namespaces=OAI_NAMESPACES)
+
+    return {
+        "arxiv_id": arxiv_id,
+        "title": html_to_text(meta.findtext("arxivraw:title", default="", namespaces=OAI_NAMESPACES)),
+        "authors": authors,
+        "categories": categories,
+        "submitted_date": gmt_to_shanghai_day(first_version_gmt),
+        "abstract": abstract,
+        "paper_url": f"https://arxiv.org/abs/{arxiv_id}",
+        "pdf_url": f"https://arxiv.org/pdf/{arxiv_id}",
+        "oai_datestamp": datestamp,
+        "oai_first_version_gmt": first_version_gmt,
+    }
+
+
+def fetch_oai_papers(
+    target_date: dt.date,
+    delay_seconds: float,
+    lookahead_days: int,
+    now: dt.datetime | None = None,
+) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+    query_days = build_oai_query_days(target_date, now=now, lookahead_days=lookahead_days)
+    papers: list[dict[str, Any]] = []
+    day_statuses: list[dict[str, Any]] = []
+
+    for query_day in query_days:
+        set_statuses: list[dict[str, Any]] = []
+        for category in CORE_CATEGORIES:
+            set_spec = OAI_SET_SPECS[category]
+            token = None
+            pages = 0
+            records = 0
+            kept = 0
+            errors: list[str] = []
+
+            while True:
+                if token:
+                    url = f"{OAI_URL}?verb=ListRecords&resumptionToken={urllib.parse.quote(token)}"
+                else:
+                    encoded_set = urllib.parse.quote(set_spec)
+                    day_text = query_day.isoformat()
+                    url = (
+                        f"{OAI_URL}?verb=ListRecords&metadataPrefix=arXivRaw&set={encoded_set}"
+                        f"&from={day_text}&until={day_text}"
+                    )
+                try:
+                    time.sleep(delay_seconds)
+                    root = ET.fromstring(http_get(url, timeout=90))
+                    pages += 1
+                    for record in root.findall(".//oai:record", OAI_NAMESPACES):
+                        records += 1
+                        try:
+                            paper = parse_oai_record(record)
+                        except ValueError as error:
+                            errors.append(str(error))
+                            continue
+                        if paper["submitted_date"] == target_date.isoformat():
+                            papers.append(paper)
+                            kept += 1
+                    token_node = root.find(".//oai:resumptionToken", OAI_NAMESPACES)
+                    token = (token_node.text or "").strip() if token_node is not None else ""
+                    if not token:
+                        break
+                except urllib.error.HTTPError as error:
+                    errors.append(f"HTTPError {error.code}: {error.reason}")
+                    break
+                except Exception as error:  # noqa: BLE001
+                    errors.append(f"{type(error).__name__}: {error}")
+                    break
+
+            set_statuses.append(
+                {
+                    "category": category,
+                    "set_spec": set_spec,
+                    "pages": pages,
+                    "records": records,
+                    "kept": kept,
+                    "errors": errors,
+                }
+            )
+        day_statuses.append({"query_day": query_day.isoformat(), "sets": set_statuses})
+
+    availability_window_end = target_date + dt.timedelta(days=lookahead_days)
+    status = {
+        "status": "ok",
+        "query_days": [day.isoformat() for day in query_days],
+        "lookahead_days": lookahead_days,
+        "availability_window_complete": (now or dt.datetime.now(TIMEZONE)).astimezone(TIMEZONE).date() >= availability_window_end,
+        "days": day_statuses,
+        "count": len(merge_papers(papers)),
+    }
+    return merge_papers(papers), status
+
+
 def fetch_api_papers(target_date: dt.date, max_results: int, delay_seconds: float) -> tuple[list[dict[str, Any]], dict[str, Any]]:
     query = build_api_query(target_date)
     encoded = urllib.parse.urlencode(
@@ -510,13 +662,14 @@ def enrich_fulltext(
     if truncated:
         text = text[:max_chars]
 
-    all_urls = sorted(set((paper.get("source_urls") or []) + urls + extract_urls(paper.get("abstract", ""))))
+    all_urls = sorted(set((paper.get("source_urls") or []) + extract_urls(paper.get("abstract", ""))))
     code_info = classify_code_links(all_urls)
     basis = "\n".join([paper.get("title", ""), paper.get("abstract", ""), text])
     enriched.update(
         {
             "tags": infer_tags(basis, paper.get("categories") or []),
             "source_urls": all_urls,
+            "fulltext_reference_urls": sorted(set(urls)),
             "has_open_source_demo_code": code_info["has_open_source_demo_code"],
             "code_links": code_info["code_links"],
             "fulltext_status": status,
@@ -528,6 +681,151 @@ def enrich_fulltext(
         }
     )
     return enriched
+
+
+def enrich_without_fulltext(paper: dict[str, Any], reason: str) -> dict[str, Any]:
+    all_urls = sorted(set((paper.get("source_urls") or []) + extract_urls(paper.get("abstract", ""))))
+    code_info = classify_code_links(all_urls)
+    enriched = {**paper}
+    enriched.update(
+        {
+            "tags": infer_tags("\n".join([paper.get("title", ""), paper.get("abstract", "")]), paper.get("categories") or []),
+            "source_urls": all_urls,
+            "has_open_source_demo_code": code_info["has_open_source_demo_code"],
+            "code_links": code_info["code_links"],
+            "fulltext_status": reason,
+            "fulltext_chars": 0,
+            "fulltext_truncated": False,
+            "fulltext": "",
+        }
+    )
+    return enriched
+
+
+def split_sentences(text: str) -> list[str]:
+    if not text:
+        return []
+    normalized = " ".join(text.split())
+    return [part.strip() for part in re.split(r"(?<=[.!?])\s+", normalized) if part.strip()]
+
+
+def find_relevant_sentence(text: str, patterns: list[str]) -> str:
+    for sentence in split_sentences(text):
+        lowered = sentence.lower()
+        if any(pattern in lowered for pattern in patterns):
+            return sentence
+    return ""
+
+
+def analysis_confidence(paper: dict[str, Any]) -> str:
+    status = paper.get("fulltext_status")
+    if status in {"html", "pdf"}:
+        return "高"
+    if status in {"skipped_scale", "skipped"}:
+        return "中低"
+    return "低"
+
+
+def primary_orin_connection(paper: dict[str, Any]) -> list[str]:
+    tags = set(paper.get("tags") or [])
+    connections = []
+    mapping = {
+        "LLM推理": "可连接到 Orin 里的 vLLM / 推理服务链路",
+        "KVCache": "可连接到 Orin 里的 KVCache 与长上下文主题",
+        "注意力算法": "可连接到 Orin 里的注意力优化与算子设计主题",
+        "长上下文": "可连接到 Orin 里的长上下文与上下文窗口主题",
+        "模型架构": "可连接到 Orin 里的模型架构与 MoE 主题",
+        "模型压缩": "可连接到 Orin 里的量化、压缩、部署成本主题",
+        "RAG": "可连接到 Orin 里的 RAG / 检索增强主题",
+        "AI Agent": "可连接到 Orin 里的 Agent、工具调用与工作流主题",
+        "多模态": "可连接到 Orin 里的多模态模型与应用主题",
+        "LLM推理能力": "可连接到 Orin 里的推理能力与评测主题",
+    }
+    for tag, sentence in mapping.items():
+        if tag in tags:
+            connections.append(sentence)
+    if not connections:
+        categories = ", ".join(paper.get("categories") or []) or "当前分类"
+        connections.append(f"当前更像通用 {categories} 研究，可作为 Orin 里 AI 论文观察池的背景材料")
+    return connections
+
+
+def importance_rating(paper: dict[str, Any]) -> str:
+    tags = set(paper.get("tags") or [])
+    score = 0
+    if tags & {"LLM推理", "AI Agent", "KVCache", "RAG", "LLM推理能力"}:
+        score += 2
+    if tags & {"模型架构", "模型压缩", "多模态", "长上下文"}:
+        score += 1
+    if paper.get("has_open_source_demo_code") == "yes":
+        score += 1
+    if paper.get("fulltext_status") in {"html", "pdf"}:
+        score += 1
+    if paper.get("fulltext_status") in {"failed", "skipped_scale", "skipped"}:
+        score -= 1
+    if score >= 4:
+        return "A"
+    if score >= 2:
+        return "B"
+    return "C"
+
+
+def build_paper_analysis(paper: dict[str, Any]) -> dict[str, str]:
+    abstract = paper.get("abstract", "")
+    title = paper.get("title", paper.get("arxiv_id", "论文"))
+    tags = paper.get("tags") or []
+    confidence = analysis_confidence(paper)
+    area = tags[0] if tags else (paper.get("categories") or ["AI 研究"])[0]
+    problem_sentence = split_sentences(abstract)[0] if split_sentences(abstract) else "摘要没有给出足够清晰的问题定义"
+    idea_sentence = find_relevant_sentence(abstract, ["propose", "introduce", "present", "develop", "design"])
+    evidence_sentence = find_relevant_sentence(abstract, ["experiment", "benchmark", "result", "evaluate", "outperform", "performance"])
+
+    if not idea_sentence:
+        sentences = split_sentences(abstract)
+        idea_sentence = sentences[1] if len(sentences) > 1 else problem_sentence
+
+    if not evidence_sentence:
+        evidence_sentence = "摘要未直接给出明确的定量结果，需要阅读全文或代码仓库进一步确认"
+
+    architecture_sentence = "从标题、标签与摘要看，方法主线是“问题建模 -> 关键模块设计 -> 基准验证”"
+    if "AI Agent" in tags:
+        architecture_sentence = "从摘要与标签看，系统更像技能、工具、规划器协同的 Agent 工作流，而不是单一模型增量"
+    elif "LLM推理" in tags or "LLM推理能力" in tags:
+        architecture_sentence = "方法重点落在大模型推理链路上，核心流程通常围绕推理步骤、搜索结构或解码策略展开"
+    elif "多模态" in tags:
+        architecture_sentence = "方法形态更接近多模态编码、模态对齐或跨模态融合，再接下游任务头做验证"
+    elif "模型压缩" in tags:
+        architecture_sentence = "方法重心偏向模型压缩链路，通常包含压缩策略、误差控制与部署收益评估"
+
+    confidence_note = f"当前分析置信度：{confidence}"
+    if paper.get("fulltext_status") not in {"html", "pdf"}:
+        confidence_note += "；正文未完整抽取，本条判断主要基于标题、摘要、分类和链接信号"
+
+    conclusion = f"{title} 更偏向 {area} 方向，当前最值得关注的是其是否能在公开基准或真实系统中复现摘要声称的收益"
+    follow_up = []
+    if paper.get("has_open_source_demo_code") != "yes":
+        follow_up.append("作者是否会补公开代码或最小可复现实验脚本")
+    if paper.get("fulltext_status") not in {"html", "pdf"}:
+        follow_up.append("需要在正文可用后复核方法细节与实验设置")
+    if "AI Agent" in tags:
+        follow_up.append("需要关注任务拆分、工具选择与多轮反馈机制是否有消融实验")
+    elif "LLM推理" in tags or "LLM推理能力" in tags:
+        follow_up.append("需要确认是否报告了时延、吞吐、成本或准确率之间的权衡")
+    elif "模型压缩" in tags:
+        follow_up.append("需要确认压缩收益是否在不同模型规模与硬件上都成立")
+    else:
+        follow_up.append("需要确认摘要中的收益是否覆盖更强基线或更复杂场景")
+
+    return {
+        "core_problem": f"论文聚焦于 {area}，摘要显示其核心问题是：{problem_sentence}",
+        "key_idea": f"从摘要可见，作者的关键思路是：{idea_sentence}",
+        "architecture": f"{architecture_sentence}；{confidence_note}",
+        "evidence": f"当前能直接拿到的证据是：{evidence_sentence}",
+        "rating": importance_rating(paper),
+        "connections": "；".join(primary_orin_connection(paper)),
+        "questions": "；".join(follow_up),
+        "conclusion": conclusion,
+    }
 
 
 def load_state(path: str | Path) -> dict[str, Any]:
@@ -575,39 +873,31 @@ def mark_analyzed(
 def collect(args: argparse.Namespace) -> int:
     target_date = dt.date.fromisoformat(args.target_date) if args.target_date else previous_day()
     state = load_state(args.state)
-    api_papers, api_status = fetch_api_papers(target_date, args.max_results, args.delay_seconds)
-    html_papers, html_status = fetch_html_search_papers(
+    now = dt.datetime.now(TIMEZONE)
+    papers, oai_status = fetch_oai_papers(
         target_date,
-        size=args.search_size,
-        pages_per_batch=args.search_pages,
         delay_seconds=args.delay_seconds,
+        lookahead_days=args.oai_lookahead_days,
+        now=now,
     )
-    papers = merge_papers(api_papers, html_papers)
     papers = [paper for paper in papers if paper.get("submitted_date") in (None, target_date.isoformat())]
+    pending_reason = None
+    if not papers and not oai_status.get("availability_window_complete"):
+        pending_reason = "target day may not be fully exposed in public arXiv feeds yet"
 
+    unprocessed = filter_unprocessed(papers, state)
     enriched: list[dict[str, Any]] = []
-    for index, paper in enumerate(filter_unprocessed(papers, state)):
+    for index, paper in enumerate(unprocessed):
         if args.max_papers and index >= args.max_papers:
             break
         paper = enrich_from_abs_page(paper, args.delay_seconds)
         if paper.get("submitted_date") and paper["submitted_date"] != target_date.isoformat():
             continue
-        if not args.skip_fulltext:
+        if not args.skip_fulltext and index < args.fulltext_limit:
             paper = enrich_fulltext(paper, timeout=args.fulltext_timeout, max_chars=args.max_fulltext_chars)
         else:
-            all_urls = extract_urls(paper.get("abstract", ""), *(paper.get("source_urls") or []))
-            code_info = classify_code_links(all_urls)
-            paper.update(
-                {
-                    "tags": infer_tags("\n".join([paper.get("title", ""), paper.get("abstract", "")]), paper.get("categories") or []),
-                    "has_open_source_demo_code": code_info["has_open_source_demo_code"],
-                    "code_links": code_info["code_links"],
-                    "fulltext_status": "skipped",
-                    "fulltext_chars": 0,
-                    "fulltext_truncated": False,
-                    "fulltext": "",
-                }
-            )
+            reason = "skipped" if args.skip_fulltext else "skipped_scale"
+            paper = enrich_without_fulltext(paper, reason=reason)
         enriched.append(paper)
 
     output = {
@@ -615,15 +905,19 @@ def collect(args: argparse.Namespace) -> int:
         "generated_at": dt.datetime.now(TIMEZONE).isoformat(timespec="seconds"),
         "target_date": target_date.isoformat(),
         "query": {
-            "api_query": build_api_query(target_date),
+            "collector": "oai_pmh_v1_shanghai_filter",
             "categories": CORE_CATEGORIES,
             "keyword_terms": KEYWORD_TERMS,
-            "search_batches": SEARCH_BATCHES,
+            "oai_set_specs": OAI_SET_SPECS,
+            "oai_query_days": oai_status.get("query_days", []),
         },
-        "source_status": {"api": api_status, "html_search": html_status},
+        "source_status": {
+            "oai": oai_status,
+            "pending_reason": pending_reason,
+        },
         "counts": {
             "candidate_papers": len(papers),
-            "already_processed": len(papers) - len(filter_unprocessed(papers, state)),
+            "already_processed": len(papers) - len(unprocessed),
             "new_papers": len(enriched),
         },
         "papers": enriched,
@@ -639,6 +933,10 @@ def render_report(args: argparse.Namespace) -> int:
     data = json.loads(Path(args.input).read_text(encoding="utf-8"))
     target_date = data["target_date"]
     generated_at = dt.datetime.now(TIMEZONE).date().isoformat()
+    source_status = data.get("source_status", {})
+    oai_status = source_status.get("oai", {})
+    fulltext_ready = sum(1 for paper in data["papers"] if paper.get("fulltext_status") in {"html", "pdf"})
+    fulltext_skipped = sum(1 for paper in data["papers"] if paper.get("fulltext_status") not in {"html", "pdf"})
     lines = [
         "---",
         "tags: [papers, arxiv, ai, llm-inference]",
@@ -654,25 +952,42 @@ def render_report(args: argparse.Namespace) -> int:
         f"- 候选论文：{data['counts']['candidate_papers']} 篇；",
         f"- 新增待分析论文：{data['counts']['new_papers']} 篇；",
         f"- 已跳过重复论文：{data['counts']['already_processed']} 篇；",
+        f"- 采集入口：OAI-PMH 单日轮询 + `v1 GMT -> Asia/Shanghai` 日期过滤；",
+        f"- 完整正文抽取：{fulltext_ready} 篇；",
+        f"- 仅基于摘要/元数据分析：{fulltext_skipped} 篇；",
         "",
-        "## 1.2 今日论文总表",
+        "## 1.2 抓取状态",
         "",
-        "| 评级 | arXiv ID | 标题 | 标签 | 论文链接 | 开源Demo/代码 | 一句话结论 |",
-        "|---|---|---|---|---|---|---|",
+        f"- OAI 查询日：{', '.join(oai_status.get('query_days', [])) or '未记录'}；",
+        f"- 可见性窗口是否完整：{'是' if oai_status.get('availability_window_complete') else '否'}；",
     ]
+    if source_status.get("pending_reason"):
+        lines.append(f"- 公开可见性提醒：{source_status['pending_reason']}；")
+    lines.extend(
+        [
+            "",
+            "## 1.3 今日论文总表",
+            "",
+            "| 评级 | arXiv ID | 标题 | 标签 | 论文链接 | 开源Demo/代码 | 一句话结论 |",
+            "|---|---|---|---|---|---|---|",
+        ]
+    )
     for paper in data["papers"]:
+        analysis = build_paper_analysis(paper)
         code = "有：" + ", ".join(paper.get("code_links", [])) if paper.get("code_links") else "未发现"
         tags = ", ".join(paper.get("tags", []))
         title = (paper.get("title") or "").replace("|", "\\|")
+        conclusion = analysis["conclusion"].replace("|", "\\|")
         lines.append(
-            f"| 待评 | {paper['arxiv_id']} | {title} | {tags} | {paper.get('paper_url')} | {code} | 待 AI 分析 |"
+            f"| {analysis['rating']} | {paper['arxiv_id']} | {title} | {tags} | {paper.get('paper_url')} | {code} | {conclusion} |"
         )
-    lines.extend(["", "## 1.3 论文详析", ""])
+    lines.extend(["", "## 1.4 论文详析", ""])
     for index, paper in enumerate(data["papers"], 1):
+        analysis = build_paper_analysis(paper)
         code = "有：" + ", ".join(paper.get("code_links", [])) if paper.get("code_links") else "未发现"
         lines.extend(
             [
-                f"### 1.3.{index} [待评] {paper.get('title', paper['arxiv_id'])}",
+                f"### 1.4.{index} [{analysis['rating']}] {paper.get('title', paper['arxiv_id'])}",
                 "",
                 "**基础信息**",
                 "",
@@ -688,13 +1003,15 @@ def render_report(args: argparse.Namespace) -> int:
                 "",
                 paper.get("abstract", "未解析"),
                 "",
-                "**AI 分析待填**",
+                "**AI 分析**",
                 "",
-                "- 核心问题：；",
-                "- 原理与核心思想：；",
-                "- 架构与流程：；",
-                "- 实验与证据：；",
-                "- 重要性评级：；",
+                f"- 核心问题：{analysis['core_problem']}；",
+                f"- 原理与核心思想：{analysis['key_idea']}；",
+                f"- 架构与流程：{analysis['architecture']}；",
+                f"- 实验与证据：{analysis['evidence']}；",
+                f"- 重要性评级：{analysis['rating']}；",
+                f"- Orin 知识连接：{analysis['connections']}；",
+                f"- 后续问题：{analysis['questions']}；",
                 "",
             ]
         )
@@ -722,10 +1039,12 @@ def build_parser() -> argparse.ArgumentParser:
     collect_parser.add_argument("--max-results", type=int, default=1000, help="Maximum arXiv API results.")
     collect_parser.add_argument("--search-size", type=int, default=200, help="HTML search page size per keyword batch.")
     collect_parser.add_argument("--search-pages", type=int, default=2, help="HTML search pages per keyword batch.")
-    collect_parser.add_argument("--delay-seconds", type=float, default=3.1, help="Delay before external arXiv requests.")
+    collect_parser.add_argument("--delay-seconds", type=float, default=0.2, help="Delay before external arXiv requests.")
     collect_parser.add_argument("--fulltext-timeout", type=int, default=60, help="Per-paper fulltext fetch timeout.")
     collect_parser.add_argument("--max-fulltext-chars", type=int, default=0, help="0 keeps complete extracted full text in the temporary JSON.")
+    collect_parser.add_argument("--fulltext-limit", type=int, default=20, help="Only the first N papers attempt fulltext extraction; the rest stay abstract-only.")
     collect_parser.add_argument("--max-papers", type=int, default=0, help="Optional cap for validation runs.")
+    collect_parser.add_argument("--oai-lookahead-days", type=int, default=2, help="Single-day OAI query window extends this many days beyond the target date.")
     collect_parser.add_argument("--skip-fulltext", action="store_true", help="Skip fulltext extraction for smoke tests.")
     collect_parser.set_defaults(func=collect)
 

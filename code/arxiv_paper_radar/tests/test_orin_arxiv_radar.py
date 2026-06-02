@@ -1,3 +1,4 @@
+import argparse
 import datetime as dt
 import json
 from pathlib import Path
@@ -132,3 +133,87 @@ def test_state_marks_only_new_papers_and_records_report(tmp_path):
     assert saved["papers"]["2605.00002"]["status"] == "analyzed"
     assert saved["papers"]["2605.00002"]["title"] == "New paper"
     assert saved["papers"]["2605.00002"]["report_path"].endswith("2026-06-01 arxiv ai papers.md")
+
+
+def test_parse_oai_record_uses_v1_timestamp_in_shanghai_timezone():
+    xml = """
+    <record xmlns="http://www.openarchives.org/OAI/2.0/">
+      <header>
+        <identifier>oai:arXiv.org:2606.01313</identifier>
+        <datestamp>2026-06-02</datestamp>
+      </header>
+      <metadata>
+        <arXivRaw xmlns="http://arxiv.org/OAI/arXivRaw/">
+          <id>2606.01313</id>
+          <title>PSG-Nav: Probabilistic Scene Graph Navigation via Multiverse Decision Making</title>
+          <authors>Author One, Author Two</authors>
+          <categories>cs.AI</categories>
+          <abstract>Introduces a navigation method for embodied agents.</abstract>
+          <version version="v1">
+            <date>Sun, 31 May 2026 16:00:19 GMT</date>
+          </version>
+        </arXivRaw>
+      </metadata>
+    </record>
+    """
+
+    paper = radar.parse_oai_record(xml)
+
+    assert paper["arxiv_id"] == "2606.01313"
+    assert paper["submitted_date"] == "2026-06-01"
+    assert paper["oai_datestamp"] == "2026-06-02"
+    assert paper["oai_first_version_gmt"] == "Sun, 31 May 2026 16:00:19 GMT"
+
+
+def test_build_oai_query_days_caps_at_current_shanghai_date():
+    target = dt.date(2026, 6, 1)
+    now = dt.datetime(2026, 6, 2, 10, 0, tzinfo=radar.TIMEZONE)
+
+    days = radar.build_oai_query_days(target, now=now, lookahead_days=2)
+
+    assert days == [dt.date(2026, 6, 1), dt.date(2026, 6, 2)]
+
+
+def test_render_report_replaces_placeholder_with_auto_analysis(tmp_path):
+    input_path = tmp_path / "papers.json"
+    output_path = tmp_path / "report.md"
+    input_path.write_text(
+        json.dumps(
+            {
+                "target_date": "2026-06-01",
+                "counts": {"candidate_papers": 1, "new_papers": 1, "already_processed": 0},
+                "source_status": {"oai": {"status": "ok"}},
+                "papers": [
+                    {
+                        "arxiv_id": "2606.01314",
+                        "title": "SkillSmith: Co-Evolving Skills and Tools for Self-Improving Agent Systems",
+                        "authors": ["A", "B"],
+                        "categories": ["cs.AI", "cs.LG"],
+                        "tags": ["AI Agent", "LLM推理能力"],
+                        "paper_url": "https://arxiv.org/abs/2606.01314",
+                        "abstract": "This paper studies self-improving agent systems. It introduces a co-evolution workflow for skills and tools. Experiments show strong gains on agent benchmarks.",
+                        "code_links": ["https://github.com/acme/skillsmith"],
+                        "has_open_source_demo_code": "yes",
+                        "fulltext_status": "skipped_scale",
+                        "fulltext_chars": 0,
+                    }
+                ],
+            },
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+
+    result = radar.render_report(
+        argparse.Namespace(
+            input=str(input_path),
+            output=str(output_path),
+        )
+    )
+
+    report = output_path.read_text(encoding="utf-8")
+    assert result == 0
+    assert "AI 分析待填" not in report
+    assert "- 核心问题：" in report
+    assert "- 重要性评级：" in report
+    assert "S/A/B/C" not in report

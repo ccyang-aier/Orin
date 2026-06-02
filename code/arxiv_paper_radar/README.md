@@ -1,7 +1,7 @@
 ---
 tags: [automation, arxiv, papers, ai]
-updated: 2026-06-01
-description: Orin arXiv AI 论文日报自动化的抓取范围、执行流程、验证记录和状态文件约定。
+updated: 2026-06-02
+description: Orin arXiv AI 论文日报自动化的抓取范围、执行流程、验证记录和状态文件约定，当前版本以 OAI-PMH 为主采集入口。
 ---
 
 # 1 Orin arXiv AI 论文日报自动化
@@ -12,13 +12,14 @@ description: Orin arXiv AI 论文日报自动化的抓取范围、执行流程�
 
 ## 1.2 抓取范围
 
-主查询使用 arXiv API 的前一天提交日期窗口：
+主查询改为 OAI-PMH 单日轮询，再用 `arXivRaw` 里的 `version v1` GMT 时间换算到 `Asia/Shanghai`：
 
-- 日期窗口：`submittedDate:[YYYYMMDD0000 TO YYYYMMDD2359]`；
-- 分类范围：`cs.AI`、`cs.CL`、`cs.LG`、`cs.CV`、`cs.NE`、`cs.IR`、`cs.DC`、`cs.PF`、`cs.AR`、`stat.ML`；
-- 关键词范围：AI、artificial intelligence、machine learning、large language model、LLM、foundation model、generative AI、transformer、VLM、LLM reasoning、LLM inference、inference engine、model serving、continuous batching、speculative decoding、KV cache、KVCache、key-value cache、PagedAttention、FlashAttention、attention algorithm、long context、quantization、model compression、Mixture of Experts、MoE、RAG、AI agent 等；
+- 轮询集合：`cs:cs:AI`、`cs:cs:CL`、`cs:cs:LG`、`cs:cs:CV`、`cs:cs:NE`、`cs:cs:IR`、`cs:cs:DC`、`cs:cs:PF`、`cs:cs:AR`、`stat:stat:ML`；
+- 主过滤语义：`v1 GMT -> Asia/Shanghai date == target_date`；
+- 查询窗口：默认轮询 `target_date` 到 `target_date + 2` 的单天 OAI 记录，并分别发起请求；
+- 元数据补全：对入选论文访问 `https://arxiv.org/abs/<id>`，补充作者、摘要、分类、HTML 正文链接和显式外链；
 
-当 arXiv API 被限流或失败时，脚本会继续使用 arXiv HTML 搜索页按关键词 OR 批次兜底，避免单一入口失败导致整日报中断。
+这样做的原因是 arXiv API 与 HTML 搜索页容易限流，而 `recent/search` 更接近公告日语义，不适合精确满足“按上海自然日统计首次提交”的要求。
 
 ## 1.3 输出约定
 
@@ -77,7 +78,7 @@ python code\arxiv_paper_radar\orin_arxiv_radar.py collect `
   --output code\arxiv_paper_radar\.tmp\2026-05-31-papers.json
 ```
 
-4. 生成 Markdown 日报骨架；
+4. 生成 Markdown 日报；
 
 ```powershell
 python code\arxiv_paper_radar\orin_arxiv_radar.py render-report `
@@ -85,7 +86,7 @@ python code\arxiv_paper_radar\orin_arxiv_radar.py render-report `
   --output "notes\papers\arxiv-ai-daily\2026-05-31 arxiv ai papers.md"
 ```
 
-5. 由 Codex 自动化读取临时 JSON 和日报骨架，对每篇新增论文补全 AI 分析、核心思想、架构、实验证据和重要性评级；
+5. `render-report` 会直接把每篇论文渲染成中文分析稿，包括核心问题、关键思路、架构、证据、评级、Orin 连接和后续问题；
 
 6. 日报确认完成后，更新去重状态；
 
@@ -100,18 +101,17 @@ python code\arxiv_paper_radar\orin_arxiv_radar.py mark-analyzed `
 
 ## 1.6 可行性验证记录
 
-2026-06-01 验证结果：
+2026-06-02 验证结果：
 
-- arXiv API 最小查询在当前运行环境中返回 `HTTP 429 Rate exceeded`，脚本因此必须保留重试/失败隔离和 HTML 兜底；
-- arXiv 分类列表页可访问，`https://arxiv.org/list/cs.AI/recent?show=25` 成功返回论文列表；
-- arXiv HTML 搜索页可访问，关键词查询 `KVCache OR "KV cache" OR "LLM inference"` 成功解析到论文条目、提交日期、标题、作者、摘要和 PDF 链接；
-- arXiv 论文详情页可访问，`https://arxiv.org/abs/<id>` 可解析摘要、作者、分类、提交日期和 HTML 正文链接；
-- PDF 下载可行但较慢，首 1MB 下载约 23 秒，因此正式流程优先使用 arXiv HTML 正文页，HTML 不存在时再回退 PDF；
-- `https://arxiv.org/html/2605.31492` 成功抽取 HTML 正文，约 57,786 字符，说明 HTML 正文路径可支撑日常正文分析；
+- arXiv API 与 HTML 搜索页都曾触发 `HTTP 429`，因此不再适合作为主采集入口；
+- `https://oaipmh.arxiv.org/oai?verb=Identify` 与 `ListRecords` 在当前环境可稳定访问；
+- OAI 的 `datestamp` 更适合做“公开可见记录增量轮询”，真正的“首次提交日”需要读取 `arXivRaw version v1 date` 后自行换算时区；
+- `https://arxiv.org/abs/<id>` 可稳定解析摘要、作者、分类、提交日期和 HTML 正文链接；
+- PDF 下载可行但较慢，因此正式流程只对前若干篇论文尝试全文抽取，其余条目保留摘要级分析并明确降低置信度；
 
 ## 1.7 自动化提示词核心要求
 
-自动化不应只复述摘要。它必须结合摘要、正文抽取文本、论文链接、代码链接和标签，对每篇新增论文给出可读、可检索、可复用的简要分析。若某篇论文正文抽取失败，必须在日报中标注“正文抽取失败”，并基于摘要给出较低置信度分析。
+自动化不应只复述摘要。它必须结合摘要、正文抽取文本、论文链接、代码链接和标签，对每篇新增论文给出可读、可检索、可复用的简要分析。若某篇论文正文抽取失败，或因规模策略未抽取全文，必须在日报中明确标注，并基于摘要给出较低置信度分析。
 
 ## 1.8 当前自动化配置
 

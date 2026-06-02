@@ -197,6 +197,10 @@
   },
   "active": "3e7950d226fc8853",
   "lastOpenFiles": [
+    "docs/superpowers/plans/2026-06-02-arxiv-radar-oai-harvesting.md",
+    "docs/superpowers/plans",
+    "docs/superpowers",
+    "docs",
     "notes/papers/arxiv-ai-daily/2026-06-01 arxiv ai papers.md",
     "code/arxiv_paper_radar/README.md",
     "notes/maas/aibrix架构与实现/00.架构初探及教程大纲规划.md",
@@ -208,9 +212,6 @@
     "notes/papers/arxiv-ai-daily/2026-05-31 arxiv ai papers.md",
     "notes/papers/arxiv-ai-daily",
     "rag/arxiv_papers/processed_papers.json",
-    "rag/arxiv_papers",
-    "code/arxiv_paper_radar/requirements.txt",
-    "code/arxiv_paper_radar/orin_arxiv_radar.py",
     "notes/maas/aibrix架构与实现/10.全局串联.md",
     "notes/maas/aibrix架构与实现/assets/10/03-global-mental-model.png",
     "notes/maas/aibrix架构与实现/assets/10/02-request-hot-path.png",
@@ -242,7 +243,6 @@
     "notes/从0开始学摄影/6 光线与影调/6.2 自然光.md",
     "notes/从0开始学摄影/6 光线与影调/6.1 观察光.md",
     "notes/从0开始学摄影/6 光线与影调/6 光线与影调.md",
-    "notes/从0开始学摄影/5 焦距、距离、景深与空间感/5.5 人像变形、背景压缩、环境信息与虚化取舍.md",
     "未命名.canvas"
   ]
 }
