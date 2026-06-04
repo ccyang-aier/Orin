@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "last_run_at": "2026-06-03T10:33:34+08:00",
+  "last_run_at": "2026-06-04T10:27:11+08:00",
   "papers": {
     "2606.02418": {
       "status": "analyzed",
@@ -8312,6 +8312,3894 @@
       "last_analyzed_at": "2026-06-03T10:33:34+08:00",
       "report_path": "notes/papers/arxiv-ai-daily/2026-06-02 arxiv ai papers.md",
       "paper_url": "https://arxiv.org/abs/2606.02423",
+      "fulltext_sha256": null
+    },
+    "2606.05031": {
+      "status": "analyzed",
+      "title": "MetaPoint: Unlocking Precise Spatial Control in Agentic Visual Generation",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.05031",
+      "fulltext_sha256": "753747d6e6d5dfaa278ad661e66bd92a9b7dd027b55baa3d3f106c43852999c1"
+    },
+    "2606.05030": {
+      "status": "analyzed",
+      "title": "Imbuing Large Language Models with Bidirectional Logic for Robust Chain Repair",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.05030",
+      "fulltext_sha256": "57aee55432809ca404dc0e45d8a591177578c2075411fa98373b51fa155c5b76"
+    },
+    "2606.05029": {
+      "status": "analyzed",
+      "title": "Validity Threats for Foundation Model Research",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.05029",
+      "fulltext_sha256": "7087302aad6be6971f6bf08e62da6b8f22b0e3ec6939ca1721b10d0d2a576b62"
+    },
+    "2606.05025": {
+      "status": "analyzed",
+      "title": "Invariant Gradient Alignment for Robust Reasoning Distillation",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.05025",
+      "fulltext_sha256": "8a6b0d89d3161126276a7c46c18f0ba369b306c0db6e2486a736919e94b3657e"
+    },
+    "2606.05021": {
+      "status": "analyzed",
+      "title": "Enhancing the MADDPG Algorithm for Multi-Agent Learning via Action Inference and Importance Sampling",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.05021",
+      "fulltext_sha256": "e672baa1383f171dd84dc591ccce00fcc70774696f72062d579c1e4bed46213a"
+    },
+    "2606.05018": {
+      "status": "analyzed",
+      "title": "Handwriting Extraction and Analysis of Signature Lists in Swiss Popular Initiatives",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.05018",
+      "fulltext_sha256": "72e9a141fea2fd773c5dba05a4260e0a9f71f6718ed6baaa7fbd3c62dec92bbf"
+    },
+    "2606.05017": {
+      "status": "analyzed",
+      "title": "GoldenFloat: A Phi-Derived Static-Split Floating-Point Family from GF4 to GF256 with a Lucas-Exact Integer Identity",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.05017",
+      "fulltext_sha256": "0dade8c1b6c69f864a724432f037e70059fad3a9f99a68af11619b2247d3ef2b"
+    },
+    "2606.05016": {
+      "status": "analyzed",
+      "title": "TaDA: Calibrated Probe Gating for Task-Domain LoRA Merging",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.05016",
+      "fulltext_sha256": "0b38eb32231faf1c194aa8374f1c298fbe4c0fc52e24c1ae3fede5205c92a60c"
+    },
+    "2606.05014": {
+      "status": "analyzed",
+      "title": "Depth-Attention: Cross-Layer Value Mixing for Language Models",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.05014",
+      "fulltext_sha256": "be8fb92c14863b51f934887ad59fb5c6f9806d3ffa9b35e9c6def84a5ff8b1c0"
+    },
+    "2606.05011": {
+      "status": "analyzed",
+      "title": "CIPER: A Unified Framework for Cross-view Image-retrieval and Pose-estimation",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.05011",
+      "fulltext_sha256": "5f6e20829055608525c408c0f76a02989a4810002fb0f3d3f84cdd123455f733"
+    },
+    "2606.05009": {
+      "status": "analyzed",
+      "title": "DAR: Deontic Reasoning with Agentic Harnesses",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.05009",
+      "fulltext_sha256": "7bb9f574a5496b735c420cb1ce511f0372aecc8864e86ecbeae38b8a9458ac9a"
+    },
+    "2606.05008": {
+      "status": "analyzed",
+      "title": "M$^3$Eval: Multi-Modal Memory Evaluation through Cognitively-Grounded Video Tasks",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.05008",
+      "fulltext_sha256": "30a202bde3889437501624790912090cd5cf2e090a3c063c8f910645fb46824e"
+    },
+    "2606.05004": {
+      "status": "analyzed",
+      "title": "SharedRequest: Privacy-Preserving Model-Agnostic Inference for Large Language Models",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.05004",
+      "fulltext_sha256": "e5a4b66024957e7dbabed59a3b647bd5f6b96b02bc497149430824591d7d9130"
+    },
+    "2606.05002": {
+      "status": "analyzed",
+      "title": "GARL: Game-Theoretic Reinforcement Learning for Multi-Agent Strategic Prioritisation",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.05002",
+      "fulltext_sha256": "b06ab19d665544b6441867e29c1ea843b65624ebe7c9e22b7089aa39fedb548b"
+    },
+    "2606.04994": {
+      "status": "analyzed",
+      "title": "New Benchmarking Shows Limited Generalization Power of TCR Antigenic Epitope Prediction Models",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04994",
+      "fulltext_sha256": "b4036c834272edb11c84aa59469f36a14acaeddb309cf99ecc717d05e7ea0f8c"
+    },
+    "2606.04992": {
+      "status": "analyzed",
+      "title": "Multi-Camera AR Guidance System for Surgical Instrument Handling and Assembly: Investigating Workload and Efficiency",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04992",
+      "fulltext_sha256": "f9320fda2ac1aa42773e8ab9f9777d81bc81ed6396b640b58637ddd84c402545"
+    },
+    "2606.04990": {
+      "status": "analyzed",
+      "title": "From Agent Traces to Trust: Evidence Tracing and Execution Provenance in LLM Agents",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04990",
+      "fulltext_sha256": "d593361a18ae3232a31e9621c216991f3e8d586674e7358f8dffb217d1c033f6"
+    },
+    "2606.04987": {
+      "status": "analyzed",
+      "title": "DeliChess: A Multi-party Dialogue Dataset for Deliberation in Chess Puzzle Solving",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04987",
+      "fulltext_sha256": "7df68b55c02a299214dcf8e955748b38f73909040c9f513c3b0129eecacb914a"
+    },
+    "2606.04986": {
+      "status": "analyzed",
+      "title": "Food-R1: A Unified Multi-Task Food Vision-Language Model with Reinforcement Learning",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04986",
+      "fulltext_sha256": "6fb509681d0cfd14a785f9e7bf1302c7d9cf77fd467a75c72b7f9962648605eb"
+    },
+    "2606.04980": {
+      "status": "analyzed",
+      "title": "AlphaQ: Calibration-Free Bit Allocation for Mixture-of-Experts Quantization",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04980",
+      "fulltext_sha256": "64991ae2f79edb1d9bdcead84431b8f8566e9eb3a6b59fa6829ddb287bccaba2"
+    },
+    "2606.04978": {
+      "status": "analyzed",
+      "title": "Probing Outcome-Level Resemblance and Mechanism-Level Alignment in LLM Risk Decisions: Evidence from the St. Petersburg Game",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04978",
+      "fulltext_sha256": null
+    },
+    "2606.04974": {
+      "status": "analyzed",
+      "title": "SAID: Accelerating Diffusion-Based Language Models via Scaffold-Aware Iterative Decoding",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04974",
+      "fulltext_sha256": null
+    },
+    "2606.04971": {
+      "status": "analyzed",
+      "title": "Be Fair! Can Machine Learning Engineering Agents Adhere to Fairness Constraints?",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04971",
+      "fulltext_sha256": null
+    },
+    "2606.04970": {
+      "status": "analyzed",
+      "title": "Plan, Watch, Recover: A Benchmark and Architectures for Proactive Procedural Assistance",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04970",
+      "fulltext_sha256": null
+    },
+    "2606.04967": {
+      "status": "analyzed",
+      "title": "From Prompt to Process: a Process Taxonomy and Comparative Assessment of Frameworks Supporting AI Software Development Agents",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04967",
+      "fulltext_sha256": null
+    },
+    "2606.04964": {
+      "status": "analyzed",
+      "title": "SemBlock: Semantic Boundary Dynamic Blocks for Diffusion LLMs",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04964",
+      "fulltext_sha256": null
+    },
+    "2606.04957": {
+      "status": "analyzed",
+      "title": "NLLog: Lightweight, Explainable SOC Anomaly Detection via Log-to-Language Rewriting",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04957",
+      "fulltext_sha256": null
+    },
+    "2606.04952": {
+      "status": "analyzed",
+      "title": "Clinical Assistant for Remote Engagement Link (CARE-link): A Web-Based Electronic Health Records Software for Managing Diabetes",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04952",
+      "fulltext_sha256": null
+    },
+    "2606.04946": {
+      "status": "analyzed",
+      "title": "A General Framework for Dynamic Consistent Submodular Maximization",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04946",
+      "fulltext_sha256": null
+    },
+    "2606.04945": {
+      "status": "analyzed",
+      "title": "STaR-Quant: State-Time Consistent Post-Training Quantization for Diffusion Large Language Models",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04945",
+      "fulltext_sha256": null
+    },
+    "2606.04944": {
+      "status": "analyzed",
+      "title": "Dual-Stream MLP is All You Need for CTR Prediction",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04944",
+      "fulltext_sha256": null
+    },
+    "2606.04935": {
+      "status": "analyzed",
+      "title": "What Type of Inference is Active Inference?",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04935",
+      "fulltext_sha256": null
+    },
+    "2606.04934": {
+      "status": "analyzed",
+      "title": "The local complexity of certifying parity",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04934",
+      "fulltext_sha256": null
+    },
+    "2606.04931": {
+      "status": "analyzed",
+      "title": "Mean-based algorithms: A lower bound and regret",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04931",
+      "fulltext_sha256": null
+    },
+    "2606.04930": {
+      "status": "analyzed",
+      "title": "AdaKoop: Efficient Modeling of Nonlinear Dynamics from Nonstationary Data Streams with Koopman Operator Regression",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04930",
+      "fulltext_sha256": null
+    },
+    "2606.04929": {
+      "status": "analyzed",
+      "title": "Sequential Data Poisoning in LLM Post-Training",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04929",
+      "fulltext_sha256": null
+    },
+    "2606.04928": {
+      "status": "analyzed",
+      "title": "Data Attribution in Large Language Models via Bidirectional Gradient Optimization",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04928",
+      "fulltext_sha256": null
+    },
+    "2606.04925": {
+      "status": "analyzed",
+      "title": "Scene-Centric Unsupervised Video Panoptic Segmentation",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04925",
+      "fulltext_sha256": null
+    },
+    "2606.04924": {
+      "status": "analyzed",
+      "title": "Can Crowdsourcing Survive the LLM Era? A Community Survey on Human Data Collection",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04924",
+      "fulltext_sha256": null
+    },
+    "2606.04923": {
+      "status": "analyzed",
+      "title": "Reproducing, Analyzing, and Detecting Reward Hacking in Rubric-Based Reinforcement Learning",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04923",
+      "fulltext_sha256": null
+    },
+    "2606.04922": {
+      "status": "analyzed",
+      "title": "Geometry-Aware Distillation for Prompt Tuning Biomedical Vision-Language Models",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04922",
+      "fulltext_sha256": null
+    },
+    "2606.04920": {
+      "status": "analyzed",
+      "title": "Toward Multi-Domain and Long-Tailed Quantization via Feature Alignment and Scaling",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04920",
+      "fulltext_sha256": null
+    },
+    "2606.04916": {
+      "status": "analyzed",
+      "title": "Worker Utility as Hysteresis: A Preisach Model of Transaction Acceptance in Gig Labour Markets",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04916",
+      "fulltext_sha256": null
+    },
+    "2606.04915": {
+      "status": "analyzed",
+      "title": "Caliper: Probing Lexical Anchors versus Causal Structure in LLMs",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04915",
+      "fulltext_sha256": null
+    },
+    "2606.04911": {
+      "status": "analyzed",
+      "title": "BreastGPT: A Multimodal Large Language Model for the Full Spectrum of Breast Cancer Clinical Routine",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04911",
+      "fulltext_sha256": null
+    },
+    "2606.04909": {
+      "status": "analyzed",
+      "title": "BEATS: Bootstrapping E-commerce Attribute Taxonomies for Search through Iterative Human-AI Collaboration",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04909",
+      "fulltext_sha256": null
+    },
+    "2606.04906": {
+      "status": "analyzed",
+      "title": "'Your AI Text is not Mine': Redefining and Evaluating AI-generated Text Detection under Realistic Assumptions",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04906",
+      "fulltext_sha256": null
+    },
+    "2606.04903": {
+      "status": "analyzed",
+      "title": "Provably Auditable and Safe LLM Agents from Human-Authored Ontologies",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04903",
+      "fulltext_sha256": null
+    },
+    "2606.04898": {
+      "status": "analyzed",
+      "title": "CDPM-Align: Multi-Scale Guidance-Aligned Diffusion Pretraining for Robust Few-Shot Anatomical Landmark Detection",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04898",
+      "fulltext_sha256": null
+    },
+    "2606.04891": {
+      "status": "analyzed",
+      "title": "Hierarchical Space Partition for Surface Reconstruction",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04891",
+      "fulltext_sha256": null
+    },
+    "2606.04889": {
+      "status": "analyzed",
+      "title": "GRAIL: Gradient-Reweighted Advantages for Reinforcement Learning with Verifiable Rewards",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04889",
+      "fulltext_sha256": null
+    },
+    "2606.04888": {
+      "status": "analyzed",
+      "title": "HD-DinoMoE: A Class-Aware Hierarchical Dual Mixture-of-Experts Network for Scleral Anomaly Segmentation in Complex Acquisition Scenarios",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04888",
+      "fulltext_sha256": null
+    },
+    "2606.04883": {
+      "status": "analyzed",
+      "title": "Optimizing the Cost-Quality Tradeoff of Agentic Theorem Provers in Lean",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04883",
+      "fulltext_sha256": null
+    },
+    "2606.04880": {
+      "status": "analyzed",
+      "title": "MAOAM: Unified Object and Material Selection with Vision-Language Models",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04880",
+      "fulltext_sha256": null
+    },
+    "2606.04877": {
+      "status": "analyzed",
+      "title": "Abduction Prover in Isabelle/HOL",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04877",
+      "fulltext_sha256": null
+    },
+    "2606.04876": {
+      "status": "analyzed",
+      "title": "Towards Pretraining Text Encoders for TabPFN",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04876",
+      "fulltext_sha256": null
+    },
+    "2606.04874": {
+      "status": "analyzed",
+      "title": "Agent Planning Benchmark: A Diagnostic Framework for Planning Capabilities in LLM Agents",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04874",
+      "fulltext_sha256": null
+    },
+    "2606.04871": {
+      "status": "analyzed",
+      "title": "Recent Advances and Trends in Learning-based 3D Representations",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04871",
+      "fulltext_sha256": null
+    },
+    "2606.04867": {
+      "status": "analyzed",
+      "title": "AICompanionBench: Benchmarking LLMs-as-Judges for AI Companion Safety",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04867",
+      "fulltext_sha256": null
+    },
+    "2606.04866": {
+      "status": "analyzed",
+      "title": "Provably Reduced Sample Cost in Prior-Guided Hyperparameter Optimization",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04866",
+      "fulltext_sha256": null
+    },
+    "2606.04863": {
+      "status": "analyzed",
+      "title": "IRIS-GAN: Staged Specialist Detection of Deepfake Faces",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04863",
+      "fulltext_sha256": null
+    },
+    "2606.04860": {
+      "status": "analyzed",
+      "title": "Learning Empirically Admissible Neural Heuristics for Combinatorial Search",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04860",
+      "fulltext_sha256": null
+    },
+    "2606.04857": {
+      "status": "analyzed",
+      "title": "Rethinking Incompleteness: Formalizing Protocol Divergence and Train-Once Learning for Robust IMVC",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04857",
+      "fulltext_sha256": null
+    },
+    "2606.04850": {
+      "status": "analyzed",
+      "title": "Uncertainty-Aware End-to-End Co-Design of Neural Network Processors: From Training and Mapping to Fabrication",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04850",
+      "fulltext_sha256": null
+    },
+    "2606.04847": {
+      "status": "analyzed",
+      "title": "MusaCoder: Native GPU Kernel Generation with Full-Stack Training on Moore Threads GPU",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04847",
+      "fulltext_sha256": null
+    },
+    "2606.04846": {
+      "status": "analyzed",
+      "title": "Large Language Models in K-12 Education: Alignment with State Curriculum Standards and Student Personas",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04846",
+      "fulltext_sha256": null
+    },
+    "2606.04845": {
+      "status": "analyzed",
+      "title": "Bayesian learning for the stochastic shortest path problem",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04845",
+      "fulltext_sha256": null
+    },
+    "2606.04844": {
+      "status": "analyzed",
+      "title": "Drift-Augmented Scoring: Text-Derived Noise Robustness for Zero-Shot Audio-Language Classification",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04844",
+      "fulltext_sha256": null
+    },
+    "2606.04836": {
+      "status": "analyzed",
+      "title": "3D Temporal Analysis for Autism Spectrum Disorder Screening During Attention Tasks",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04836",
+      "fulltext_sha256": null
+    },
+    "2606.04834": {
+      "status": "analyzed",
+      "title": "Prediction Under Imperfect Compression: A Theory of Approximate MDL",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04834",
+      "fulltext_sha256": null
+    },
+    "2606.04833": {
+      "status": "analyzed",
+      "title": "Signed Dual Attention: Capturing Signed Dependencies in Time Series Forecasting",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04833",
+      "fulltext_sha256": null
+    },
+    "2606.04828": {
+      "status": "analyzed",
+      "title": "A French Corpus Annotated for Multiword Expressions with Adverbial Function",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04828",
+      "fulltext_sha256": null
+    },
+    "2606.04823": {
+      "status": "analyzed",
+      "title": "R-APS: Compositional Reasoning and In-Context Meta-Learning for Constrained Design via Reflective Adversarial Pareto Search",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04823",
+      "fulltext_sha256": null
+    },
+    "2606.04822": {
+      "status": "analyzed",
+      "title": "Reconciling Causality and Non-Equilibrium Thermodynamics with Hamiltonian Causal Models",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04822",
+      "fulltext_sha256": null
+    },
+    "2606.04820": {
+      "status": "analyzed",
+      "title": "OA-CutMix: Correcting the Label Bias of CutMix",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04820",
+      "fulltext_sha256": null
+    },
+    "2606.04819": {
+      "status": "analyzed",
+      "title": "The Usefulness Gap in Proof-of-Useful-Work: An Empirical Study of Pearl's cuPOW Protocol",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04819",
+      "fulltext_sha256": null
+    },
+    "2606.04816": {
+      "status": "analyzed",
+      "title": "Beyond Objective Equivalence: Constraint Injection for LLM-Based Optimization Modeling on Vehicle Routing Problems",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04816",
+      "fulltext_sha256": null
+    },
+    "2606.04815": {
+      "status": "analyzed",
+      "title": "Learning While Acting: A Skill-Enhanced Test-Time Co-Evolution Framework for Online Lifelong Learning Agents",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04815",
+      "fulltext_sha256": null
+    },
+    "2606.04812": {
+      "status": "analyzed",
+      "title": "Scenario Generation for Risk-Aware Reinforcement Learning with Probably Approximately Safe Guarantees",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04812",
+      "fulltext_sha256": null
+    },
+    "2606.04811": {
+      "status": "analyzed",
+      "title": "Dream.exe: Can Video Generation Models Dream Executable Robot Manipulation?",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04811",
+      "fulltext_sha256": null
+    },
+    "2606.04807": {
+      "status": "analyzed",
+      "title": "BiasGRPO: Stabilizing Bias Mitigation in High-Variance Reward Landscapes via Group-Relative Policy Optimization",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04807",
+      "fulltext_sha256": null
+    },
+    "2606.04806": {
+      "status": "analyzed",
+      "title": "NoRA: Evaluating Grounded Reasonableness in Visual First-person Normative Action Reasoning",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04806",
+      "fulltext_sha256": null
+    },
+    "2606.04804": {
+      "status": "analyzed",
+      "title": "The Right Measure for Physics-Constrained Generation: A Co-Area Correction for Posterior-Consistent PDE Inverse Problems",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04804",
+      "fulltext_sha256": null
+    },
+    "2606.04801": {
+      "status": "analyzed",
+      "title": "Fast Cubical Persistent Homology on 2D and 3D Images via Union-Find, Pruning, and Lookup Tables",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04801",
+      "fulltext_sha256": null
+    },
+    "2606.04798": {
+      "status": "analyzed",
+      "title": "Uncertainty-Aware (Un)Supervised Few-Shot User Adaptation for On-Device Personalized Human Activity Recognition",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04798",
+      "fulltext_sha256": null
+    },
+    "2606.04797": {
+      "status": "analyzed",
+      "title": "Crafting Your Evolving Dreams: Concept-Incremental Versatile Customization",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04797",
+      "fulltext_sha256": null
+    },
+    "2606.04792": {
+      "status": "analyzed",
+      "title": "A Pathology Foundation Model for Gastric Cancer with Real-World Validation",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04792",
+      "fulltext_sha256": null
+    },
+    "2606.04788": {
+      "status": "analyzed",
+      "title": "Z-FLoc: Zero-Shot Floorplan Localization via Geometric Primitives",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04788",
+      "fulltext_sha256": null
+    },
+    "2606.04781": {
+      "status": "analyzed",
+      "title": "AIP: A Graph Representation for Learning and Governing Agent Skills",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04781",
+      "fulltext_sha256": null
+    },
+    "2606.04780": {
+      "status": "analyzed",
+      "title": "PersonaTree: Structured Lifecycle Memory for Person Understanding in LLM Agents",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04780",
+      "fulltext_sha256": null
+    },
+    "2606.04779": {
+      "status": "analyzed",
+      "title": "Tree-Based Formalization of Multi-Agent Complementarity in Human-AI Interactions",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04779",
+      "fulltext_sha256": null
+    },
+    "2606.04778": {
+      "status": "analyzed",
+      "title": "Inference-Time Vulnerability Beyond Shallow Safety: Alignment Along Generation Trajectories",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04778",
+      "fulltext_sha256": null
+    },
+    "2606.04777": {
+      "status": "analyzed",
+      "title": "UniFair: A unified fair clustering approach based on separation and compactness",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04777",
+      "fulltext_sha256": null
+    },
+    "2606.04775": {
+      "status": "analyzed",
+      "title": "Activation Steering of Video Generation Models via Reduced-Order Linear Optimal Control",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04775",
+      "fulltext_sha256": null
+    },
+    "2606.04773": {
+      "status": "analyzed",
+      "title": "NextMotionQA: Benchmarking and Judging Human Motion Understanding with Vision-Language Models",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04773",
+      "fulltext_sha256": null
+    },
+    "2606.04772": {
+      "status": "analyzed",
+      "title": "Coarse-to-fine Hierarchical Architecture with Sequential Mamba for Brain Reconstruction",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04772",
+      "fulltext_sha256": null
+    },
+    "2606.04769": {
+      "status": "analyzed",
+      "title": "Description-Code Inconsistency in Real-world MCP Servers: Measurement, Detection, and Security Implications",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04769",
+      "fulltext_sha256": null
+    },
+    "2606.04767": {
+      "status": "analyzed",
+      "title": "Measuring Model Robustness via Fisher Information: Spectral Bounds, Theoretical Guarantees, and Practical Algorithms",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04767",
+      "fulltext_sha256": null
+    },
+    "2606.04764": {
+      "status": "analyzed",
+      "title": "Do Foundation Models See Biology? Evaluating Attention Coherence with Spatial Transcriptomics in Glioblastoma",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04764",
+      "fulltext_sha256": null
+    },
+    "2606.04757": {
+      "status": "analyzed",
+      "title": "Near-Optimal Decentralized Stochastic Convex Optimization over Networks",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04757",
+      "fulltext_sha256": null
+    },
+    "2606.04755": {
+      "status": "analyzed",
+      "title": "Archi: Agentic Operations at the CMS Experiment",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04755",
+      "fulltext_sha256": null
+    },
+    "2606.04754": {
+      "status": "analyzed",
+      "title": "Beyond Structural Symmetries: Linear Mode Connectivity via Neuron Identifiability",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04754",
+      "fulltext_sha256": null
+    },
+    "2606.04752": {
+      "status": "analyzed",
+      "title": "An Empirical Audit of Input Encoders for Multi-Channel Signal Transformers",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04752",
+      "fulltext_sha256": null
+    },
+    "2606.04751": {
+      "status": "analyzed",
+      "title": "FALSIFYBENCH: Evaluating Inductive Reasoning in LLMs with Rule Discovery Games",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04751",
+      "fulltext_sha256": null
+    },
+    "2606.04750": {
+      "status": "analyzed",
+      "title": "Fog of Love: Engineering Virtuous Agent Behavior with Affinity-based Reinforcement Learning in a Game Environment",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04750",
+      "fulltext_sha256": null
+    },
+    "2606.04749": {
+      "status": "analyzed",
+      "title": "COP-Q: Safety-First Reinforcement Learning for Robot Control via Cholesky-Ordered Projection",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04749",
+      "fulltext_sha256": null
+    },
+    "2606.04743": {
+      "status": "analyzed",
+      "title": "TIDE: Proactive Multi-Problem Discovery via Template-Guided Iteration",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04743",
+      "fulltext_sha256": null
+    },
+    "2606.04739": {
+      "status": "analyzed",
+      "title": "Revisiting Vul-RAG: Reproducibility and Replicability of RAG-based Vulnerability Detection with Open-Weight Models",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04739",
+      "fulltext_sha256": null
+    },
+    "2606.04737": {
+      "status": "analyzed",
+      "title": "Physics-Informed Video Generation via Mixture-of-Experts Latent Alignment",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04737",
+      "fulltext_sha256": null
+    },
+    "2606.04736": {
+      "status": "analyzed",
+      "title": "Curvature-aware dynamic precision approach for physics-informed neural networks",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04736",
+      "fulltext_sha256": null
+    },
+    "2606.04735": {
+      "status": "analyzed",
+      "title": "Trace-Mediated Peak Bias: Bridging Temporal Credit Assignment and Cognitive Heuristics in Deep Reinforcement Learning",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04735",
+      "fulltext_sha256": null
+    },
+    "2606.04733": {
+      "status": "analyzed",
+      "title": "Contrastive Learning and Correlation Clustering for Sequences of Network Telescope Data",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04733",
+      "fulltext_sha256": null
+    },
+    "2606.04730": {
+      "status": "analyzed",
+      "title": "Multilingual Long-Form Speech Instruction Following: KIT's Submission to IWSLT 2026",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04730",
+      "fulltext_sha256": null
+    },
+    "2606.04727": {
+      "status": "analyzed",
+      "title": "EviRank: Evidence-Based Confidence Estimation for LLM-Based Ranking",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04727",
+      "fulltext_sha256": null
+    },
+    "2606.04722": {
+      "status": "analyzed",
+      "title": "StrokeTimer: Robust Representation Learning for Ischemic Stroke Onset-Time Estimation from Non-contrast CT",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04722",
+      "fulltext_sha256": null
+    },
+    "2606.04719": {
+      "status": "analyzed",
+      "title": "Query-based Cross-Modal Projector Bolstering Mamba Multimodal LLM",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04719",
+      "fulltext_sha256": null
+    },
+    "2606.04718": {
+      "status": "analyzed",
+      "title": "CoRe-MoE: Contrastive Reweighted Mixture of Experts for Multi-Terrain Humanoid Locomotion with Gait Adaptation",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04718",
+      "fulltext_sha256": null
+    },
+    "2606.04710": {
+      "status": "analyzed",
+      "title": "Data Efficient Complex Feature Fusion Network For Hyperspectral Image Classification",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04710",
+      "fulltext_sha256": null
+    },
+    "2606.04708": {
+      "status": "analyzed",
+      "title": "VISTA: Vision-Grounded and Physics-Validated Adaptation of UMI data for VLA Training",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04708",
+      "fulltext_sha256": null
+    },
+    "2606.04706": {
+      "status": "analyzed",
+      "title": "ReConFuse: Reconstruction-Error Guided Semantic Fusion for AI-Generated Video Detection",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04706",
+      "fulltext_sha256": null
+    },
+    "2606.04705": {
+      "status": "analyzed",
+      "title": "Enhancing MedSAM with a Lightweight Box Predictor for Medical Image Segmentation",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04705",
+      "fulltext_sha256": null
+    },
+    "2606.04703": {
+      "status": "analyzed",
+      "title": "Rethinking Continual Experience Internalization for Self-Evolving LLM Agents",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04703",
+      "fulltext_sha256": null
+    },
+    "2606.04701": {
+      "status": "analyzed",
+      "title": "Benchmarking Living-Screen-Native GUI Agents on Short-Video Platforms",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04701",
+      "fulltext_sha256": null
+    },
+    "2606.04700": {
+      "status": "analyzed",
+      "title": "A New Angle on Bones: Robust Pose Estimation in X-Ray and Ultrasound",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04700",
+      "fulltext_sha256": null
+    },
+    "2606.04699": {
+      "status": "analyzed",
+      "title": "Graph-Guided Universum Learning in Generalized Eigenvalue Proximal SVMs for Alzheimer's Disease Classification",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04699",
+      "fulltext_sha256": null
+    },
+    "2606.04695": {
+      "status": "analyzed",
+      "title": "Cone-Compatible Monge Geometry for High-Dimensional Ordered Optimal Transport",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04695",
+      "fulltext_sha256": null
+    },
+    "2606.04694": {
+      "status": "analyzed",
+      "title": "DuDi: Dual-Signal Distillation with Cross-Lingual Verbalizer",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04694",
+      "fulltext_sha256": null
+    },
+    "2606.04691": {
+      "status": "analyzed",
+      "title": "SMADE-IE: Sparse Multi-Agent Framework with Evidence-Driven Debate for Zero-Shot Information Extraction",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04691",
+      "fulltext_sha256": null
+    },
+    "2606.04689": {
+      "status": "analyzed",
+      "title": "QPredSGG: Hybrid Quantum Predicate Learning for Long-Tailed Scene Graph Generation",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04689",
+      "fulltext_sha256": null
+    },
+    "2606.04688": {
+      "status": "analyzed",
+      "title": "MeshWeaver: Sparse-Voxel-Guided Surface Weaving for Autoregressive Mesh Generation",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04688",
+      "fulltext_sha256": null
+    },
+    "2606.04687": {
+      "status": "analyzed",
+      "title": "Clownfish: Scaling DAG-based BFT Consensus via Sparse Edges",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04687",
+      "fulltext_sha256": null
+    },
+    "2606.04684": {
+      "status": "analyzed",
+      "title": "Real-Time Automatic License Plate Recognition Using YOLOv8, SORT Tracking, and Temporal Data Interpolation",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04684",
+      "fulltext_sha256": null
+    },
+    "2606.04680": {
+      "status": "analyzed",
+      "title": "Read What You Hear: Reference-Free Hypotheses Evaluation with Acoustic Discrepancy",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04680",
+      "fulltext_sha256": null
+    },
+    "2606.04678": {
+      "status": "analyzed",
+      "title": "Test-Time Compute Scaling for ASR with Depth-Conditioned Looped Transformers",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04678",
+      "fulltext_sha256": null
+    },
+    "2606.04672": {
+      "status": "analyzed",
+      "title": "Learning Long Range Spatio-Temporal Representations over Continuous Time Dynamic Graphs with State Space Models",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04672",
+      "fulltext_sha256": null
+    },
+    "2606.04670": {
+      "status": "analyzed",
+      "title": "Fitting scattered data with optional monotonicity constraints on GPU: LipFit package",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04670",
+      "fulltext_sha256": null
+    },
+    "2606.04665": {
+      "status": "analyzed",
+      "title": "Towards Accurate Model Selection in Deep Unsupervised Domain Adaptation",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04665",
+      "fulltext_sha256": null
+    },
+    "2606.04662": {
+      "status": "analyzed",
+      "title": "Why Muon Outperforms Adam: A Curvature Perspective",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04662",
+      "fulltext_sha256": null
+    },
+    "2606.04661": {
+      "status": "analyzed",
+      "title": "CRAFT: Cost-aware Refinement And Front-aware Tuning of Prompts",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04661",
+      "fulltext_sha256": null
+    },
+    "2606.04660": {
+      "status": "analyzed",
+      "title": "LifeSide: Benchmarking Agents as Lifelong Digital Companions",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04660",
+      "fulltext_sha256": null
+    },
+    "2606.04658": {
+      "status": "analyzed",
+      "title": "U-Net-Accelerated Quality-Diversity Optimization for Climate-Adaptive Urban Layouts",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04658",
+      "fulltext_sha256": null
+    },
+    "2606.04656": {
+      "status": "analyzed",
+      "title": "Instance-Level Post Hoc Uncertainty Quantification in Object Detection",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04656",
+      "fulltext_sha256": null
+    },
+    "2606.04652": {
+      "status": "analyzed",
+      "title": "Rectangular Matrix Multiplication in the Low-Bandwidth Model",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04652",
+      "fulltext_sha256": null
+    },
+    "2606.04650": {
+      "status": "analyzed",
+      "title": "Improving the Efficiency and Effectiveness of LLM Knowledge Distillation for Conversational Search",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04650",
+      "fulltext_sha256": null
+    },
+    "2606.04648": {
+      "status": "analyzed",
+      "title": "BiNSGPS: Geometry Problem Solving via Bidirectional Neuro-Symbolic Interaction",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04648",
+      "fulltext_sha256": null
+    },
+    "2606.04647": {
+      "status": "analyzed",
+      "title": "ALINC: Active Learning for Inductive Node Classification via Graph Sampling",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04647",
+      "fulltext_sha256": null
+    },
+    "2606.04646": {
+      "status": "analyzed",
+      "title": "QO-Bench: Diagnosing Query-Operator-Preserving Retrieval over Typed Event Tuples",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04646",
+      "fulltext_sha256": null
+    },
+    "2606.04645": {
+      "status": "analyzed",
+      "title": "CYGNET: Cypher Gate for Neural Execution Triage and Cost Containment",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04645",
+      "fulltext_sha256": null
+    },
+    "2606.04634": {
+      "status": "analyzed",
+      "title": "Explainably Safe Reinforcement Learning",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04634",
+      "fulltext_sha256": null
+    },
+    "2606.04632": {
+      "status": "analyzed",
+      "title": "VentAgent: When LLMs Learn to Breathe -- Multi-Objective Arbitration for ARDS Ventilation",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04632",
+      "fulltext_sha256": null
+    },
+    "2606.04628": {
+      "status": "analyzed",
+      "title": "RAMPART: Registry-based Agentic Memory with Priority-Aware Runtime Transformation",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04628",
+      "fulltext_sha256": null
+    },
+    "2606.04627": {
+      "status": "analyzed",
+      "title": "MIRAGE: Mobile Agents with Implicit Reasoning and Generative World Models",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04627",
+      "fulltext_sha256": null
+    },
+    "2606.04623": {
+      "status": "analyzed",
+      "title": "Learning symplectic model reduction based on a approximation theorem of symplectic embeddings",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04623",
+      "fulltext_sha256": null
+    },
+    "2606.04621": {
+      "status": "analyzed",
+      "title": "MeshFlow: Efficient Artistic Mesh Generation via MeshVAE and Flow-based Diffusion Transformer",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04621",
+      "fulltext_sha256": null
+    },
+    "2606.04620": {
+      "status": "analyzed",
+      "title": "QuBLAST: A Framework for Quantizing Large Language Models with Block-Level Compression Approach and Activation Scaling Strategy",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04620",
+      "fulltext_sha256": null
+    },
+    "2606.04619": {
+      "status": "analyzed",
+      "title": "A Normative Intermediate Representation for ASP-Based Compliance Reasoning",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04619",
+      "fulltext_sha256": null
+    },
+    "2606.04613": {
+      "status": "analyzed",
+      "title": "Beyond Symmetric Alignment: Spectral Diagnostics of Modality Imbalance in Vision-Language Models in the Medical Domain",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04613",
+      "fulltext_sha256": null
+    },
+    "2606.04612": {
+      "status": "analyzed",
+      "title": "Hybrid Adversarial Defence for Natural Language Understanding Tasks",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04612",
+      "fulltext_sha256": null
+    },
+    "2606.04604": {
+      "status": "analyzed",
+      "title": "COMBINER: Composed Image Retrieval Guided by Attribute-based Neighbor Relations",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04604",
+      "fulltext_sha256": null
+    },
+    "2606.04603": {
+      "status": "analyzed",
+      "title": "Distributional Approximate Nearest Neighbour Search for Uncertainty-Aware Retrieval",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04603",
+      "fulltext_sha256": null
+    },
+    "2606.04602": {
+      "status": "analyzed",
+      "title": "Parthenon Law: A Self-Evolving Legal-Agent Framework",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04602",
+      "fulltext_sha256": null
+    },
+    "2606.04599": {
+      "status": "analyzed",
+      "title": "Plan First, Judge Later, Run Better: A DMAIC-Inspired Agentic System for Industrial Anomaly Detection",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04599",
+      "fulltext_sha256": null
+    },
+    "2606.04597": {
+      "status": "analyzed",
+      "title": "Learning Admissible Heuristics via Cost Partitioning",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04597",
+      "fulltext_sha256": null
+    },
+    "2606.04596": {
+      "status": "analyzed",
+      "title": "A Systematic Evaluation of Positional Bias in Multi-Video Summarization with MLLMs",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04596",
+      "fulltext_sha256": null
+    },
+    "2606.04594": {
+      "status": "analyzed",
+      "title": "Ekka: Automated Diagnosis of Silent Errors in LLM Inference",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04594",
+      "fulltext_sha256": null
+    },
+    "2606.04593": {
+      "status": "analyzed",
+      "title": "4D Reconstruction from Sparse Dynamic Cameras",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04593",
+      "fulltext_sha256": null
+    },
+    "2606.04592": {
+      "status": "analyzed",
+      "title": "Synthetic Personalities: How Well Can LLMs Mimic Individual Respondents Using Socio-Economic Microdata?",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04592",
+      "fulltext_sha256": null
+    },
+    "2606.04591": {
+      "status": "analyzed",
+      "title": "Fine-grained Fragment Retrieval in Multi-modal Long-form Dialogues",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04591",
+      "fulltext_sha256": null
+    },
+    "2606.04588": {
+      "status": "analyzed",
+      "title": "VCIFBench: Evaluating Complex Instruction Following for Video Understanding",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04588",
+      "fulltext_sha256": null
+    },
+    "2606.04583": {
+      "status": "analyzed",
+      "title": "HalfNet: Randomized Neural Networks with Learned Subspace Geometry",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04583",
+      "fulltext_sha256": null
+    },
+    "2606.04582": {
+      "status": "analyzed",
+      "title": "Reconstructing Unobservable Temperature Fields via Simulation-Aided Intelligent Sensing",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04582",
+      "fulltext_sha256": null
+    },
+    "2606.04581": {
+      "status": "analyzed",
+      "title": "Multi-SPIN: Multi-Access Speculative Inference for Cooperative Token Generation at the Edge",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04581",
+      "fulltext_sha256": null
+    },
+    "2606.04579": {
+      "status": "analyzed",
+      "title": "SCI-PRM: A Tool Aware Process Reward Model for Scientific Reasoning Verification",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04579",
+      "fulltext_sha256": null
+    },
+    "2606.04576": {
+      "status": "analyzed",
+      "title": "ReSGA: A Large Tail Risk Model for Learning Value-at-Risk and Expected Shortfall",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04576",
+      "fulltext_sha256": null
+    },
+    "2606.04574": {
+      "status": "analyzed",
+      "title": "Dynamic Multi-Pair Trading Strategy in Cryptocurrency Markets with Deep Reinforcement Learning",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04574",
+      "fulltext_sha256": null
+    },
+    "2606.04564": {
+      "status": "analyzed",
+      "title": "SurvPFN: Towards Foundation Models for Survival Predictions",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04564",
+      "fulltext_sha256": null
+    },
+    "2606.04562": {
+      "status": "analyzed",
+      "title": "Neetyabhas: A Framework for Uncertainty-Aware Public Policy Optimization in Rational Agent-Based Models",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04562",
+      "fulltext_sha256": null
+    },
+    "2606.04560": {
+      "status": "analyzed",
+      "title": "Rollout-Level Advantage-Prioritized Experience Replay for GRPO",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04560",
+      "fulltext_sha256": null
+    },
+    "2606.04557": {
+      "status": "analyzed",
+      "title": "Cartridges at Scale: Training Modular KV Caches over Large Document Collections",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04557",
+      "fulltext_sha256": null
+    },
+    "2606.04555": {
+      "status": "analyzed",
+      "title": "Temporal Order Matters for Agentic Memory: Segment Trees for Long-Horizon Agents",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04555",
+      "fulltext_sha256": null
+    },
+    "2606.04552": {
+      "status": "analyzed",
+      "title": "LDARNet: DNA Adaptive Representation Network with Learnable Tokenization for Genomic Modeling",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04552",
+      "fulltext_sha256": null
+    },
+    "2606.04550": {
+      "status": "analyzed",
+      "title": "Trading Engagement for Sustainability: Carbon-Aware Re-ranking for E-commerce Recommendations",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04550",
+      "fulltext_sha256": null
+    },
+    "2606.04547": {
+      "status": "analyzed",
+      "title": "Beyond Retrieval: Learning Compact User Representations for Scalable LLM Personalization",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04547",
+      "fulltext_sha256": null
+    },
+    "2606.04545": {
+      "status": "analyzed",
+      "title": "Impostor: An Agent-Curated Benchmark for Realistic AIGC Manipulation Localization",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04545",
+      "fulltext_sha256": null
+    },
+    "2606.04536": {
+      "status": "analyzed",
+      "title": "Scaling Self-Evolving Agents via Parametric Memory",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04536",
+      "fulltext_sha256": null
+    },
+    "2606.04535": {
+      "status": "analyzed",
+      "title": "Dynamic Infilling Anchors for Format-Constrained Generation in Diffusion Large Language Models",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04535",
+      "fulltext_sha256": null
+    },
+    "2606.04528": {
+      "status": "analyzed",
+      "title": "Optical-Guided Neural Collapse for SAR Few-Shot Class Incremental Learning",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04528",
+      "fulltext_sha256": null
+    },
+    "2606.04527": {
+      "status": "analyzed",
+      "title": "Echo-Infinity: Learning Evolving Memory for Real-Time Infinite Video Generation",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04527",
+      "fulltext_sha256": null
+    },
+    "2606.04525": {
+      "status": "analyzed",
+      "title": "GENEB: Why Genomic Models Are Hard to Compare",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04525",
+      "fulltext_sha256": null
+    },
+    "2606.04522": {
+      "status": "analyzed",
+      "title": "ANN Search: Recall What Matters",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04522",
+      "fulltext_sha256": null
+    },
+    "2606.04517": {
+      "status": "analyzed",
+      "title": "Treat Traffic Like Trees: A Semantic-Preserving Hierarchical Graph-Based Expert Framework for Encrypted Traffic Analysis",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04517",
+      "fulltext_sha256": null
+    },
+    "2606.04516": {
+      "status": "analyzed",
+      "title": "GeoMin: Data-Efficient Semi-Supervised RLVR via Geometric Distribution Modeling",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04516",
+      "fulltext_sha256": null
+    },
+    "2606.04514": {
+      "status": "analyzed",
+      "title": "SAILRec: Steering LLM Attention to Dual-Side Semantically Aligned Collaborative Embeddings for Recommendation",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04514",
+      "fulltext_sha256": null
+    },
+    "2606.04513": {
+      "status": "analyzed",
+      "title": "MapAgent: An Industrial-Grade Agentic Framework for City-scale Lane-level Map Generation",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04513",
+      "fulltext_sha256": null
+    },
+    "2606.04511": {
+      "status": "analyzed",
+      "title": "SparDA: Sparse Decoupled Attention for Efficient Long-Context LLM Inference",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04511",
+      "fulltext_sha256": null
+    },
+    "2606.04507": {
+      "status": "analyzed",
+      "title": "Self-Evolving Deep Research via Joint Generation and Evaluation",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04507",
+      "fulltext_sha256": null
+    },
+    "2606.04505": {
+      "status": "analyzed",
+      "title": "Simulate, Reason, Decide: Scientific Reasoning with LLMs for Simulation-Driven Decision Making",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04505",
+      "fulltext_sha256": null
+    },
+    "2606.04503": {
+      "status": "analyzed",
+      "title": "Smart Picks in the Dark: Towards Efficient RLVR for Reasoning via Tracing Metacognitive Pivots",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04503",
+      "fulltext_sha256": null
+    },
+    "2606.04500": {
+      "status": "analyzed",
+      "title": "SANE Schema-aware Natural-language Evaluation of Biological Data",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04500",
+      "fulltext_sha256": null
+    },
+    "2606.04499": {
+      "status": "analyzed",
+      "title": "Modeling and Interpreting Teamwork Dynamics in Cancer Care Outcome Prediction",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04499",
+      "fulltext_sha256": null
+    },
+    "2606.04494": {
+      "status": "analyzed",
+      "title": "Beyond Prompt-Based Planning: MCP-Native Graph Planning-based Biomedical Agent System",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04494",
+      "fulltext_sha256": null
+    },
+    "2606.04493": {
+      "status": "analyzed",
+      "title": "SFMambaNet: Spectral-Frequency Enhanced Selective State Space Model for Correspondence Pruning",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04493",
+      "fulltext_sha256": null
+    },
+    "2606.04492": {
+      "status": "analyzed",
+      "title": "Episodic Memory Temporal Consistency for Cooperative Multi-Agent Reinforcement Learning",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04492",
+      "fulltext_sha256": null
+    },
+    "2606.04486": {
+      "status": "analyzed",
+      "title": "Global Sketch-Based Watermarking for Diffusion Language Models",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04486",
+      "fulltext_sha256": null
+    },
+    "2606.04485": {
+      "status": "analyzed",
+      "title": "LimiX-2M: Mitigating Low-Rank Collapse and Attention Bottlenecks in Tabular Foundation Models",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04485",
+      "fulltext_sha256": null
+    },
+    "2606.04484": {
+      "status": "analyzed",
+      "title": "AgentJet: A Flexible Swarm Training Framework for Agentic Reinforcement Learning",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04484",
+      "fulltext_sha256": null
+    },
+    "2606.04483": {
+      "status": "analyzed",
+      "title": "Off-Distribution Voices: Fanfiction Subgenres as Universal Vernacular Jailbreaks for Aligned LLMs",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04483",
+      "fulltext_sha256": null
+    },
+    "2606.04480": {
+      "status": "analyzed",
+      "title": "IMPose: Interactive Multi-person Pose Estimation with Dynamic Correction Propagation",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04480",
+      "fulltext_sha256": null
+    },
+    "2606.04479": {
+      "status": "analyzed",
+      "title": "Evaluating Reasoning Fidelity in Visual Text Generation",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04479",
+      "fulltext_sha256": null
+    },
+    "2606.04476": {
+      "status": "analyzed",
+      "title": "When Both Layers Learn: Training Dynamics of Representing Linear Models via ReLU Networks",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04476",
+      "fulltext_sha256": null
+    },
+    "2606.04474": {
+      "status": "analyzed",
+      "title": "Entity Binding Failures in Speech LLM Reasoning: Diagnosis and Chain-of-Thought Intervention",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04474",
+      "fulltext_sha256": null
+    },
+    "2606.04473": {
+      "status": "analyzed",
+      "title": "ChessMimic: Per-Rating Transformer Models for Human Move, Clock, and Outcome Prediction in Online Blitz Chess",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04473",
+      "fulltext_sha256": null
+    },
+    "2606.04469": {
+      "status": "analyzed",
+      "title": "Adaptive Calibration for Fair and Performant Facial Recognition",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04469",
+      "fulltext_sha256": null
+    },
+    "2606.04468": {
+      "status": "analyzed",
+      "title": "ParetoPilot: Zero-Surrogate Offline Multi-Objective Optimization via Infer-Perturb-Guide Diffusion",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04468",
+      "fulltext_sha256": null
+    },
+    "2606.04466": {
+      "status": "analyzed",
+      "title": "Learning What to Learn: Stage-Specific Data Sets for SFT-then-RL in Small Language Model Reasoning",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04466",
+      "fulltext_sha256": null
+    },
+    "2606.04465": {
+      "status": "analyzed",
+      "title": "SePO: Self-Evolving Prompt Agent for System Prompt Optimization",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04465",
+      "fulltext_sha256": null
+    },
+    "2606.04461": {
+      "status": "analyzed",
+      "title": "ChannelTok: Efficient Flexible-Length Vision Tokenization",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04461",
+      "fulltext_sha256": null
+    },
+    "2606.04460": {
+      "status": "analyzed",
+      "title": "CyberGym-E2E: Scalable Real-World Benchmark for AI Agents' End-to-End Cybersecurity Capabilities",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04460",
+      "fulltext_sha256": null
+    },
+    "2606.04459": {
+      "status": "analyzed",
+      "title": "Token Rankings are Unforgeable Language Model Signatures",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04459",
+      "fulltext_sha256": null
+    },
+    "2606.04457": {
+      "status": "analyzed",
+      "title": "Imagine Before You Draw: Visual Prompt Engineering for Image Generation",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04457",
+      "fulltext_sha256": null
+    },
+    "2606.04455": {
+      "status": "analyzed",
+      "title": "The Meta-Agent Challenge: Are Current Agents Capable of Autonomous Agent Development?",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04455",
+      "fulltext_sha256": null
+    },
+    "2606.04454": {
+      "status": "analyzed",
+      "title": "Stepwise Reasoning Enhancement for LLMs via External Subgraph Generation",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04454",
+      "fulltext_sha256": null
+    },
+    "2606.04453": {
+      "status": "analyzed",
+      "title": "Radiomic Feature Selection Using Gradient Loss of Deep Neural Network for Lung Cancer Stage Detection",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04453",
+      "fulltext_sha256": null
+    },
+    "2606.04451": {
+      "status": "analyzed",
+      "title": "On Out-of-sample Embedding in UMAP",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04451",
+      "fulltext_sha256": null
+    },
+    "2606.04450": {
+      "status": "analyzed",
+      "title": "Listening to the Workforce: Measuring Construction Worker Safety Attitudes from Social Media Discourse Using LLMs",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04450",
+      "fulltext_sha256": null
+    },
+    "2606.04448": {
+      "status": "analyzed",
+      "title": "Bridging Short Videos and Live Streams: Reasoning-Guided Multimodal LLMs for Cross-Domain Representation Learning",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04448",
+      "fulltext_sha256": null
+    },
+    "2606.04446": {
+      "status": "analyzed",
+      "title": "D^2SD: Accelerating Speculative Decoding with Dual Diffusion Draft Models",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04446",
+      "fulltext_sha256": null
+    },
+    "2606.04445": {
+      "status": "analyzed",
+      "title": "RowNet: A Memory Transformer for Tabular Regression",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04445",
+      "fulltext_sha256": null
+    },
+    "2606.04444": {
+      "status": "analyzed",
+      "title": "Scaling Datasets for Multi-Sensor, Multi-Agent, and Multi-Domain Learning in Autonomous Systems",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04444",
+      "fulltext_sha256": null
+    },
+    "2606.04442": {
+      "status": "analyzed",
+      "title": "MemoryDocDataSet: A Benchmark for Joint Conversational Memory and Long Document Reasoning",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04442",
+      "fulltext_sha256": null
+    },
+    "2606.04438": {
+      "status": "analyzed",
+      "title": "LoopMoE: Unifying Iterative Computation with Mixture-of-Experts for Language Modeling",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04438",
+      "fulltext_sha256": null
+    },
+    "2606.04437": {
+      "status": "analyzed",
+      "title": "INTACT: Ego-Guided Typed Sparse Evidence Retrieval for Heterogeneous Collaborative Perception",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04437",
+      "fulltext_sha256": null
+    },
+    "2606.04436": {
+      "status": "analyzed",
+      "title": "3DThinkVLA: Endowing Vision-Language-Action Models with Latent 3D Priors via 3D-Thinking-Guided Co-training",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04436",
+      "fulltext_sha256": null
+    },
+    "2606.04435": {
+      "status": "analyzed",
+      "title": "Cascading Hallucination in Agentic RAG: The CHARM Framework for Detection and Mitigation",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04435",
+      "fulltext_sha256": null
+    },
+    "2606.04434": {
+      "status": "analyzed",
+      "title": "Hyper-ICL: Attention Calibration with Hyperbolic Anchor Distillation for Multimodal In-Context Learning",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04434",
+      "fulltext_sha256": null
+    },
+    "2606.04433": {
+      "status": "analyzed",
+      "title": "Stateful Visual Encoders for Vision-Language Models",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04433",
+      "fulltext_sha256": null
+    },
+    "2606.04432": {
+      "status": "analyzed",
+      "title": "DSA: Dynamic Step Allocation for Fast Autoregressive Video Generation",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04432",
+      "fulltext_sha256": null
+    },
+    "2606.04429": {
+      "status": "analyzed",
+      "title": "Flatness and Generalization: Learning Multi-Index Models with Homogeneous Neural Networks",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04429",
+      "fulltext_sha256": null
+    },
+    "2606.04427": {
+      "status": "analyzed",
+      "title": "Implicit Fuzzification via Bounded Noise Injection for Robust Medical Image Segmentation",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04427",
+      "fulltext_sha256": null
+    },
+    "2606.04425": {
+      "status": "analyzed",
+      "title": "What If Prompt Injection Never Left? Exploring Cross-Session Stored Prompt Injection in Agentic Systems",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04425",
+      "fulltext_sha256": null
+    },
+    "2606.04423": {
+      "status": "analyzed",
+      "title": "The price of multi-group transductive learning",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04423",
+      "fulltext_sha256": null
+    },
+    "2606.04421": {
+      "status": "analyzed",
+      "title": "Trivium: Temporal Regret as a First-Class Objective for Causal-Memory Controllers",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04421",
+      "fulltext_sha256": null
+    },
+    "2606.04420": {
+      "status": "analyzed",
+      "title": "Loss-Conditional PINNs for Parametric PDE Families",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04420",
+      "fulltext_sha256": null
+    },
+    "2606.04419": {
+      "status": "analyzed",
+      "title": "L-TGVN: Leveraging Longitudinal Priors for Personalized Rapid MRI",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04419",
+      "fulltext_sha256": null
+    },
+    "2606.04418": {
+      "status": "analyzed",
+      "title": "CleanCodec: Efficient and Robust Speech Tokenization via Perceptually Guided Encoding",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04418",
+      "fulltext_sha256": null
+    },
+    "2606.04415": {
+      "status": "analyzed",
+      "title": "FlexNPU: Transparent NPU Virtualization for Dynamic LLM Prefill-Decode Co-location",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04415",
+      "fulltext_sha256": null
+    },
+    "2606.04414": {
+      "status": "analyzed",
+      "title": "Motion-Guided Causal Disentanglement for Robust Multi-View Cine Cardiac MRI Diagnosis",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04414",
+      "fulltext_sha256": null
+    },
+    "2606.04413": {
+      "status": "analyzed",
+      "title": "(Mis)generalization of Helpful-only Fine-tuning",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04413",
+      "fulltext_sha256": null
+    },
+    "2606.04410": {
+      "status": "analyzed",
+      "title": "Ultra-Fast Neural Video Compression",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04410",
+      "fulltext_sha256": null
+    },
+    "2606.04409": {
+      "status": "analyzed",
+      "title": "An Empirical Study of Data Scale, Model Complexity, and Input Modalities in Visual Generalization",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04409",
+      "fulltext_sha256": null
+    },
+    "2606.04408": {
+      "status": "analyzed",
+      "title": "An Ensembled Latent Factor Model via Differential Evolution and Gradient Descent Optimization",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04408",
+      "fulltext_sha256": null
+    },
+    "2606.04405": {
+      "status": "analyzed",
+      "title": "Low-Rank Decay for Grokking in Scale-Invariant Transformers: A Spectral-Geometric View",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04405",
+      "fulltext_sha256": null
+    },
+    "2606.04404": {
+      "status": "analyzed",
+      "title": "Knockoffs-based False Discovery Rate Control and Simplification for Deep Neural Networks",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04404",
+      "fulltext_sha256": null
+    },
+    "2606.04402": {
+      "status": "analyzed",
+      "title": "Not All Errors Are Equal: Consequence-Aware Reasoning Compute Allocation",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04402",
+      "fulltext_sha256": null
+    },
+    "2606.04401": {
+      "status": "analyzed",
+      "title": "TANDEM: Bi-Level Data Mixture Optimization with Twin Networks",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04401",
+      "fulltext_sha256": null
+    },
+    "2606.04399": {
+      "status": "analyzed",
+      "title": "DPDL: Towards Differential Privacy Preservation in Decentralized Stochastic Learning on Non-IID Data",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04399",
+      "fulltext_sha256": null
+    },
+    "2606.04397": {
+      "status": "analyzed",
+      "title": "Context-as-a-Service: Surfacing Cross-File Dependency Chains for LLM-Generated Developer Documentation",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04397",
+      "fulltext_sha256": null
+    },
+    "2606.04396": {
+      "status": "analyzed",
+      "title": "Read the Trace, Steer the Path: Trajectory-Aware Reinforcement Learning for Diffusion Language Models",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04396",
+      "fulltext_sha256": null
+    },
+    "2606.04392": {
+      "status": "analyzed",
+      "title": "Physics-Informed Neural Network Modeling of Biodegradable Contaminant Transport through GCL/SL Composite Liners",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04392",
+      "fulltext_sha256": null
+    },
+    "2606.04391": {
+      "status": "analyzed",
+      "title": "Online Skill Learning for Web Agents via State-Grounded Dynamic Retrieval",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04391",
+      "fulltext_sha256": null
+    },
+    "2606.04390": {
+      "status": "analyzed",
+      "title": "Shortcomings and capacities of real-constrained neural networks in complex spaces",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04390",
+      "fulltext_sha256": null
+    },
+    "2606.04389": {
+      "status": "analyzed",
+      "title": "When Clients Stop Following: A Cognitive Conceptualization Diagram-driven Framework for Strategic Counseling",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04389",
+      "fulltext_sha256": null
+    },
+    "2606.04388": {
+      "status": "analyzed",
+      "title": "TITAN-FedAnil+: Trust-Based Adaptive Blockchain Federated Learning for Resource-Constrained Intelligent Enterprises",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04388",
+      "fulltext_sha256": null
+    },
+    "2606.04387": {
+      "status": "analyzed",
+      "title": "Rethinking Sales Lead Scoring with LLM-based Hierarchical Preference Ranking",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04387",
+      "fulltext_sha256": null
+    },
+    "2606.04385": {
+      "status": "analyzed",
+      "title": "Geometry-Preserving Unsupervised Alignment for Heterogeneous Foundation Models",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04385",
+      "fulltext_sha256": null
+    },
+    "2606.04384": {
+      "status": "analyzed",
+      "title": "Revisiting Privacy Amplification by Subsampling in Selective Release DPSGD",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04384",
+      "fulltext_sha256": null
+    },
+    "2606.04382": {
+      "status": "analyzed",
+      "title": "LCSHBench: A Multilingual, Consensus-Grounded Benchmark for Library of Congress Subject Heading Assignment",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04382",
+      "fulltext_sha256": null
+    },
+    "2606.04381": {
+      "status": "analyzed",
+      "title": "From Symbolic to Geometric: Enabling Spatial Reasoning in Large Language Models",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04381",
+      "fulltext_sha256": null
+    },
+    "2606.04380": {
+      "status": "analyzed",
+      "title": "REGAIN: REconciliation GAIN-driven Auxiliary Direction Learning",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04380",
+      "fulltext_sha256": null
+    },
+    "2606.04378": {
+      "status": "analyzed",
+      "title": "DLLG: Dynamic Logit-Level Gating of LLM Experts",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04378",
+      "fulltext_sha256": null
+    },
+    "2606.04375": {
+      "status": "analyzed",
+      "title": "When Do Fewer Coordinates Suffice in DP-SGD?",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04375",
+      "fulltext_sha256": null
+    },
+    "2606.04374": {
+      "status": "analyzed",
+      "title": "DSIRM: Learning Query-Bridged Discrete Semantic Identifiers for E-commerce Relevance Modeling",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04374",
+      "fulltext_sha256": null
+    },
+    "2606.04373": {
+      "status": "analyzed",
+      "title": "Selective Coupling of Decoupled Informative Regions: Masked Attention Alignment for Data-Free Quantization of Vision Transformers",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04373",
+      "fulltext_sha256": null
+    },
+    "2606.04369": {
+      "status": "analyzed",
+      "title": "VT-3DAD: Cross-Category 3D Anomaly Detection via Visual-Text Normal Space Alignment",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04369",
+      "fulltext_sha256": null
+    },
+    "2606.04367": {
+      "status": "analyzed",
+      "title": "GlossAssist -- A Tool to Simplify Corpus Creation and Study the Effect of NLP Models in Low-Resource Documentation Settings",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04367",
+      "fulltext_sha256": null
+    },
+    "2606.04366": {
+      "status": "analyzed",
+      "title": "MeshTok: Efficient Multi-Scale Tokenization for Scalable PDE Transformers",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04366",
+      "fulltext_sha256": null
+    },
+    "2606.04365": {
+      "status": "analyzed",
+      "title": "Multi-Granularity 3D Kidney Lesion Characterization from CT Volumes",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04365",
+      "fulltext_sha256": null
+    },
+    "2606.04364": {
+      "status": "analyzed",
+      "title": "Spatially Grounded Concept Bottleneck Models via Part-Factorized Attention",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04364",
+      "fulltext_sha256": null
+    },
+    "2606.04362": {
+      "status": "analyzed",
+      "title": "Disentangling Answer Engine Optimization from Platform Growth: A Log-Based Natural Experiment on ChatGPT Referral Traffic",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04362",
+      "fulltext_sha256": null
+    },
+    "2606.04360": {
+      "status": "analyzed",
+      "title": "Deliberate Evolution: Agentic Reasoning for Sample-Efficient Symbolic Regression with LLMs",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04360",
+      "fulltext_sha256": null
+    },
+    "2606.04351": {
+      "status": "analyzed",
+      "title": "Video2LoRA: Parametric Video Internalization for Vision-Language Models",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04351",
+      "fulltext_sha256": null
+    },
+    "2606.04349": {
+      "status": "analyzed",
+      "title": "MorphoQuant: Modality-Aware Quantization for Omni-modal Large Language Models",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04349",
+      "fulltext_sha256": null
+    },
+    "2606.04345": {
+      "status": "analyzed",
+      "title": "HYolo: An Intelligent IoT-Based Object Detection System Using Hypergraph Learning",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04345",
+      "fulltext_sha256": null
+    },
+    "2606.04343": {
+      "status": "analyzed",
+      "title": "Robust Multi-view Clustering against Imperfect Information",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04343",
+      "fulltext_sha256": null
+    },
+    "2606.04342": {
+      "status": "analyzed",
+      "title": "Expectations vs. Realities: The Cost of MSE-Optimal Forecasting Under Conditional Uncertainty",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04342",
+      "fulltext_sha256": null
+    },
+    "2606.04340": {
+      "status": "analyzed",
+      "title": "Noisy memory encoding explains negative polarity illusions",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04340",
+      "fulltext_sha256": null
+    },
+    "2606.04339": {
+      "status": "analyzed",
+      "title": "Literature-Guided Minimax Optimization of Virtual Epilepsy Neurostimulation",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04339",
+      "fulltext_sha256": null
+    },
+    "2606.04338": {
+      "status": "analyzed",
+      "title": "Federated Learning for Multi-Center Sepsis Early Prediction with Privacy-Preserving",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04338",
+      "fulltext_sha256": null
+    },
+    "2606.04335": {
+      "status": "analyzed",
+      "title": "Policy Gradient for Continuous-Time Robust Markov Decision Processes",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04335",
+      "fulltext_sha256": null
+    },
+    "2606.04329": {
+      "status": "analyzed",
+      "title": "From Untrusted Input to Trusted Memory: A Systematic Study of Memory Poisoning Attacks in LLM Agents",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04329",
+      "fulltext_sha256": null
+    },
+    "2606.04328": {
+      "status": "analyzed",
+      "title": "Generalizable Multi-Task Learning for Wireless Networks Using Prompt Decision Transformers",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04328",
+      "fulltext_sha256": null
+    },
+    "2606.04327": {
+      "status": "analyzed",
+      "title": "A Geometric Characterization of the Stationary Plateau for Two-Layer Neural Networks",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04327",
+      "fulltext_sha256": null
+    },
+    "2606.04326": {
+      "status": "analyzed",
+      "title": "Measuring What Matters: Synthetic Benchmarks for Concept Bottleneck Models",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04326",
+      "fulltext_sha256": null
+    },
+    "2606.04325": {
+      "status": "analyzed",
+      "title": "Parameter-Efficient Fine-Tuning with Learnable Rank",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04325",
+      "fulltext_sha256": null
+    },
+    "2606.04324": {
+      "status": "analyzed",
+      "title": "Neural Galerkin Normalizing Flows for Bayesian Inference of Diffusions with Inaccessible Boundaries",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04324",
+      "fulltext_sha256": null
+    },
+    "2606.04323": {
+      "status": "analyzed",
+      "title": "Answer Self-Consistency with Margin-Triggered Question Re-Arbitration for the CVPR 2026 VidLLMs Challenge",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04323",
+      "fulltext_sha256": null
+    },
+    "2606.04321": {
+      "status": "analyzed",
+      "title": "The Digital Apprentice: A Framework for Human-Directed Agentic AI Development",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04321",
+      "fulltext_sha256": null
+    },
+    "2606.04320": {
+      "status": "analyzed",
+      "title": "OpenRFM: Dissecting Relational In-Context Learning",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04320",
+      "fulltext_sha256": null
+    },
+    "2606.04319": {
+      "status": "analyzed",
+      "title": "PureLight: Learning Complex Luminaires with Light Tracing",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04319",
+      "fulltext_sha256": null
+    },
+    "2606.04317": {
+      "status": "analyzed",
+      "title": "Toward a Generalized Defense Across Sparse, Continuous, and Structured Parameter Attacks",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04317",
+      "fulltext_sha256": null
+    },
+    "2606.04315": {
+      "status": "analyzed",
+      "title": "Exploring Cross-Scenario Generality of Agentic Memory Systems: Diagnostics and a Strong Baseline",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04315",
+      "fulltext_sha256": null
+    },
+    "2606.04314": {
+      "status": "analyzed",
+      "title": "Testing Neural Networks via Bayesian-Guided Exploration of Decision Landscapes",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04314",
+      "fulltext_sha256": null
+    },
+    "2606.04310": {
+      "status": "analyzed",
+      "title": "Latent Anchor-Driven Test Generation for Deep Neural Networks",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04310",
+      "fulltext_sha256": null
+    },
+    "2606.04308": {
+      "status": "analyzed",
+      "title": "Creative Reading: Scaffolding Reading for Transformation",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04308",
+      "fulltext_sha256": null
+    },
+    "2606.04307": {
+      "status": "analyzed",
+      "title": "Folded Transport MCMC: Certifiable Quotient Posterior Computation for Symmetric Bayesian Models",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04307",
+      "fulltext_sha256": null
+    },
+    "2606.04305": {
+      "status": "analyzed",
+      "title": "Offline-to-Online Learning in Linear Bandits",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04305",
+      "fulltext_sha256": null
+    },
+    "2606.04302": {
+      "status": "analyzed",
+      "title": "LazyAttention: Efficient Retrieval-Augmented Generation with Deferred Positional Encoding",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04302",
+      "fulltext_sha256": null
+    },
+    "2606.04301": {
+      "status": "analyzed",
+      "title": "XSSR: Cross-Domain Self-Supervised Representative Selection for Efficient Annotation in Medical Image Segmentation",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04301",
+      "fulltext_sha256": null
+    },
+    "2606.04300": {
+      "status": "analyzed",
+      "title": "Argus-Retriever: Vision-LLM Late-Interaction Retrieval with Region-Aware Query-Conditioned MoE for Visual Document Retrieval",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04300",
+      "fulltext_sha256": null
+    },
+    "2606.04299": {
+      "status": "analyzed",
+      "title": "Efficient and Training-Free Single-Image Diffusion Models",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04299",
+      "fulltext_sha256": null
+    },
+    "2606.04298": {
+      "status": "analyzed",
+      "title": "Anycast Performance in Context",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04298",
+      "fulltext_sha256": null
+    },
+    "2606.04296": {
+      "status": "analyzed",
+      "title": "The Saturation Trap and the Subjectivity of Intervention Timing: Why Affect-Based Triggers and LLM Judges Fail to Time Interventions on Autonomous Agents",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04296",
+      "fulltext_sha256": null
+    },
+    "2606.04291": {
+      "status": "analyzed",
+      "title": "A Cookbook of 3D Vision: Data, Learning Paradigms, and Application",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04291",
+      "fulltext_sha256": null
+    },
+    "2606.04290": {
+      "status": "analyzed",
+      "title": "PE-MHL: Physics-Encoded Modular Hybrid Layers for Scalable Learning of Complex Systems",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04290",
+      "fulltext_sha256": null
+    },
+    "2606.04287": {
+      "status": "analyzed",
+      "title": "Scaling Novel Graph Generation via Lightweight Structure-Guided Autoregressive Models",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04287",
+      "fulltext_sha256": null
+    },
+    "2606.04286": {
+      "status": "analyzed",
+      "title": "Using Text-Based Causal Inference to Disentangle Factors Influencing Online Review Ratings",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04286",
+      "fulltext_sha256": null
+    },
+    "2606.04284": {
+      "status": "analyzed",
+      "title": "Sparse Mixture-of-Experts Reward Models Learn Interpretable and Specialized Experts for Personalized Preference Modeling",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04284",
+      "fulltext_sha256": null
+    },
+    "2606.04282": {
+      "status": "analyzed",
+      "title": "FindIt: A Format-Informed Visual Detection Benchmark for Generalist Multimodal LLMs",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04282",
+      "fulltext_sha256": null
+    },
+    "2606.04280": {
+      "status": "analyzed",
+      "title": "The Loss Is Not Enough: Sampling Conditions and Inductive Bias in Contrastive Representation Learning",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04280",
+      "fulltext_sha256": null
+    },
+    "2606.04279": {
+      "status": "analyzed",
+      "title": "Derivative Informed Learning of Exchange-Correlation Functionals",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04279",
+      "fulltext_sha256": null
+    },
+    "2606.04275": {
+      "status": "analyzed",
+      "title": "From Ticks to Flows: Dynamics of Neural Reinforcement Learning in Continuous Environments",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04275",
+      "fulltext_sha256": null
+    },
+    "2606.04274": {
+      "status": "analyzed",
+      "title": "Long Live Fine-Tuning: Task-Specific Transformers Outperform Zero-Shot LLMs for Misinformation Response Classification on Reddit",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04274",
+      "fulltext_sha256": null
+    },
+    "2606.04273": {
+      "status": "analyzed",
+      "title": "Characterizing initial human-AI proof formalization workflows",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04273",
+      "fulltext_sha256": null
+    },
+    "2606.04272": {
+      "status": "analyzed",
+      "title": "RL Excursions during Pre-Training: Re-examining Policy Optimization for LLM training",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04272",
+      "fulltext_sha256": null
+    },
+    "2606.04271": {
+      "status": "analyzed",
+      "title": "StandardE2E: A Unified Framework for End-to-End Autonomous Driving Datasets",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04271",
+      "fulltext_sha256": null
+    },
+    "2606.04269": {
+      "status": "analyzed",
+      "title": "Instant-Fold: In-Context Imitation Learning for Deformable Object Manipulation",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04269",
+      "fulltext_sha256": null
+    },
+    "2606.04268": {
+      "status": "analyzed",
+      "title": "ACEAPEX: Parallel LZ77 Decoding via Encode-Time Absolute Offset Resolution",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04268",
+      "fulltext_sha256": null
+    },
+    "2606.04266": {
+      "status": "analyzed",
+      "title": "Long-Term and Short-Term Transistor Aging in Deep Neural Networks: Impact and Mitigation",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04266",
+      "fulltext_sha256": null
+    },
+    "2606.04265": {
+      "status": "analyzed",
+      "title": "Nonlocal Mean Field Schr\\\"{o}dinger Bridge with Learned Interactions",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04265",
+      "fulltext_sha256": null
+    },
+    "2606.04264": {
+      "status": "analyzed",
+      "title": "UniCanvas: A Diffusion-base Unified Model for Text-in-Image Joint Generation",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04264",
+      "fulltext_sha256": null
+    },
+    "2606.04262": {
+      "status": "analyzed",
+      "title": "Can I Take Another Dose? Evaluating LLM Decision-Making Under Temporal Uncertainty in OTC Dosing QA",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04262",
+      "fulltext_sha256": null
+    },
+    "2606.04261": {
+      "status": "analyzed",
+      "title": "Can Generalist Agents Automate Data Curation?",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04261",
+      "fulltext_sha256": null
+    },
+    "2606.04251": {
+      "status": "analyzed",
+      "title": "SBP-Net: Learning Thin Structure Reconstruction with Sliding-Box Projections",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04251",
+      "fulltext_sha256": null
+    },
+    "2606.04249": {
+      "status": "analyzed",
+      "title": "Prospective Dynamic 3D MRI Reconstruction via Latent-Space Motion Tracking from Single Measurement",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04249",
+      "fulltext_sha256": null
+    },
+    "2606.04246": {
+      "status": "analyzed",
+      "title": "StepPRM-RTL: Stepwise Process-Reward Guided LLM Fine-Tuning for Enhanced RTL Synthesis",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04246",
+      "fulltext_sha256": null
+    },
+    "2606.04244": {
+      "status": "analyzed",
+      "title": "VAMPS: Visual-Assisted Mathematical Problem Solving Benchmark",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04244",
+      "fulltext_sha256": null
+    },
+    "2606.04240": {
+      "status": "analyzed",
+      "title": "Overview of the EReL@MIR 2025 Multimodal Document Retrieval Challenge (Track 1)",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04240",
+      "fulltext_sha256": null
+    },
+    "2606.04238": {
+      "status": "analyzed",
+      "title": "Recover-LoRA for Aggressive Quantization: Reclaiming Accuracy in 2-Bit Language Models via Low-Rank Adaptation with Knowledge Distillation on Synthetic Data",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04238",
+      "fulltext_sha256": null
+    },
+    "2606.04236": {
+      "status": "analyzed",
+      "title": "Supportive Token Revealing for Fast Diffusion Language Model Decoding",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04236",
+      "fulltext_sha256": null
+    },
+    "2606.04231": {
+      "status": "analyzed",
+      "title": "MM-BizRAG: Rethinking Multimodal Retrieval-Augmented Generation for General Purpose Enterprise Q&A",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04231",
+      "fulltext_sha256": null
+    },
+    "2606.04227": {
+      "status": "analyzed",
+      "title": "Incremental Sheaf Cohomology on Cellular Complexes: O(1)-in-n Lazy Edit Processing under Bounded Local Geometry",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04227",
+      "fulltext_sha256": null
+    },
+    "2606.04226": {
+      "status": "analyzed",
+      "title": "PerceptTwin: Semantic Scene Reconstruction for Iterative LLM Planning and Verification",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04226",
+      "fulltext_sha256": null
+    },
+    "2606.04223": {
+      "status": "analyzed",
+      "title": "Consensus is Strategically Insufficient: Reasoning-Trace Disagreement as a Knowledge-Representation Signal",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04223",
+      "fulltext_sha256": null
+    },
+    "2606.04221": {
+      "status": "analyzed",
+      "title": "Feasibility of Time-Domain DNN-Based Speech Enhancement on Embedded FPGA for Hearing Aid",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04221",
+      "fulltext_sha256": null
+    },
+    "2606.04212": {
+      "status": "analyzed",
+      "title": "Edge of Stability Selectively Shapes Learning Across the Data Distribution",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04212",
+      "fulltext_sha256": null
+    },
+    "2606.04210": {
+      "status": "analyzed",
+      "title": "Representation Matters in Randomized Smoothing for Audio Classification",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04210",
+      "fulltext_sha256": null
+    },
+    "2606.04209": {
+      "status": "analyzed",
+      "title": "A Geometric View of Counterfactual Behavior: Interaction of Boundary Proximity and Local Support",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04209",
+      "fulltext_sha256": null
+    },
+    "2606.04205": {
+      "status": "analyzed",
+      "title": "DetectZoo: A Unified Toolkit for AI-Generated Content Detection Across Text, Audio, and Image Modalities",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04205",
+      "fulltext_sha256": null
+    },
+    "2606.04202": {
+      "status": "analyzed",
+      "title": "SMAC-Talk: A Natural Language Extension of the StarCraft Multi-Agent Challenge for Large Language Models",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04202",
+      "fulltext_sha256": null
+    },
+    "2606.04199": {
+      "status": "analyzed",
+      "title": "Cross-Prompt Generalization in Detecting AI-Generated Fake News Using Interpretable Linguistic Features",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04199",
+      "fulltext_sha256": null
+    },
+    "2606.04198": {
+      "status": "analyzed",
+      "title": "Spatial Artifact Coherence Determines Codec Robustness in Patch-Based rPPG",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04198",
+      "fulltext_sha256": null
+    },
+    "2606.04197": {
+      "status": "analyzed",
+      "title": "Exploring the Topology and Memory of Consensus: How LLM Agents Agree, Fragment, or Settle When Forming Conventions",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04197",
+      "fulltext_sha256": null
+    },
+    "2606.04194": {
+      "status": "analyzed",
+      "title": "Training-Free Lexical-Dense Fusion for Conversational-Memory Retrieval",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04194",
+      "fulltext_sha256": null
+    },
+    "2606.04193": {
+      "status": "analyzed",
+      "title": "Notarized Agents: Receiver-Attested Confidential Receipts for AI Agent Actions",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04193",
+      "fulltext_sha256": null
+    },
+    "2606.04191": {
+      "status": "analyzed",
+      "title": "Metric-Aware Hybrid Forecasting for the CTF4Science Lorenz Challenge",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04191",
+      "fulltext_sha256": null
+    },
+    "2606.04189": {
+      "status": "analyzed",
+      "title": "ACAT: A Collaborative Platform for Efficient Aspect-Based Sentiment Dataset Annotation",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04189",
+      "fulltext_sha256": null
+    },
+    "2606.04188": {
+      "status": "analyzed",
+      "title": "Dual Advantage Fields",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04188",
+      "fulltext_sha256": null
+    },
+    "2606.04184": {
+      "status": "analyzed",
+      "title": "GroupToM-Bench: Benchmarking Group Theory of Mind and Nonlinear Social Emergence in MLLMs",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04184",
+      "fulltext_sha256": null
+    },
+    "2606.04182": {
+      "status": "analyzed",
+      "title": "Exact Unlearning in Reinforcement Learning",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04182",
+      "fulltext_sha256": null
+    },
+    "2606.04180": {
+      "status": "analyzed",
+      "title": "KODA: Contrastive Representation Comparison and Alignment for Vision-Language Foundation Models",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04180",
+      "fulltext_sha256": null
+    },
+    "2606.04177": {
+      "status": "analyzed",
+      "title": "A Systematic Analysis of Linguistic Features in AI-Generated Text Detection Across Domains and Models",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04177",
+      "fulltext_sha256": null
+    },
+    "2606.04176": {
+      "status": "analyzed",
+      "title": "Low-rank Distributional Matrix Completion",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04176",
+      "fulltext_sha256": null
+    },
+    "2606.04171": {
+      "status": "analyzed",
+      "title": "MimeLens: Position-Agnostic Content-Type Detection for Binary Fragments",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04171",
+      "fulltext_sha256": null
+    },
+    "2606.04168": {
+      "status": "analyzed",
+      "title": "When Autoregressive Consistency Hurts Safety Alignment",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04168",
+      "fulltext_sha256": null
+    },
+    "2606.04167": {
+      "status": "analyzed",
+      "title": "Smart Transportation Without Neurons -- Fair Metro Network Expansion with Tabular Reinforcement Learning",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04167",
+      "fulltext_sha256": null
+    },
+    "2606.04166": {
+      "status": "analyzed",
+      "title": "End-to-End Text Line Detection and Ordering",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04166",
+      "fulltext_sha256": null
+    },
+    "2606.04165": {
+      "status": "analyzed",
+      "title": "CaloTrilogy: Toward a Breakthrough in One-Step, End-to-End, Physics-Guided Shower Generation for Modern Calorimeters",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04165",
+      "fulltext_sha256": null
+    },
+    "2606.04164": {
+      "status": "analyzed",
+      "title": "ADAPTOOD: Uncertainty-Aware Fine-Tuning for Out-of-Distribution ECG Time Series Models",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04164",
+      "fulltext_sha256": null
+    },
+    "2606.04161": {
+      "status": "analyzed",
+      "title": "When Offline Selectors Cannot Beat the Best Single Model: A Diagnostic Study on edX Dropout Prediction",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04161",
+      "fulltext_sha256": null
+    },
+    "2606.04160": {
+      "status": "analyzed",
+      "title": "Expert-Aware Refusal Steering",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04160",
+      "fulltext_sha256": null
+    },
+    "2606.04155": {
+      "status": "analyzed",
+      "title": "SocialCoach: Personalized Social Skill Learning with RL-based Agentic Tutoring and Practice",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04155",
+      "fulltext_sha256": null
+    },
+    "2606.04154": {
+      "status": "analyzed",
+      "title": "EpiFormer: Learning Antigen-Antibody Interactions for Epitope Prediction via Geometric Deep Learning",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04154",
+      "fulltext_sha256": null
+    },
+    "2606.04152": {
+      "status": "analyzed",
+      "title": "Thinking Through Signs: PEEL as a Semiotic Scaffolding for Epistemically Accountable AI-Enabled Research",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04152",
+      "fulltext_sha256": null
+    },
+    "2606.04150": {
+      "status": "analyzed",
+      "title": "Stumbling Into AI Emotional Dependence: How Routine AI Interactions Reshape Human Connection",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04150",
+      "fulltext_sha256": null
+    },
+    "2606.04145": {
+      "status": "analyzed",
+      "title": "EvalStop: Using World Feedback to Detect and Correct Reward Overoptimization in Multi-Tenant RLHF Platforms",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04145",
+      "fulltext_sha256": null
+    },
+    "2606.04143": {
+      "status": "analyzed",
+      "title": "Physics-Informed Machine Learning for Short-Term Flood Prediction",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04143",
+      "fulltext_sha256": null
+    },
+    "2606.04141": {
+      "status": "analyzed",
+      "title": "Caught in the Act(ivation): Toward Pre-Output and Multi-Turn Detection of Credential Exfiltration by LLM Agents",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04141",
+      "fulltext_sha256": null
+    },
+    "2606.04135": {
+      "status": "analyzed",
+      "title": "Stationarity-Aware Retrieval-Augmented Time Series Forecasting",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04135",
+      "fulltext_sha256": null
+    },
+    "2606.04133": {
+      "status": "analyzed",
+      "title": "Pinpoint: Grounded Worldwide Image Geolocation via Cross-Source Retrieval and Reranking",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04133",
+      "fulltext_sha256": null
+    },
+    "2606.04127": {
+      "status": "analyzed",
+      "title": "When Retrieval Doesn't Help: A Large-Scale Study of Biomedical RAG",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04127",
+      "fulltext_sha256": null
+    },
+    "2606.04126": {
+      "status": "analyzed",
+      "title": "HighTide: An Agent-Curated Open-Source VLSI Benchmark Suite",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04126",
+      "fulltext_sha256": null
+    },
+    "2606.04123": {
+      "status": "analyzed",
+      "title": "Semantic Constraint Synthesis for Adaptive Trajectory Optimization via Large Language Models",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04123",
+      "fulltext_sha256": null
+    },
+    "2606.04121": {
+      "status": "analyzed",
+      "title": "veriFIRE: an Industrial Case Study in Verifying Consistency Properties for a DNN-Based Wildfire Detection System",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04121",
+      "fulltext_sha256": null
+    },
+    "2606.04120": {
+      "status": "analyzed",
+      "title": "SaliMory: Orchestrating Cognitive Memory for Conversational Agents",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04120",
+      "fulltext_sha256": null
+    },
+    "2606.04118": {
+      "status": "analyzed",
+      "title": "Computational conceptual history of scientific concepts: From early digital methods to LLMs",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04118",
+      "fulltext_sha256": null
+    },
+    "2606.04115": {
+      "status": "analyzed",
+      "title": "dMX: Differentiable Mixed-Precision Assignment for Low-Precision Floating-Point Formats",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04115",
+      "fulltext_sha256": null
+    },
+    "2606.04111": {
+      "status": "analyzed",
+      "title": "AgenticDiffusion: Agentic Diffusion-based Path Planning for Vision-Based UAV Navigation",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04111",
+      "fulltext_sha256": null
+    },
+    "2606.04110": {
+      "status": "analyzed",
+      "title": "Variance Reduction for Heavy-Tailed Monetization Metrics in Ranking Experiments via Post-Stratification",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04110",
+      "fulltext_sha256": null
+    },
+    "2606.04109": {
+      "status": "analyzed",
+      "title": "Discourse-Role Labels as Presentation-Time Variables for Context Use in Language Models",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04109",
+      "fulltext_sha256": null
+    },
+    "2606.04108": {
+      "status": "analyzed",
+      "title": "SymTRELLIS: Symmetry-Enforced Voxel Latents for 3D Generation",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04108",
+      "fulltext_sha256": null
+    },
+    "2606.04107": {
+      "status": "analyzed",
+      "title": "Reflection Separation from a Single Image via Joint Latent Diffusion",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04107",
+      "fulltext_sha256": null
+    },
+    "2606.04106": {
+      "status": "analyzed",
+      "title": "Building The Ph(ysical)AI Layer Of Machine Intelligence",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04106",
+      "fulltext_sha256": null
+    },
+    "2606.04104": {
+      "status": "analyzed",
+      "title": "Proof-Carrying Agent Actions: Model-Agnostic Runtime Governance for Heterogeneous Agent Systems",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04104",
+      "fulltext_sha256": null
+    },
+    "2606.04103": {
+      "status": "analyzed",
+      "title": "The Differentiable Auditory Loop (DAL): An ML Framework for Hyper-Personalized Hearing Aids",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04103",
+      "fulltext_sha256": null
+    },
+    "2606.04101": {
+      "status": "analyzed",
+      "title": "UltraEP: Unleash MoE Training and Inference on Rack-Scale Nodes with Near-Optimal Load Balancing",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04101",
+      "fulltext_sha256": null
+    },
+    "2606.04100": {
+      "status": "analyzed",
+      "title": "Stein Kernelized Molecular Dynamics for Active Learning of Interatomic Potentials",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04100",
+      "fulltext_sha256": null
+    },
+    "2606.04098": {
+      "status": "analyzed",
+      "title": "When Seeing Is Not Believing -- A Benchmark for Search-Grounded Video Misinformation Detection",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04098",
+      "fulltext_sha256": null
+    },
+    "2606.04095": {
+      "status": "analyzed",
+      "title": "POLARIS: Guiding Small Models to Write Long Stories",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04095",
+      "fulltext_sha256": null
+    },
+    "2606.04092": {
+      "status": "analyzed",
+      "title": "Optimal Transport Flow Matching by Design",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04092",
+      "fulltext_sha256": null
+    },
+    "2606.04075": {
+      "status": "analyzed",
+      "title": "Large Language Models Hack Rewards, and Society",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.04075",
+      "fulltext_sha256": null
+    },
+    "2606.03994": {
+      "status": "analyzed",
+      "title": "SimuScene: Simulation-Ready Compositional 3D Scene Reconstruction from a Single Image",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.03994",
+      "fulltext_sha256": null
+    },
+    "2606.03992": {
+      "status": "analyzed",
+      "title": "Exploring Easy Boosts for Lidar Semantic Scene Completion",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.03992",
+      "fulltext_sha256": null
+    },
+    "2606.03990": {
+      "status": "analyzed",
+      "title": "Neuron Populations Exhibit Divergent Selectivity with Scale",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.03990",
+      "fulltext_sha256": null
+    },
+    "2606.03989": {
+      "status": "analyzed",
+      "title": "PixVOD: Pixel-Distributed Direct Visual Odometry and Depth Estimation",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.03989",
+      "fulltext_sha256": null
+    },
+    "2606.03988": {
+      "status": "analyzed",
+      "title": "Imaginative Perception Tokens Enhance Spatial Reasoning in Multimodal Language Models",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.03988",
+      "fulltext_sha256": null
+    },
+    "2606.03986": {
+      "status": "analyzed",
+      "title": "NewtPhys: Do Foundation Models Understand Newtonian Physics?",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.03986",
+      "fulltext_sha256": null
+    },
+    "2606.03985": {
+      "status": "analyzed",
+      "title": "Humanoid-GPT: Scaling Data and Structure for Zero-Shot Motion Tracking",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.03985",
+      "fulltext_sha256": null
+    },
+    "2606.03982": {
+      "status": "analyzed",
+      "title": "Language Models Compare Quantities Using Number-specific and Unit-specific Heuristics",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.03982",
+      "fulltext_sha256": null
+    },
+    "2606.03980": {
+      "status": "analyzed",
+      "title": "Skill-RM: Unifying Heterogeneous Evaluation Criteria via Agent Skill",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.03980",
+      "fulltext_sha256": null
+    },
+    "2606.03979": {
+      "status": "analyzed",
+      "title": "Language Models Need Sleep: Learning to Self-Modify and Consolidate Memories",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.03979",
+      "fulltext_sha256": null
+    },
+    "2606.03976": {
+      "status": "analyzed",
+      "title": "Formalizing the Binding Problem",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.03976",
+      "fulltext_sha256": null
+    },
+    "2606.03972": {
+      "status": "analyzed",
+      "title": "AAD-1: Asymmetric Adversarial Distillation for One-Step Autoregressive Video Generation",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.03972",
+      "fulltext_sha256": null
+    },
+    "2606.03971": {
+      "status": "analyzed",
+      "title": "Video-Mirai: Autoregressive Video Diffusion Models Need Foresight",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.03971",
+      "fulltext_sha256": null
+    },
+    "2606.03969": {
+      "status": "analyzed",
+      "title": "Quantifying Faithful Confidence Expression in Large Reasoning Models",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.03969",
+      "fulltext_sha256": null
+    },
+    "2606.03968": {
+      "status": "analyzed",
+      "title": "QUBRIC: Co-Designing Queries and Rubrics for RL Beyond Verifiable Rewards",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.03968",
+      "fulltext_sha256": null
+    },
+    "2606.03967": {
+      "status": "analyzed",
+      "title": "AlignAtt4LLM: Fast AlignAtt for Decoder-Only LLMs at IWSLT 2026 Simultaneous Speech Translation Task",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.03967",
+      "fulltext_sha256": null
+    },
+    "2606.03965": {
+      "status": "analyzed",
+      "title": "Agentic Chain-of-Thought Steering for Efficient and Controllable LLM Reasoning",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.03965",
+      "fulltext_sha256": null
+    },
+    "2606.03963": {
+      "status": "analyzed",
+      "title": "Self-Refining Agentic Reinforcement Learning for Vision-Conditioned UAV Navigation",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.03963",
+      "fulltext_sha256": null
+    },
+    "2606.03962": {
+      "status": "analyzed",
+      "title": "Using Reward Uncertainty to Induce Diverse Behaviour in Reinforcement Learning",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.03962",
+      "fulltext_sha256": null
+    },
+    "2606.03957": {
+      "status": "analyzed",
+      "title": "Efficient ASR Training with Conversations that Never Happened",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.03957",
+      "fulltext_sha256": null
+    },
+    "2606.03954": {
+      "status": "analyzed",
+      "title": "VLESA: Vision-Language Embodied Safety Agent for Human Activity Monitoring",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.03954",
+      "fulltext_sha256": null
+    },
+    "2606.03951": {
+      "status": "analyzed",
+      "title": "Demo2Tutorial: From Human Experience to Multimodal Software Tutorials",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.03951",
+      "fulltext_sha256": null
+    },
+    "2606.03948": {
+      "status": "analyzed",
+      "title": "A Pocket Offline Model for Simultaneous Speech Translation as CUNI Submission to IWSLT 2026",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.03948",
+      "fulltext_sha256": null
+    },
+    "2606.03946": {
+      "status": "analyzed",
+      "title": "MLSkip: Data Skipping for ML Filters via Lightweight Metadata",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.03946",
+      "fulltext_sha256": null
+    },
+    "2606.03943": {
+      "status": "analyzed",
+      "title": "PointAction: 3D Points as Universal Action Representations for Robot Control",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.03943",
+      "fulltext_sha256": null
+    },
+    "2606.03940": {
+      "status": "analyzed",
+      "title": "SEAOTTER: Sensor Embedded Autoencoding with One-Time Transcode for Efficient Reconstruction",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.03940",
+      "fulltext_sha256": null
+    },
+    "2606.03939": {
+      "status": "analyzed",
+      "title": "FlashbackCL: Mitigating Temporal Forgetting in Federated Learning",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.03939",
+      "fulltext_sha256": null
+    },
+    "2606.03938": {
+      "status": "analyzed",
+      "title": "q0: Primitives for Hyper-Epoch Pretraining",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.03938",
+      "fulltext_sha256": null
+    },
+    "2606.03937": {
+      "status": "analyzed",
+      "title": "Entropy Is Not Enough: Unlocking Effective Reinforcement Learning for Visual Reasoning via Vision-Anchored Token Selection",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.03937",
+      "fulltext_sha256": null
+    },
+    "2606.03936": {
+      "status": "analyzed",
+      "title": "Correcting Neural Operator Spectral Bias via Diffusion Posterior Sampling with Sparse Observations",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.03936",
+      "fulltext_sha256": null
+    },
+    "2606.03935": {
+      "status": "analyzed",
+      "title": "Quadratic integrate-and-fire neurons exhibit less fragmented loss landscapes and outperform leaky integrate-and-fire neurons in spike-based gradient descent",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.03935",
+      "fulltext_sha256": null
+    },
+    "2606.03928": {
+      "status": "analyzed",
+      "title": "Value-Aware Stochastic KV Cache Eviction for Reasoning Models",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.03928",
+      "fulltext_sha256": null
+    },
+    "2606.03927": {
+      "status": "analyzed",
+      "title": "FFR: Forward-Forward Learning for Regression",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.03927",
+      "fulltext_sha256": null
+    },
+    "2606.03926": {
+      "status": "analyzed",
+      "title": "DiffUNet^2: Bidirectional Prediction, Probabilistic Generation and Collaborative Visual Discovery for Scientific Data",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.03926",
+      "fulltext_sha256": null
+    },
+    "2606.03925": {
+      "status": "analyzed",
+      "title": "Adaptive Causal Alignment for High-Confidence Adversarial Training",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.03925",
+      "fulltext_sha256": null
+    },
+    "2606.03924": {
+      "status": "analyzed",
+      "title": "Knowledge Editing in Masked Diffusion Language Models",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.03924",
+      "fulltext_sha256": null
+    },
+    "2606.03923": {
+      "status": "analyzed",
+      "title": "Contrastive Neural Algorithmic Reasoning for Graph Coloring",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.03923",
+      "fulltext_sha256": null
+    },
+    "2606.03921": {
+      "status": "analyzed",
+      "title": "GARDEN: Gravity-Aligned Reconstruction of Disentangled ENvironments from RGB images",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.03921",
+      "fulltext_sha256": null
+    },
+    "2606.03920": {
+      "status": "analyzed",
+      "title": "Benchmarking Visual State Tracking in Multimodal Video Understanding",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.03920",
+      "fulltext_sha256": null
+    },
+    "2606.03919": {
+      "status": "analyzed",
+      "title": "Forecasting Conceptual Diffusion in Science: The Case of Quantum Computing",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.03919",
+      "fulltext_sha256": null
+    },
+    "2606.03918": {
+      "status": "analyzed",
+      "title": "Hedge-Bench: Benchmarking Agents on Hard, Realistic Tasks Pertaining to Financial Reasoning",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.03918",
+      "fulltext_sha256": null
+    },
+    "2606.03917": {
+      "status": "analyzed",
+      "title": "Beyond Gradient Descent: Adam for Analog Ising Machines",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.03917",
+      "fulltext_sha256": null
+    },
+    "2606.03915": {
+      "status": "analyzed",
+      "title": "PatchScene: Patch-based Voxel Diffusion for Large-Scale Scene Completion",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.03915",
+      "fulltext_sha256": null
+    },
+    "2606.03911": {
+      "status": "analyzed",
+      "title": "Bootstrap Your Generator: Unpaired Visual Editing with Flow Matching",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.03911",
+      "fulltext_sha256": null
+    },
+    "2606.03910": {
+      "status": "analyzed",
+      "title": "NetKV: Network-Aware Decode Instance Selection for Disaggregated LLM Inference",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.03910",
+      "fulltext_sha256": null
+    },
+    "2606.03909": {
+      "status": "analyzed",
+      "title": "SparseStreet: Sparse Gaussian Splatting for Real-Time Street Scene Simulation",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.03909",
+      "fulltext_sha256": null
+    },
+    "2606.03907": {
+      "status": "analyzed",
+      "title": "The Impact of Configuring Agentic AI Coding Tools on Build-vs-Buy Decisions: A Study Protocol",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.03907",
+      "fulltext_sha256": null
+    },
+    "2606.03906": {
+      "status": "analyzed",
+      "title": "scTranslation: A Comprehensive Benchmark for Single-Cell Multi-Omics Modality Translation",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.03906",
+      "fulltext_sha256": null
+    },
+    "2606.03904": {
+      "status": "analyzed",
+      "title": "MAdam: Metric-Aware Multi-Objective Adam",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.03904",
+      "fulltext_sha256": null
+    },
+    "2606.03903": {
+      "status": "analyzed",
+      "title": "An Attention-Based Denoising Model for Diffusion Weighted Imaging",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.03903",
+      "fulltext_sha256": null
+    },
+    "2606.03899": {
+      "status": "analyzed",
+      "title": "Denoise First, Orthogonalize Later: Understanding Momentum in Muon via Spectral Filtering",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.03899",
+      "fulltext_sha256": null
+    },
+    "2606.03895": {
+      "status": "analyzed",
+      "title": "Agent libOS: A Library-OS-Inspired Runtime for Long-Running, Capability-Controlled LLM Agents",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.03895",
+      "fulltext_sha256": null
+    },
+    "2606.03893": {
+      "status": "analyzed",
+      "title": "Electromagnetic Navigation for Femoral Osteotomy Using High-Accuracy X-ray-to-CT Registration",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.03893",
+      "fulltext_sha256": null
+    },
+    "2606.03892": {
+      "status": "analyzed",
+      "title": "Synthesize and Reward -- Reinforcement Learning for Multi-Step Tool Use in Live Environments",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.03892",
+      "fulltext_sha256": null
+    },
+    "2606.03890": {
+      "status": "analyzed",
+      "title": "OVO-S-Bench: A Hierarchical Benchmark for Streaming Spatial Intelligence in Multimodal LLMs",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.03890",
+      "fulltext_sha256": null
+    },
+    "2606.03889": {
+      "status": "analyzed",
+      "title": "RealClawBench: Live OpenClaw Benchmarks from Real Developer-Agent Sessions",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.03889",
+      "fulltext_sha256": null
+    },
+    "2606.03888": {
+      "status": "analyzed",
+      "title": "CoralBay: A Self-Supervised CT Foundation Model",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.03888",
+      "fulltext_sha256": null
+    },
+    "2606.03885": {
+      "status": "analyzed",
+      "title": "Attribution via Distributional Paths for Information Revelation",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.03885",
+      "fulltext_sha256": null
+    },
+    "2606.03883": {
+      "status": "analyzed",
+      "title": "Reasoning Structure of Large Language Models",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.03883",
+      "fulltext_sha256": null
+    },
+    "2606.03879": {
+      "status": "analyzed",
+      "title": "Beyond Encoder Accumulation: Measuring Encoder Roles in Multi-Encoder VLMs",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.03879",
+      "fulltext_sha256": null
+    },
+    "2606.03878": {
+      "status": "analyzed",
+      "title": "Privacy-Robust Incrementality Measurement for Advertising Systems under Signal Loss",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.03878",
+      "fulltext_sha256": null
+    },
+    "2606.03877": {
+      "status": "analyzed",
+      "title": "MLP Splatting: Object-Centric Neural Fields",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.03877",
+      "fulltext_sha256": null
+    },
+    "2606.03876": {
+      "status": "analyzed",
+      "title": "From 'What' to 'How' and 'Why': Sharing LLM-Generated Retrospective Summaries of Older Adults' Passive Tracking Data with Remote Family Members",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.03876",
+      "fulltext_sha256": null
+    },
+    "2606.03875": {
+      "status": "analyzed",
+      "title": "Seg2Track++: Probabilistic Track Validation and Data Association for Multi-Object Tracking and Segmentation",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.03875",
+      "fulltext_sha256": null
+    },
+    "2606.03874": {
+      "status": "analyzed",
+      "title": "DyaPlex: Full-Duplex Speech-Motion Model for Dyadic Interaction",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.03874",
+      "fulltext_sha256": null
+    },
+    "2606.03871": {
+      "status": "analyzed",
+      "title": "Visual Instruction Tuning Aligns Modalities through Abstraction",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.03871",
+      "fulltext_sha256": null
+    },
+    "2606.03868": {
+      "status": "analyzed",
+      "title": "Unified Video-Action Joint Denoising for Dexterous Action and Data Generation",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.03868",
+      "fulltext_sha256": null
+    },
+    "2606.03867": {
+      "status": "analyzed",
+      "title": "A Training-Free Mixture-of-Agents Framework for Multi-Document Summarization using LLMs and Knowledge Graphs",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.03867",
+      "fulltext_sha256": null
+    },
+    "2606.03866": {
+      "status": "analyzed",
+      "title": "Taiji: Pareto Optimal Policy Optimization with Semantics-IDs Trade-off for Industrial LLM-Enhanced Recommendation",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.03866",
+      "fulltext_sha256": null
+    },
+    "2606.03864": {
+      "status": "analyzed",
+      "title": "Explainable Forecasting of Scientific Breakthroughs from Concept Network Dynamics",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.03864",
+      "fulltext_sha256": null
+    },
+    "2606.03858": {
+      "status": "analyzed",
+      "title": "PyraMathBench: Evaluating and Improving Mathematical Capability in Large Language Models",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.03858",
+      "fulltext_sha256": null
+    },
+    "2606.03852": {
+      "status": "analyzed",
+      "title": "FLARE: Fine-Grained Diagnostic Feedback for LLM Code Refinement",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.03852",
+      "fulltext_sha256": null
+    },
+    "2606.03851": {
+      "status": "analyzed",
+      "title": "Two-Action Apple Tasting with Switching Costs",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.03851",
+      "fulltext_sha256": null
+    },
+    "2606.03846": {
+      "status": "analyzed",
+      "title": "Clustered Self-Assessment: A Simple yet Effective Method for Uncertainty Quantification in Large Language Models",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.03846",
+      "fulltext_sha256": null
+    },
+    "2606.03843": {
+      "status": "analyzed",
+      "title": "Re-Evaluating Continual Learning with Few-Shot Adaptation",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.03843",
+      "fulltext_sha256": null
+    },
+    "2606.03841": {
+      "status": "analyzed",
+      "title": "EvoDS: Self-Evolving Autonomous Data Science Agent with Skill Learning and Context Management",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.03841",
+      "fulltext_sha256": null
+    },
+    "2606.03839": {
+      "status": "analyzed",
+      "title": "Text-attributed Graph Condensation via Text Selection and Attribute Matching",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.03839",
+      "fulltext_sha256": null
+    },
+    "2606.03837": {
+      "status": "analyzed",
+      "title": "Where Do We (Not) Need Temporal Context in Low-Resource Video Task Adaptation?",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.03837",
+      "fulltext_sha256": null
+    },
+    "2606.03831": {
+      "status": "analyzed",
+      "title": "Online Learning with Gradient-Variation Interval Regret",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.03831",
+      "fulltext_sha256": null
+    },
+    "2606.03829": {
+      "status": "analyzed",
+      "title": "BigFinanceBench: A Workflow-Grounded Benchmark for Financial-Research Agents",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.03829",
+      "fulltext_sha256": null
+    },
+    "2606.03827": {
+      "status": "analyzed",
+      "title": "Conditional Latent Diffusion Model with Fourier-based Motion Modelling for Virtual Population Synthesis",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.03827",
+      "fulltext_sha256": null
+    },
+    "2606.03825": {
+      "status": "analyzed",
+      "title": "Dynamic Short Convolutions Improve Transformers",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.03825",
+      "fulltext_sha256": null
+    },
+    "2606.03823": {
+      "status": "analyzed",
+      "title": "Calibrating Urban Traffic Simulation from Sparse Road Observations via Genetic Optimization",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.03823",
+      "fulltext_sha256": null
+    },
+    "2606.03821": {
+      "status": "analyzed",
+      "title": "Finding Needles in the Haystack: Transductive Active Labeling in Ecology",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.03821",
+      "fulltext_sha256": null
+    },
+    "2606.03820": {
+      "status": "analyzed",
+      "title": "A Quantitative Approximation Framework for Flow Distillation in Diffusion Models",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.03820",
+      "fulltext_sha256": null
+    },
+    "2606.03819": {
+      "status": "analyzed",
+      "title": "TreeFlash: Parallel AR-Approximation for Faster Speculative Decoding",
+      "last_analyzed_at": "2026-06-04T10:27:11+08:00",
+      "report_path": "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
+      "paper_url": "https://arxiv.org/abs/2606.03819",
       "fulltext_sha256": null
     }
   }
