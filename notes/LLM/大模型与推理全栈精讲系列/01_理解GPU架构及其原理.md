@@ -18,8 +18,6 @@ description: 面向大模型与推理全栈初学者，建立 GPU 设计哲学�
 >
 > 先别急着记一堆硬件名词。我们从一个简单问题开始：CPU 和 GPU 为什么不是同一种机器？等这个问题变清楚，再把一个小计算例子放进来，后面的数据搬运、计算单元和性能瓶颈就不再像凭空冒出来。
 
-为了让后面的概念不飘在空中，本文会在第 1 节后半段正式引入一个大模型里常见的计算例子。它会从那时起承担贯穿样例的作用；在此之前，先把 CPU 和 GPU 的差异看清楚。
-
 ## 1. GPU的设计哲学
 
 ### 1.1 CPU 与 GPU 解决的是不同问题
@@ -110,25 +108,9 @@ GPU 的存储不是一个平坦的大空间，而是一个分层系统。越靠�
 
 这也是为什么“存储层级”应该先于“SM 架构”理解。GPU 性能常常不是因为算术单元不够强，而是因为数据没有以合适的节奏、形状和复用方式送到算术单元。
 
-### 2.2 带宽与算力的量级差异
+### 2.2 同一个例子里，权重到底有多重
 
-上面的例子只是在讲直觉：重复搬数据会浪费时间。接下来用硬件峰值数字建立一点量级感。
-
-以 NVIDIA A100 80GB SXM 产品实现为例，官方规格给出的 dense FP16 Tensor Core 峰值吞吐为 312 TFLOPS；如果使用结构化稀疏路径，标称峰值可到 624 TFLOPS。它的 HBM2e 带宽约为 2,039 GB/s；A100 80GB PCIe 版本的带宽则约为 1,935 GB/s。本文只用这些数字建立量级感，避免把不同产品形态、dense/sparse 路径和实际 kernel 性能混成一个数字。
-
-注意，这里的数字是硬件峰值，不等于任意 PyTorch 代码都能达到。它们的作用是告诉我们：如果一个算子每从显存读入很少数据就能做大量计算，它更有机会接近计算上限；如果一个算子读写了大量数据却只做很少计算，它就更容易被 HBM 带宽限制。
-
-这引出一个重要概念：Arithmetic Intensity，常译为计算强度。
-
-$$
-\text{Arithmetic Intensity} = \frac{\text{FLOPs}}{\text{Bytes moved}}
-$$
-
-它描述的是“每搬运 1 byte 数据，能做多少次浮点计算”。计算强度越高，越可能是 compute-bound；计算强度越低，越可能是 memory-bound。实际判断还要看硬件、精度、kernel、缓存复用和访问模式，但这个概念足以帮助初学者建立第一层判断。
-
-### 2.3 同一个例子里，权重到底有多重
-
-假设 $d_{model}=4096$，$d_{out}=4096$，权重矩阵 $W$ 的元素数量是：
+把数据搬运的直觉落到具体数字上。假设 $d_{model}=4096$，$d_{out}=4096$，权重矩阵 $W$ 的元素数量是：
 
 $$
 4096 \times 4096 = 16{,}777{,}216
@@ -154,7 +136,25 @@ $$
 
 这个例子先不用追求 profiler 级别的精确，只要记住一个稳定直觉：**大矩阵乘能否快，不只看 FLOPs，还要看这些 FLOPs 是否建立在足够高的数据复用之上。**
 
-现在，$Y=XW$ 又多了一层含义：它不仅是一组并行点积，还是一场数据搬运与复用的组织问题。上一节回答了“数据从哪里来”；下一节回答“数据到达计算附近后，哪些硬件单元真正消耗它”。
+### 2.3 带宽与算力的量级差异
+
+上面的例子说明了直觉：prefill 和 decode 面对的数据压力截然不同。接下来用硬件峰值数字建立量级感，并引入一个判断工具。
+
+以 NVIDIA A100 80GB SXM 产品实现为例，官方规格给出的 dense FP16 Tensor Core 峰值吞吐为 312 TFLOPS；如果使用结构化稀疏路径，标称峰值可到 624 TFLOPS。它的 HBM2e 带宽约为 2,039 GB/s；A100 80GB PCIe 版本的带宽则约为 1,935 GB/s。本文只用这些数字建立量级感，避免把不同产品形态、dense/sparse 路径和实际 kernel 性能混成一个数字。
+
+注意，这里的数字是硬件峰值，不等于任意 PyTorch 代码都能达到。它们的作用是告诉我们：如果一个算子每从显存读入很少数据就能做大量计算，它更有机会接近计算上限；如果一个算子读写了大量数据却只做很少计算，它就更容易被 HBM 带宽限制。
+
+这引出一个重要概念：Arithmetic Intensity，常译为计算强度。
+
+$$
+\text{Arithmetic Intensity} = \frac{\text{FLOPs}}{\text{Bytes moved}}
+$$
+
+它描述的是”每搬运 1 byte 数据，能做多少次浮点计算”。回头看 prefill 和 decode 的对比：prefill 的大矩阵乘让同一份 $W$ 被许多 token 行共享，计算强度高；decode 每次只用一行 $X'$，$W$ 的读取开销难以被大量计算摊薄，计算强度低。这正是两者性能特征不同的核心原因。
+
+计算强度越高，越可能是 compute-bound；计算强度越低，越可能是 memory-bound。实际判断还要看硬件、精度、kernel、缓存复用和访问模式，但这个概念足以帮助初学者建立第一层判断。第 5 节还会把它直接用于性能瓶颈分类。
+
+现在，$Y=XW$ 又多了一层含义：它不仅是一组并行点积，还是一场数据搬运与复用的组织问题。上面两节回答了”数据从哪里来”；下一节回答”数据到达计算附近后，哪些硬件单元真正消耗它”。
 
 ## 3. SM 架构
 
@@ -162,13 +162,13 @@ $$
 
 上一节讲的是数据怎么靠近计算单元。现在看真正消费这些数据的硬件。可以先把 GPU 想成由很多计算“车间”组成，每个主要车间就是一个 SM（Streaming Multiprocessor）。不同 GPU 代际的 SM 细节会变化，但初学者可以先抓住几个稳定组件：
 
-| 组件 | 作用 | 学习重点 |
+| 组件 | 作用 | 说明 |
 | --- | --- | --- |
-| Warp Scheduler | 选择就绪 Warp 并发射指令 | 用切换 Warp 的方式隐藏访存延迟； |
-| Register File | 为线程提供私有寄存器 | 寄存器用得太多会限制同时驻留的 Warp 数； |
-| Shared Memory / L1 | SM 附近的片上存储 | Block 内线程协作复用数据的关键； |
-| CUDA Core | 通用标量/向量计算单元 | 适合通用算术逻辑，不是所有计算都走 Tensor Core； |
-| Tensor Core | 矩阵乘累加专用单元 | LLM 中 GEMM、QKV projection、MLP 等高度依赖它； |
+| Warp Scheduler | 选择就绪 Warp 并发射指令 | 本篇 3.2 展开：用切换 Warp 的方式隐藏访存延迟； |
+| Register File | 为线程提供私有寄存器 | 寄存器用量影响 occupancy，见 4.3；深入展开留给 CUDA 编程专题； |
+| Shared Memory / L1 | SM 附近的片上存储 | Block 内线程协作复用数据的关键，贯穿整篇讨论； |
+| CUDA Core | 通用标量/向量计算单元 | 适合通用算术逻辑；与 Tensor Core 的对比见 3.3；深入展开留给 CUDA 编程专题； |
+| Tensor Core | 矩阵乘累加专用单元 | 本篇 3.3 展开：LLM 中 GEMM、QKV projection、MLP 等高度依赖它； |
 
 以 A100 产品实现为例，它启用了 108 个 SM。这个数字意味着什么？它不是说只有 108 个任务能并行，而是说 GPU 有 108 个主要计算“车间”。每个 SM 内部又可以驻留多个 Block、多个 Warp，大量线程在这些 SM 上分批执行。更底层的 GA100 芯片规格与具体产品启用配置可能不同，所以教程里谈硬件数量时要尽量说明产品形态。
 
@@ -223,19 +223,15 @@ $$
 
 这里要克制边界：本篇只解释“为什么低精度矩阵路径能更快”，不展开 INT8/INT4 量化如何校准、哪些层要保护、反量化开销如何权衡。这些属于后续量化与推理优化专题。
 
-### 3.4 矩阵乘 tile 如何喂给 Tensor Core
+### 3.4 Tensor Core 如何消费一个输出 tile
 
-在 $Y=XW$ 中，输出矩阵的一个 tile 不是凭空算出来的。它需要读取 $X$ 的某些行块和 $W$ 的某些列块，沿着 $d_{model}$ 这个 K 维度不断做乘加累积。
+理解 Tensor Core 怎么实际工作，需要把注意力放在 K 维度上。一个输出 tile 的每个元素，是 $X$ 的某一行与 $W$ 的某一列沿 $K=d_{model}$ 方向做的完整点积。这个点积不是一次算完的，而是沿 K 方向分成多轮：每一轮从 Shared Memory 里取一小块 $X$ tile 和一小块 $W$ tile，喂给 Tensor Core 做一次 $D = A \times B + C$ 的矩阵 tile 乘加，把结果累加到寄存器里的 $C$ 上；循环推进直到 K 维度跑完，寄存器里留下的就是这个输出 tile 的最终结果。
 
-可以粗略想象成三层切分：
+这个过程有一个关键硬件约束：累加器必须留在寄存器中，而不是每轮都写回 Shared Memory 或 HBM。寄存器是 SM 上最快的存储，但总量有限。如果一个输出 tile 需要的累加器太多，SM 上能同时驻留的 Warp 数就会减少。
 
-- 输出矩阵 $Y$ 在 $M=(B \cdot seq)$ 和 $N=d_{out}$ 方向上被切成许多输出 tile；
-- 每个输出 tile 沿 $K=d_{model}$ 方向分多轮读取 $X$ tile 和 $W$ tile；
-- SM 内部的 Warp 和 Tensor Core 处理更小的矩阵片段，并把累加结果留在寄存器中；
+这就是 tile 形状为什么是高性能 GEMM 里最重要的调参对象：tile 太小，Tensor Core 每次只做很少乘加就要切换，吞吐上不去；tile 太大，寄存器压力过高，反而减少可驻留 Warp，调度器找不到足够就绪 Warp 来隐藏延迟。所谓”优化矩阵乘”，核心是在 Tensor Core 吞吐、寄存器压力和 Warp 级并发之间找到平衡点，而不是简单地让循环跑得快。
 
-这也是为什么高性能 GEMM kernel 会非常重视 tile 形状。tile 太小，不能充分利用 Tensor Core；tile 太大，寄存器和 Shared Memory 压力过高，反而减少可驻留 Warp 或导致调度效率下降。所谓“优化矩阵乘”，不是只把 for 循环改写得漂亮，而是在硬件存储层级、SM 资源、Warp 调度和 Tensor Core tile 之间做平衡。
-
-此时，$Y=XW$ 已经从“很多输出元素”变成了“许多输出 tile 在多个 SM 上分批执行，每个 tile 又被拆成 Tensor Core 可消费的小矩阵片段”。硬件层面讲清楚后，还需要一层软件映射：PyTorch 或 CUDA 程序到底如何把这些工作交给 GPU。
+此时，$Y=XW$ 的一个输出 tile 有了完整的硬件执行图像：沿 K 轮循环 → 每轮从片上存储取小块 → Tensor Core 做 tile 乘加 → 累加器留在寄存器 → 循环结束写回 HBM。硬件层面讲清楚后，还需要一层软件映射：PyTorch 或 CUDA 程序到底如何把整个输出矩阵的任务组织并交给 GPU。
 
 ## 4. CUDA 执行模型
 
@@ -334,19 +330,17 @@ Occupancy 的意义在于 latency hiding。访问 HBM 的延迟很高，如果�
 
 **occupancy 是延迟隐藏能力的重要线索，但不是最终目标；最终目标是让当前算子的主要瓶颈被正确缓解。**
 
-### 4.4 矩阵乘如何映射到 Grid 和 Block
+### 4.4 矩阵乘如何从输出空间映射到 Grid 和 Block
 
-如果 $Y$ 是 $4096 \times 4096$，一种教学上的粗略切分是把输出切成 $128 \times 128$ 的 tile，于是得到 1024 个输出 tile。每个 tile 可以由一个或多个 Block 协作完成，Block 内部再由多个 Warp 处理更小片段。
+3.4 描述的是单个输出 tile 在硬件上如何执行。这一节要解决的问题是：整个输出矩阵有 1024 个这样的 tile，CUDA 怎么把它们组织成可以提交给 GPU 的软件任务？
 
-这个划分要同时考虑三件事：
+映射关系是这样的：一个 CUDA kernel 覆盖整个矩阵乘任务，对应输出矩阵 $Y$ 的全部计算；kernel 启动一个 Grid，Grid 里的每个 Block 负责一个或多个输出 tile 的计算；Block 内的 Thread 被分组成若干 Warp，每个 Warp 分到更小的片段；GPU 的调度器把这些 Block 分批分配到 108 个 SM 上，每个 SM 上同时驻留若干 Block 并发执行。
 
-- 输出 tile 要足够大，才能让 Tensor Core 做充分的矩阵 tile 计算；
-- Block 使用的寄存器和 Shared Memory 不能过高，否则 occupancy 会过低；
-- $X$ tile 和 $W$ tile 要能在片上存储中复用，否则 HBM 读写会拖慢整体；
+从程序员的角度看，写 `torch.matmul(x, w)` 时实际上在做的是：把一个 $4096 \times 4096$ 的输出空间切分成 1024 个任务单元，以 Grid→Block→Thread 的形式提交给 GPU，让调度器决定哪些 Block 先跑、跑在哪个 SM 上。程序员不需要手动指定”这个 Block 去第 7 号 SM”，CUDA 的执行模型把这个调度决策交给硬件。
 
-对初学者来说，不需要马上设计最优 GEMM kernel。更重要的是建立映射：`torch.matmul(x, w)` 不是一个黑盒魔法，它最终会变成一批 kernel；kernel 把输出空间切成许多 Block；Block 被调度到 SM；Warp 执行 SIMT 指令；Tensor Core 消费小矩阵 tile；存储层级负责让数据尽量少从 HBM 重读。
+这和 3.4 的区别在于：3.4 讲的是一个 Block 内部，Warp 怎么沿 K 轮循环推进、Tensor Core 怎么消费 tile、累加器怎么留在寄存器——这是**单个任务单元的执行行为**；4.4 讲的是 1024 个任务单元怎么被编号、打包、提交、分配——这是**整个任务集合的组织与调度**。两者合在一起，才构成从 `torch.matmul` 到硬件执行的完整链路。
 
-这一章给 $Y=XW$ 加上的含义是“提交与调度”：同一个矩阵乘不仅要能切成 tile，还要被组织成 kernel、Grid、Block、Thread，并在 SM 上以 Warp 为单位执行。接下来，才能讨论这些工作为什么有时快、有时慢。
+这一节给 $Y=XW$ 加上的含义是”提交与分配”：矩阵乘不仅要在硬件上以 tile 为单位执行，还要先以 Grid/Block/Thread 为单位被组织和提交，才能让 GPU 调度器把工作铺到全部 SM 上。接下来，才能讨论这些工作为什么有时快、有时慢。
 
 ## 5. 三类性能瓶颈
 
@@ -411,39 +405,19 @@ Memory-bound 的直觉是：计算单元并没有被喂饱，它们经常在等�
 
 ### 5.5 用 Arithmetic Intensity 做第一层判断
 
-Arithmetic Intensity 可以帮助你把问题先归类。
+2.3 节已经引入了 Arithmetic Intensity 的定义和 prefill/decode 的对比。这里把它直接用作三类瓶颈的诊断起点。
 
-对于矩阵乘：
+面对一个具体算子，可以先问：它的计算强度高还是低？如果高，优先检查 compute-bound 方向——是否用上 Tensor Core，矩阵形状是否足够大，精度路径是否匹配；如果低，优先检查 memory-bound 方向——是否反复读写 HBM，是否能通过 fusion、tiling 或 batching 减少搬运次数；如果是多卡场景，还要单独问 communication-bound——collective 时间是否在关键路径上，通信能否与计算重叠。
 
-$$
-(M \times K) \cdot (K \times N) \rightarrow (M \times N)
-$$
-
-计算量大约是：
-
-$$
-2MKN
-$$
-
-如果 $M$、$N$、$K$ 都很大，且数据能被有效复用，那么每读入一批数据可以做大量 FLOPs，计算强度高，更可能 compute-bound。
-
-如果 $M$ 很小，例如 decode 中 $M$ 接近 batch 或 token 数，而 $K$、$N$ 很大，那么读取权重和 KV cache 的代价很难被大量计算摊薄，更容易 memory-bound。
-
-这不是最终判决，而是第一层提问方式：
-
-- 如果 compute-bound，是否用上 Tensor Core，矩阵形状是否足够好；
-- 如果 memory-bound，是否反复读写 HBM，是否能 fusion、tiling、batching 或减少 KV cache 搬运；
-- 如果 communication-bound，是否有多卡 collective、stage 边界或跨节点通信在等待；
-
-后续学习 TP、DP、PP、EP、KV cache、PagedAttention、FlashAttention、量化和 serving scheduler 时，都可以把这些问题带进去。很多“为什么这个优化有效”的答案，本质上都可以归入这三类瓶颈。
+这不是最终判决，而是第一层提问方式。后续学习 FlashAttention、PagedAttention、TP、PP、EP、KV cache 管理、量化和 serving scheduler 时，都可以把这个框架带进去：很多”为什么这个优化有效”的答案，本质上都可以归入这三类瓶颈之一。
 
 ## 6. 本篇总结与系列导航
 
-GPU 不是“更快的 CPU”，而是为高吞吐并行计算设计的处理器。它牺牲了许多单线程低延迟和复杂控制能力，换来大量线程、SM、Warp、片上存储和专用矩阵计算单元。大模型之所以适合 GPU，是因为 Transformer 中存在大量规则张量计算，尤其是 $Y=XW$ 这类矩阵乘，可以被拆成海量 tile 并行执行。
+GPU 不是”更快的 CPU”，而是为高吞吐并行计算设计的处理器。它牺牲了单线程低延迟和复杂控制能力，换来大量线程、SM、Warp、片上存储和专用矩阵计算单元。大模型之所以适合 GPU，是因为 Transformer 中存在大量规则张量计算，尤其是 $Y=XW$ 这类矩阵乘，天然可以被拆成海量 tile 并行执行。
 
-理解 GPU，要同时抓住两条线：一条是计算如何组织，另一条是数据如何移动。SM、Warp、CUDA Core 和 Tensor Core 解释“怎么算”；HBM、L2、Shared Memory、Registers 解释“数据从哪里来”；CUDA 的 Kernel、Grid、Block、Thread 解释“软件如何把任务交给硬件”。最后，compute-bound、memory-bound、communication-bound 则帮助我们把这些知识变成性能判断能力。
+理解 GPU 要同时抓住三条线：**计算如何组织**（SM、Warp、CUDA Core、Tensor Core）、**数据如何移动**（HBM、L2、Shared Memory、Registers）、**软件如何把任务交给硬件**（Kernel、Grid、Block、Thread）。这三条线汇聚成一个性能判断框架：compute-bound、memory-bound、communication-bound。
 
-本篇之后，再学习 Attention、Transformer、KV cache、FlashAttention、PagedAttention、Tensor Parallelism、Pipeline Parallelism、Expert Parallelism、量化和推理服务时，就不会只看到一串框架名词。FlashAttention 可以先从减少 HBM 访问理解；PagedAttention 和 KV cache 管理可以先从显存分配与复用理解；TP、PP、EP 可以先从 communication-bound 理解；batching 和 scheduler 可以先从 compute/memory utilization 理解。你会开始追问：这个机制是在减少计算、减少 HBM 访问、提高 Tensor Core 利用率、改善 batching，还是在降低跨卡通信？这正是大模型与推理全栈学习中最重要的底层视角之一。
+带着这个框架往后学，遇到每一个新机制都可以先问：它在缓解哪类瓶颈？FlashAttention 减少 HBM 访问次数，是 memory-bound 的应对；PagedAttention 改善 KV cache 显存利用率，是存储层级的延伸；TP/PP/EP 把张量切到多卡，通信开销随之而来，是 communication-bound 的起点；batching 和 serving scheduler 提升硬件利用率，是 compute/memory utilization 的工程实践。这个追问习惯，是大模型推理全栈学习里最值得建立的底层视角。
 
 ## 参考资料
 
