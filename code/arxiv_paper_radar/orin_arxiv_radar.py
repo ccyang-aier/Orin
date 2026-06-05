@@ -726,6 +726,23 @@ def analysis_confidence(paper: dict[str, Any]) -> str:
     return "低"
 
 
+def describe_fulltext_status(paper: dict[str, Any]) -> str:
+    status = paper.get("fulltext_status")
+    chars = paper.get("fulltext_chars", 0)
+    if status == "html":
+        return f"已抽取 HTML 正文，字符数 {chars}"
+    if status == "pdf":
+        return f"已抽取 PDF 正文，字符数 {chars}"
+    if status == "skipped_scale":
+        return "未抽取全文（规模控制策略），当前仅基于摘要与元数据分析"
+    if status == "skipped":
+        return "未抽取全文（本次运行显式跳过），当前仅基于摘要与元数据分析"
+    if status == "failed":
+        error = paper.get("fulltext_error") or "未记录失败原因"
+        return f"全文抽取失败（{error}），当前仅基于摘要与元数据分析"
+    return "全文抽取状态未记录，当前仅基于摘要与元数据分析"
+
+
 def primary_orin_connection(paper: dict[str, Any]) -> list[str]:
     tags = set(paper.get("tags") or [])
     connections = []
@@ -961,6 +978,8 @@ def render_report(args: argparse.Namespace) -> int:
         f"- OAI 查询日：{', '.join(oai_status.get('query_days', [])) or '未记录'}；",
         f"- 可见性窗口是否完整：{'是' if oai_status.get('availability_window_complete') else '否'}；",
     ]
+    if not oai_status.get("availability_window_complete"):
+        lines.append("- 版本说明：当前报告为首版，后续可能因 arXiv 公共可见性延迟而补录；")
     if source_status.get("pending_reason"):
         lines.append(f"- 公开可见性提醒：{source_status['pending_reason']}；")
     lines.extend(
@@ -997,7 +1016,7 @@ def render_report(args: argparse.Namespace) -> int:
                 f"- 自动标签：{', '.join(paper.get('tags', [])) or '未解析'}；",
                 f"- 论文链接：{paper.get('paper_url')}；",
                 f"- 开源Demo/代码：{code}；",
-                f"- 正文抽取：{paper.get('fulltext_status')}，字符数 {paper.get('fulltext_chars')}；",
+                f"- 正文抽取：{describe_fulltext_status(paper)}；",
                 "",
                 "**摘要**",
                 "",
