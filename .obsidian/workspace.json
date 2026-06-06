@@ -195,8 +195,9 @@
       "bases:新建数据库": false
     }
   },
-  "active": "355c39dd8741f2da",
+  "active": "433a032bfb786d4a",
   "lastOpenFiles": [
+    "notes/LLM/大模型与推理全栈精讲系列/imgs/Pasted image 20260606185902.png",
     "notes/LLM/大模型与推理全栈精讲系列/01_理解GPU架构及其原理.md.tmp.27644.fcb72060c1f5",
     "notes/LLM/大模型与推理全栈精讲系列/01_理解GPU架构及其原理.md.tmp.27644.2d87f7922678",
     "notes/LLM/大模型与推理全栈精讲系列/01_理解GPU架构及其原理.md.tmp.27644.ab46e3aa0169",
@@ -217,7 +218,6 @@
     "code/arxiv_paper_radar/__pycache__",
     "code/arxiv_paper_radar/tests/__pycache__/test_orin_arxiv_radar.cpython-312-pytest-9.0.3.pyc",
     "code/arxiv_paper_radar/tests/__pycache__/conftest.cpython-312-pytest-9.0.3.pyc",
-    "code/arxiv_paper_radar/tests/__pycache__",
     "notes/maas/aibrix架构与实现/10.全局串联.md",
     "notes/maas/aibrix架构与实现/assets/10/03-global-mental-model.png",
     "notes/maas/aibrix架构与实现/assets/10/02-request-hot-path.png",
