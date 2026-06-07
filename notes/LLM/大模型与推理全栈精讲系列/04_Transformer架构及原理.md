@@ -54,15 +54,7 @@ Transformer 的价值就在于，它把 Attention 放进一个可扩展的网络
 
 总图中的 Cross-Attention 可以这样读：Decoder 当前状态提供 Query，Encoder memory 提供 Key/Value，Decoder 由此在生成目标 token 时查询源序列信息。
 
-### 1.3 Transformer 的一句话定义
-
-可以把 Transformer 定义为：
-
-**Transformer 是一种基于 Attention 的序列建模架构，它用位置编码补充顺序信息，用多头注意力完成跨位置的信息路由，用 FFN 完成逐位置非线性变换，并通过残差与归一化稳定深层堆叠。**
-
-更短一点：
-
-**Transformer = Attention 路由信息 + FFN 改写表示 + 位置编码提供顺序 + 残差归一化保证可训练。**
+清楚了这些选择的动机之后，我们从最基础的问题开始：Attention 为什么"不知道顺序"？
 
 ## 2. 位置编码
 
@@ -70,7 +62,7 @@ Transformer 的价值就在于，它把 Attention 放进一个可扩展的网络
 
 Self-Attention 的输入如果只有词向量，那么它天然不知道 token 的绝对位置。
 
-更严格地说，在没有位置编码、相对位置偏置、causal mask 等任何位置相关信号的双向 Self-Attention 中，计算具有置换等变性（permutation equivariance）：如果把输入序列按某个置换打乱，输出也会按同样的置换被打乱。模型能知道 token 之间的内容相似性，但不能单靠 Attention 计算本身知道“谁在前，谁在后”。
+更严格地说，对于没有任何位置相关信号的双向 Self-Attention，如果把输入序列按某个置换打乱，输出也会按同样的置换被打乱——模型只能感知 token 之间的内容相似性，完全无法从计算本身知道”谁在前，谁在后”。这个性质在数学上被称为置换等变性（permutation equivariance）。
 
 这对语言是致命的。下面三句话包含同样的词，但语义完全不同：
 
@@ -182,7 +174,7 @@ $$
 
 ### 3.3 FFN 负责逐 token 变换
 
-Attention 混合的是不同 token 之间的信息，但它本身主要是加权求和。Transformer 还需要一个强的非线性变换模块来改写每个位置的表示。
+Attention 完成的是加权求和：它决定从哪些 token 取信息，再按权重把 Value 混进来。但这个过程本质上是线性加权，每个 token 内部的表示并没有经过强的非线性改写。Transformer 因此需要一个专门负责"改写"的模块。
 
 原始 Transformer 使用 Position-wise FFN：
 
@@ -252,17 +244,9 @@ $$
 
 这与早期机器翻译中的 Attention 思想一脉相承，只是 Transformer 把它完全矩阵化，并放进多层深度架构中。
 
-### 4.4 Decoder-Only 的转向
+### 4.4 小结
 
-现代主流 LLM 大多不是原始 Encoder-Decoder 架构，而是 Decoder-Only。它们保留 masked self-attention，去掉独立 Encoder 和 Cross-Attention，用统一的自回归目标建模：
-
-$$
-p(x_1,\ldots,x_n)=\prod_{t=1}^{n}p(x_t \mid x_{<t})
-$$
-
-Decoder-Only 的优势是训练和推理形式统一，生成路径自然，KV cache 易于复用，规模化工程更直接。代价是理解任务也要通过生成式接口表达，且双向完整可见性不如 Encoder-Only 自然。
-
-这不是说 Decoder-Only 在所有任务上理论最优，而是在大规模预训练和统一生成接口时代，它成为了最具扩展性的主干。
+Encoder-Decoder 的完整数据流至此已经清楚：Encoder 双向编码源序列，Decoder 通过 Masked Self-Attention 维护自回归约束，通过 Cross-Attention 查询源句信息，最终逐 token 生成目标序列。这套架构在现代 LLM 中经历了怎样的演变，我们放到第 7 节架构地图里系统对比。
 
 ## 5. 残差、归一化与 FFN
 
@@ -351,6 +335,8 @@ Decoder 用 causal mask 保证每个位置看不到未来，但计算上仍能�
 
 KV cache 可以避免每一步重复计算所有历史 token 的 Key/Value。它不改变自回归依赖，但显著降低每步的重复计算。
 
+理解了训练和推理的数据流之后，我们来看这两个阶段各自的计算代价。
+
 ### 6.3 复杂度地图
 
 设序列长度为 $n$，模型维度为 $d$，单层 Transformer 的主要成本可粗略理解为：
@@ -390,7 +376,19 @@ Transformer 的工程瓶颈通常不是一个词能概括的。
 | Decoder-Only | 只看过去 | 自回归生成、对话、代码生成 | GPT、LLaMA |
 | Encoder-Decoder | Encoder 双向，Decoder 自回归 | 翻译、摘要、条件生成 | T5、原始 Transformer |
 
-这三者不是“谁更高级”的关系，而是信息边界与训练目标不同。现代 LLM 选择 Decoder-Only，是因为自回归生成统一了预训练和推理接口，并且非常适合规模化。
+这三者不是”谁更高级”的关系，而是信息边界与训练目标不同。现代 LLM 之所以普遍选择 Decoder-Only，需要单独展开。
+
+### 7.1.1 Decoder-Only 为什么成为主流
+
+Decoder-Only 去掉了独立 Encoder 和 Cross-Attention，用统一的自回归目标建模：
+
+$$
+p(x_1,\ldots,x_n)=\prod_{t=1}^{n}p(x_t \mid x_{<t})
+$$
+
+优势在于：训练和推理形式统一，KV cache 易于复用，规模化工程路径更直接。代价是理解任务也必须通过生成式接口表达，且双向完整可见性不如 Encoder-Only 自然。
+
+这不是说 Decoder-Only 在所有任务上理论最优，而是在大规模预训练和统一生成接口时代，它成为了最具扩展性的主干。
 
 ### 7.2 读 Transformer 代码时的检查清单
 
@@ -439,7 +437,11 @@ Transformer 可以被压缩成一个循环堆叠的表示更新过程：
 4. FFN 对每个位置独立做非线性改写；
 5. 多层重复后，输出层把表示映射到任务需要的空间；
 
-如果 Attention 是“谁和谁对话”，那么 Transformer block 就是“对话之后如何消化、稳定、再进入下一轮对话”。现代大模型只是把这套骨架放大、改造和工程化：更好的位置编码、更适合推理的 attention 变体、更强的 FFN、更稳定的归一化、更精细的并行与缓存管理。
+如果 Attention 是”谁和谁对话”，那么 Transformer block 就是”对话之后如何消化、稳定、再进入下一轮对话”。现代大模型只是把这套骨架放大、改造和工程化：更好的位置编码、更适合推理的 attention 变体、更强的 FFN、更稳定的归一化、更精细的并行与缓存管理。
+
+> **一句话定义：** Transformer 是以 Multi-Head Self-Attention 为核心信息路由机制、以 Position-wise FFN 为逐 token 非线性变换、以残差连接和归一化保障深层稳定训练的通用序列神经网络骨架。
+
+本文到此完成了对 Transformer 架构的系统梳理。接下来的篇章将把视角从”单个模型如何工作”转移到”真实系统如何运行”：现代 LLM 推理在工程上面临哪些具体挑战，KV cache、显存管理、批处理和并行策略如何把理论架构变成可部署的服务，以及当模型规模和上下文窗口继续增长时，这些系统层设计如何演进。
 
 ## 8. 参考资料
 
