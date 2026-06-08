@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "notes/LLM/大模型与推理全栈精讲系列/01_理解GPU架构及其原理.md",
+                "file": "notes/LLM/大模型与推理全栈精讲系列/02_大模型基础速通.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "01_理解GPU架构及其原理"
+              "title": "02_大模型基础速通"
             }
           }
         ]
@@ -156,13 +156,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "notes/LLM/大模型与推理全栈精讲系列/01_理解GPU架构及其原理.md",
+                "file": "notes/LLM/大模型与推理全栈精讲系列/02_大模型基础速通.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "01_理解GPU架构及其原理 的大纲"
+              "title": "02_大模型基础速通 的大纲"
             }
           },
           {
@@ -195,20 +195,24 @@
       "bases:新建数据库": false
     }
   },
-  "active": "433a032bfb786d4a",
+  "active": "355c39dd8741f2da",
   "lastOpenFiles": [
+    "notes/LLM/大模型与推理全栈精讲系列/imgs/llm-encoder-decoder-attention-handdrawn-cn.png",
+    "notes/LLM/大模型与推理全栈精讲系列/imgs/llm-rnn-lstm-bottleneck-handdrawn-cn.png",
+    "notes/LLM/大模型与推理全栈精讲系列/imgs/llm-ngram-neural-lm-bottleneck-handdrawn-cn.png",
+    "notes/LLM/大模型与推理全栈精讲系列/imgs/llm-decoding-strategies-handdrawn-cn.png",
+    "notes/LLM/大模型与推理全栈精讲系列/imgs/llm-autoregressive-generation-loop-handdrawn-cn.png",
+    "notes/LLM/大模型与推理全栈精讲系列/01_理解GPU架构及其原理.md",
     "notes/LLM/大模型与推理全栈精讲系列/imgs/gpu-tensor-core-mma-tile-handdrawn-cn.png",
     "notes/LLM/大模型与推理全栈精讲系列/imgs/gpu-warp-simt-model-handdrawn-cn.png",
     "notes/LLM/大模型与推理全栈精讲系列/imgs/gpu-sm-architecture-zoom-handdrawn-cn.png",
     "notes/LLM/大模型与推理全栈精讲系列/imgs/gpu-yxw-tile-dataflow-handdrawn-cn.png",
     "notes/LLM/大模型与推理全栈精讲系列/imgs/gpu-memory-hierarchy-overview-handdrawn-cn.png",
     "notes/LLM/大模型与推理全栈精讲系列/imgs/gpu-yxw-tile-computation-handdrawn-cn.png",
-    "notes/LLM/大模型与推理全栈精讲系列/imgs/gpu-architecture-overview-handdrawn-cn.png",
     "notes/LLM/大模型与推理全栈精讲系列/01_从CNN、RNN到Attention（废弃）.md",
     "notes/LLM/大模型与推理全栈精讲系列/04_Transformer架构及原理.md",
     "notes/LLM/大模型与推理全栈精讲系列/03_深入理解Attention机制.md",
     "notes/LLM/大模型与推理全栈精讲系列/04_Transformer架构及原理.md.tmp.9232.bae8588111b3",
-    "notes/LLM/大模型与推理全栈精讲系列/01_理解GPU架构及其原理.md",
     "notes/LLM/大模型与推理全栈精讲系列/_03_编排分析报告.md",
     "notes/LLM/大模型与推理全栈精讲系列/02_大模型基础速通.md",
     "notes/LLM/大模型与推理全栈精讲系列/03_深入理解Attention机制.md.tmp.50112.c6e37dfddc40",
@@ -220,7 +224,6 @@
     "notes/LLM/大模型与推理全栈精讲系列/02_大模型基础速通.md.tmp.26860.924097260bd5",
     "notes/LLM/大模型与推理全栈精讲系列/02_大模型基础速通.md.tmp.26860.28b5265ae56d",
     "notes/LLM/大模型与推理全栈精讲系列/02_大模型基础速通.md.tmp.26860.1b954d5f70e3",
-    "notes/LLM/大模型与推理全栈精讲系列/imgs/Pasted image 20260606185902.png",
     "AGENTS.md",
     "notes/papers/arxiv-ai-daily/2026-06-04 arxiv ai papers.md",
     "CLAUDE.md",
@@ -232,9 +235,6 @@
     "code/arxiv_paper_radar/README.md",
     "notes/maas/aibrix架构与实现/00.架构初探及教程大纲规划.md",
     "notes/maas/aibrix架构与实现/10.全局串联.md",
-    "notes/maas/aibrix架构与实现/assets/10/03-global-mental-model.png",
-    "notes/maas/aibrix架构与实现/assets/10/02-request-hot-path.png",
-    "notes/maas/aibrix架构与实现/assets/10/01-deployment-control-loop.png",
     "notes/maas/aibrix架构与实现/06.KVCache系统.md",
     "notes/maas/aibrix架构与实现/07.路由系统.md",
     "notes/maas/aibrix架构与实现/08.扩展能力与特殊架构.md",
