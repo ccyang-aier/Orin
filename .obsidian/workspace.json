@@ -197,6 +197,13 @@
   },
   "active": "433a032bfb786d4a",
   "lastOpenFiles": [
+    "notes/LLM/大模型与推理全栈精讲系列/imgs/gpu-tensor-core-mma-tile-handdrawn-cn.png",
+    "notes/LLM/大模型与推理全栈精讲系列/imgs/gpu-warp-simt-model-handdrawn-cn.png",
+    "notes/LLM/大模型与推理全栈精讲系列/imgs/gpu-sm-architecture-zoom-handdrawn-cn.png",
+    "notes/LLM/大模型与推理全栈精讲系列/imgs/gpu-yxw-tile-dataflow-handdrawn-cn.png",
+    "notes/LLM/大模型与推理全栈精讲系列/imgs/gpu-memory-hierarchy-overview-handdrawn-cn.png",
+    "notes/LLM/大模型与推理全栈精讲系列/imgs/gpu-yxw-tile-computation-handdrawn-cn.png",
+    "notes/LLM/大模型与推理全栈精讲系列/imgs/gpu-architecture-overview-handdrawn-cn.png",
     "notes/LLM/大模型与推理全栈精讲系列/01_从CNN、RNN到Attention（废弃）.md",
     "notes/LLM/大模型与推理全栈精讲系列/04_Transformer架构及原理.md",
     "notes/LLM/大模型与推理全栈精讲系列/03_深入理解Attention机制.md",
@@ -235,14 +242,7 @@
     "notes/maas/aibrix架构与实现/04.复杂推理部署形态.md",
     "notes/maas/aibrix架构与实现/03.模型生命周期与基础推理工作负载.md",
     "notes/maas/aibrix架构与实现/05.弹性机制.md",
-    "notes/maas/aibrix架构与实现/assets/09/04-rollout-change-flow.png",
-    "notes/maas/aibrix架构与实现/assets/09/02-observability-signal-map.png",
-    "notes/maas/aibrix架构与实现/assets/09/03-troubleshooting-ladder.png",
-    "notes/maas/aibrix架构与实现/assets/09/01-production-operating-loop.png",
-    "notes/maas/aibrix架构与实现/assets/08/05-batch-api-execution-mode.png",
-    "notes/maas/aibrix架构与实现/assets/08/04-gateway-integration-boundaries.png",
     "notes/maas/aibrix架构与实现/02.CRD中心化架构.md",
-    "notes/maas/aibrix架构与实现/01.AIBrix要解决什么问题.md",
     "未命名.canvas"
   ]
 }

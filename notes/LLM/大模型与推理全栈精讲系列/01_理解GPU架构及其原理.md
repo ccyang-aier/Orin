@@ -5,7 +5,7 @@ tags:
   - CUDA
   - NVIDIA
   - model-serving
-updated: 2026-06-06
+updated: 2026-06-08
 description: 面向大模型与推理全栈初学者，建立 GPU 设计哲学、存储层级、SM/Warp/Tensor Core 与 CUDA 执行模型的基础心智模型，为后续理解 LLM 性能与推理系统打底。
 ---
 
@@ -30,6 +30,19 @@ CPU和GPU都能执行程序，但它们从一开始就不是为同一种工作�
 CPU追求的是低延迟和通用控制能力。它通常拥有少量复杂核心、较强的分支预测、乱序执行能力、多级缓存和复杂控制逻辑，适合操作系统调度、文件网络I/O、复杂业务逻辑、串行依赖强的程序，以及对单个任务响应时间敏感的场景。
 
 GPU追求的是高吞吐。它不指望某一个线程像CPU核心那样强，而是准备了大量较轻量的执行资源，让成千上万个线程同时做形状相似的工作。
+
+在正式比较 CPU 和 GPU 之前，可以先把 GPU 当作一个由多个层次组成的并行计算设备来看。一次 GPU 计算通常不是“CPU 把数据丢给某个神奇核心”，而是 CPU 侧程序通过 CUDA Runtime 或深度学习框架发起 kernel launch，请求进入 GPU 后由调度器分配给大量 SM（Streaming Multiprocessor），SM 再使用 CUDA Core、Tensor Core、寄存器和 Shared Memory / L1 等资源完成局部计算。数据则主要存放在 HBM / Global Memory 中，经由 memory controller、L2 Cache 和 SM 附近的片上存储逐步靠近计算单元。
+
+![GPU 内部架构总览|900](imgs/gpu-architecture-overview-handdrawn-cn.png)
+
+这张图先建立几个最重要的对象：
+
+- **CPU Host**：负责运行主程序、准备数据、发起 kernel launch 和接收结果；
+- **GPU Scheduler**：把提交进来的并行任务分批调度到不同 SM；
+- **SM**：GPU 内部的主要计算单元集群，后文会专门展开；
+- **CUDA Core / Tensor Core**：真正执行算术计算或矩阵乘累加的计算单元；
+- **Shared Memory / L1、L2 Cache、HBM / Global Memory**：不同距离、容量和速度的数据存放位置；
+- **PCIe / NVLink**：CPU、GPU 或多 GPU 之间交换数据的外部连接通道；
 
 总的来说，可以把两者的差异压缩成一句话：**CPU擅长把少量复杂任务尽快做完，GPU擅长把海量相似任务同时铺开。**
 
@@ -70,18 +83,16 @@ B \cdot seq \cdot d_{out}
 $$
 个可以并行组织的输出位置。
 
-如果 $B=1$，$seq=4096$，$d_{out}=4096$，那么输出元素数量约为 1677 万。这里我们不需要去关系关心每个点积具体怎么做，只看一次计算的任务形状：即对于这个输出矩阵来说，它的每个位置都在做取一段输入矩阵的行或列、也可以理解为取一段权重、然后再去做乘加累积这类工作。
+如果 $B=1$，$seq=4096$，$d_{out}=4096$，那么输出元素数量约为 1677 万。这里我们不需要关心每个点积具体怎么做，只看一次计算的任务形状：对于这个输出矩阵来说，每个位置都在取一段输入矩阵的行、取一段权重矩阵的列，然后做乘加累积。
 
 这种任务性质就给了GPU发挥空间，而GPU的做法是，它不会让一个线程把1677万个输出元素从头算到尾，而是会把输出矩阵切成许多更小的tile，让不同计算资源分头处理不同tile，GPU本身就包含着众多可并行的计算单元，它本身就适合这种工作。
 
-【批注，这张图重新生成下，这张图无法很直观体现GPU是分tile去计算的，保持这个图本身的矩阵示例的同时，优化下】
+![贯穿样例：Y=XW 如何被拆成输出 tile|900](imgs/gpu-yxw-tile-computation-handdrawn-cn.png)
 
-![贯穿样例：Y=XW 如何被拆成输出 tile|900](imgs/gpu-yxw-tile-running-example-handdrawn-cn-v2.png)
+这张图的重点不是让读者记住某个固定的 `128×128`，而是理解 tile 的作用。输出矩阵 $Y$ 被划分成许多小块，每个输出 tile 对应 $Y$ 中一片连续区域。为了算出这一片区域，GPU 会沿 $K=d_{model}$ 方向分多轮取 $X'$ 的子块和 $W$ 的子块，把每一轮的小矩阵乘结果累加到同一个输出 tile 上。换句话说，tile 是 GPU 组织矩阵乘的基本工作单元：它把一个巨大的输出空间拆成许多可以并行分配、可以局部复用数据的小任务。
 
-【批注，这个解释不好，围绕tile这块讲解下即可】
-如图所示，GPU 的“快”不是简单来自频率更高，也不是来自某个单独线程更聪明，而是来自任务规模足够大、形状足够规则、数据访问足够友好时形成的吞吐优势。
+这里需要特别注意：tile 并不是把矩阵“画上网格”这么简单。它同时影响三件事：一是输出空间如何被分给不同 SM；二是每个任务需要搬哪些 $X$ 和 $W$ 子块；三是这些子块能否在片上存储和寄存器中被多次复用。后面讨论存储层级、SM 和 Tensor Core 时，都会继续回到这个 tile 视角。
 
-【批注，过渡生硬】
 沿着 $Y=XW$ 继续往下看，会自然遇到几个问题：这些 tile 需要的数据从哪里来；数据到达后由哪些硬件单元计算；软件又如何把整片输出空间交给 GPU 执行。后面的存储层级、SM 架构和 CUDA 执行模型，都会围绕这些问题展开。
 
 接下来我们先回答第一个问题：在并行工作开始之前，数据要放在哪里，又要怎样靠近真正执行计算的位置。
@@ -92,11 +103,13 @@ $$
 
 ### 2.1 显存与片上存储
 
-GPU的存储不是一个平坦的大空间，而是一个分层系统：**越靠近计算单元，容量通常越小、延迟越低、访问越快；越远离计算单元，容量越大、延迟越高。**
+这里就要提到GPU的存储资源。GPU的存储不是一个平坦的大空间，而是一个分层系统：**越靠近计算单元，容量通常越小、延迟越低、访问越快；越远离计算单元，容量越大、延迟越高。**
+
+![GPU 存储资源层级|900](imgs/gpu-memory-hierarchy-overview-handdrawn-cn.png)
 
 对大模型来说，权重、激活、KV cache 和中间 buffer 的规模都很大，通常不可能长期放在离计算单元最近的那一点小容量存储里。它们大多先放在设备显存中，也就是GPU自己管理的大容量内存空间里。真正执行某一小块计算时，GPU会把马上要用、还会被反复使用的数据搬到更靠近计算单元的位置。
 
-为了先建立层级感，可以把这些存储位置粗略分成四层。这里先看它们的直觉和在LLM中的角色，具体如何被程序调度，后面讲 CUDA执行模型时会再具体展开。
+为了先建立层级感，可以把这些存储位置粗略分成四层。这里先看它们的直觉和在LLM中的角色，具体如何被程序调度，后面讲CUDA执行模型时会再具体展开。
 
 | 层级                  | 直觉                 | 在 LLM 中的角色                |
 | ------------------- | ------------------ | ------------------------- |
@@ -105,15 +118,17 @@ GPU的存储不是一个平坦的大空间，而是一个分层系统：**越靠
 | Shared Memory / L1  | 靠近计算现场，适合一小组线程协作复用 | 高性能矩阵乘会把tile搬进来反复使用       |
 | Registers           | 每个线程私有，最快但总量有限     | 存放局部变量、累加器和小片段中间值         |
 
-这里先抓住一个简单分工：上面这些层级负责存放或临时缓存数据；真正执行乘法、加法和矩阵乘累加的硬件单元，会在下一节再介绍。也就是说，一次计算能不能顺利展开，不只取决于“有没有足够的计算单元”，还取决于数据能不能以合适的节奏来到这些计算单元附近。
+这里要建立一个非常重要的硬件直觉：**CUDA Core 和 Tensor Core 并不是直接在 HBM 上“远程计算”。** 它们真正消费的是已经通过 load/store 路径进入 SM 附近、并最终进入寄存器或片上数据通路的操作数。HBM 负责提供大容量存储，但如果每一次乘加都要重新等待 HBM，计算单元就会长期空转。因此，高性能 GPU 程序的核心工作之一，就是把马上要用的数据从远处搬近，并让搬近的数据被尽可能多次复用。
+
+所以，在GPU内部可以先确立一个简单分工：存储层级负责存放、缓存和搬运数据；CUDA Core、Tensor Core 等计算单元负责消耗已经送到附近的数据。一次计算能不能顺利展开，不只取决于有没有足够多的计算单元，还取决于数据能不能以合适的节奏来到这些计算单元附近。
 
 把这个层级放回 $Y=XW$，问题会更具体。$Y$ 里的一个元素需要读取 $X$ 的一段行数据和 $W$ 的一段列数据，然后做点积。相邻的输出元素并不是完全陌生的：同一行的多个输出会反复用到同一段 $X$，同一列方向的多个输出也会反复用到相邻的 $W$ 数据。
 
-如果每个输出元素都独自从 HBM 里把自己需要的数据重新读一遍，很多带宽会浪费在“搬同样或相邻的数据”上。GPU 矩阵乘真正想做的是：先把一小块 $X$ 和一小块 $W$ 搬到更近的位置，让一批输出 tile 反复使用它们；中间累加结果尽量留在寄存器里，等一个 tile 算完后再写回 HBM。
+如果每个输出元素都独自从 HBM 里把自己需要的数据重新读一遍，很多带宽会浪费在**搬同样或相邻的数据**上。GPU矩阵乘真正想做的是：先把一小块 $X$ 和一小块 $W$ 搬到更近的位置，让一批输出 tile 反复使用它们；中间累加结果尽量留在寄存器里，等一个 tile 算完后再写回 HBM。
 
-![GPU 存储层级与 Y=XW 数据流动|900](imgs/gpu-memory-hierarchy-yxw-handdrawn-cn-v2.png)
+![Y=XW 中一个输出 tile 的数据搬运与复用|900](imgs/gpu-yxw-tile-dataflow-handdrawn-cn.png)
 
-因此，一个高性能矩阵乘实现的核心努力，可以粗略理解为：
+如图可见，一个高性能矩阵乘实现的核心努力，可以粗略理解为：
 
 - 少从 HBM 重复读取已经能被复用的数据；
 - 把 $X$ 和 $W$ 的小块 tile 搬到 Shared Memory / L1 或寄存器附近；
@@ -122,91 +137,94 @@ GPU的存储不是一个平坦的大空间，而是一个分层系统：**越靠
 
 到这里，$Y=XW$ 又多了一层含义：它不只是一组可以并行的输出位置，还是一场数据搬运与复用的组织问题。接下来用同一块权重矩阵看一个更贴近推理的现象：为什么 prefill 和 decode 的数据压力并不一样。
 
+这里不要求读者已经熟悉推理系统，只需要先知道一次大模型回答通常可以粗略拆成两个阶段：prefill 先处理已有上下文，decode 再逐个生成新 token。两个阶段都在使用同一类矩阵计算，但它们给 GPU 带来的数据复用机会很不一样。
+
 ### 2.2 prefill 与 decode
 
 先把数据搬运的直觉落到具体数字上。假设 $d_{model}=4096$，$d_{out}=4096$，权重矩阵 $W$ 的元素数量是：
-
 $$
 4096 \times 4096 = 16{,}777{,}216
 $$
 
 如果用 FP16 或 BF16 存储，每个元素 2 bytes，那么这个权重矩阵约为 32 MiB。它不是一个抽象矩阵，而是一块真实占用显存、计算时需要被读取的数据。
 
-但只知道“权重有 32 MiB”还不够。更关键的问题是：这块权重被读进来以后，能服务多少计算。推理时可以先粗略区分两种形态。
+但只知道权重有 32 MiB还不够。更关键的问题是：这块权重被读进来以后，能服务多少计算。推理时可以先粗略区分两种形态。
 
-第一种是 prefill，也就是一次处理已有上下文中的多个 token。假设一次处理 $seq=4096$ 个 token，那么 $X'$ 的形状大约是 $[4096,4096]$，$W$ 是 $[4096,4096]$，输出也是 $[4096,4096]$。计算量约为：
-
+第一种是 prefill，也就是一次处理已有上下文中的多个 token。假设一次处理 $seq=4096$个token，那么 $X'$ 的形状大约是 $[4096,4096]$，$W$ 是 $[4096,4096]$，输出也是 $[4096,4096]$。计算量约为：
 $$
 2 \times 4096^3 \approx 1374 \text{ 亿 FLOPs}
 $$
 
-此时同一份 $W$ 可以被许多 token 行复用，读入一批权重后能支撑大量乘加运算。矩阵形状越大、数据复用越充分，GPU 越容易把这些计算组织成高吞吐的大矩阵乘。
+此时同一份 $W$ 可以被许多 token 行复用，读入一批权重后能支撑大量乘加运算。矩阵形状越大、数据复用越充分，GPU越容易把这些计算组织成高吞吐的大矩阵乘。
 
 第二种是 decode，也就是模型逐步生成新 token。假设每次只生成一个 token，$X'$ 的形状接近 $[1,4096]$，$W$ 仍然是 $[4096,4096]$。计算量约为：
-
 $$
 2 \times 1 \times 4096 \times 4096 \approx 3355 \text{ 万 FLOPs}
 $$
 
-看起来计算量也不小，但和 prefill 相比，每次新 token 只提供很少的输入行，同一份 $W$ 能被摊薄的计算更少。换句话说，decode 不是“没有计算”，而是每次计算规模更小，权重读取、KV cache 读取和 batch 组织方式更容易影响实际速度。
+看起来计算量也不小，但和 prefill 相比，每次新 token 只提供很少的输入行，同一份 $W$ 能被摊薄的计算更少。换句话说，decode 不是没有计算，而是每次计算规模更小，权重读取、KV cache 读取和 batch 组织方式更容易影响实际速度。
 
-所以，这里不能只看 FLOPs 的绝对值。prefill 的优势在于大块计算和较好的权重复用；decode 的难点在于逐 token 推进、输入规模小、数据读取压力更容易暴露。后续推理系统之所以重视 batching、KV cache 管理和 attention 优化，就是因为它们都在影响“每次搬数据之后，能不能产生足够多有用计算”。
+所以，这里我们分析这个不是为了看 FLOPs 的绝对值，而是要明白，prefill 的优势在于大块计算和较好的权重复用；decode 的难点在于逐 token 推进、输入规模小、数据读取压力更容易暴露。这里我们可以建立一个持久的认知：**后续推理系统之所以重视 batching、KV cache 管理和 attention 优化，就是因为它们都在影响每次搬数据之后，能不能产生足够多有用计算。**
 
-这个例子先不用追求 profiler 级别的精确，只要记住一个稳定直觉：**大矩阵乘能否快，不只看 FLOPs，还要看这些 FLOPs 是否建立在足够高的数据复用之上。**
+也就是说：**大矩阵乘能否快，不只看 FLOPs，还要看这些 FLOPs 是否建立在足够高的数据复用之上。**
 
 ### 2.3 带宽与算力的量级差异
 
-上面的例子说明了直觉：prefill 和 decode 面对的数据压力不同。接下来用硬件峰值数字建立量级感，并引入一个判断工具。
+上面的例子说明了直觉：prefill 和 decode 面对的数据压力不同，接下来我们可以用硬件峰值数字建立量级感，并引入一个判断工具。
 
-以 NVIDIA A100 80GB SXM 产品实现为例，官方规格给出的 dense FP16 矩阵计算峰值为 312 TFLOPS；如果使用结构化稀疏路径，标称峰值可到 624 TFLOPS。这个峰值来自后文会介绍的 Tensor Core 路径。它的 HBM2e 带宽约为 2,039 GB/s；A100 80GB PCIe 版本的带宽则约为 1,935 GB/s。本文只用这些数字建立量级感，避免把不同产品形态、dense/sparse 路径和实际实现性能混成一个数字。
+以 NVIDIA A100 80GB SXM 产品实现为例，官方规格给出的 dense FP16 矩阵计算峰值为 312 TFLOPS；如果使用结构化稀疏路径，标称峰值可到 624 TFLOPS，这个峰值来自后文会介绍的 Tensor Core 路径。它的 HBM2e 带宽约为 2,039 GB/s；A100 80GB PCIe 版本的带宽则约为 1,935 GB/s。本文只用这些数字建立量级感，避免把不同产品形态、dense/sparse 路径和实际实现性能混成一个数字。
 
-这里最重要的不是记住某个具体数值，而是看到一个事实：算力峰值和显存带宽不是同一个量纲，二者之间的差距会逼出“每搬一次数据，到底能做多少计算”这个问题。
+这里最重要的不是记住某个具体数值，而是看到一个事实：**算力峰值和显存带宽不是同一个量纲，二者之间的差距会逼出每搬一次数据，到底能做多少计算这个本质问题。**
 
-注意，这里的数字是硬件峰值，不等于任意 PyTorch 代码都能达到。它们的作用是告诉我们：如果一个算子每从显存读入很少数据就能做大量计算，它更有机会接近计算上限；如果一个算子读写了大量数据却只做很少计算，它就更容易被 HBM 带宽限制。
+注意，这里的数字是硬件峰值，不等于任意 PyTorch 代码都能达到。它们的作用是告诉我们：**如果一个算子每从显存读入很少数据就能做大量计算，它更有机会接近计算上限；如果一个算子读写了大量数据却只做很少计算，它就更容易被 HBM 带宽限制。**
 
 这引出一个重要概念：Arithmetic Intensity，常译为计算强度。
-
 $$
 \text{Arithmetic Intensity} = \frac{\text{FLOPs}}{\text{Bytes moved}}
 $$
 
-它描述的是“每搬运 1 byte 数据，能做多少次浮点计算”。回头看 prefill 和 decode 的对比：prefill 的大矩阵乘让同一份 $W$ 被许多 token 行共享，计算强度高；decode 每次只用一行 $X'$，$W$ 的读取开销难以被大量计算摊薄，计算强度低。这正是两者性能特征不同的核心原因。
+它描述的是：每搬运 1 byte 数据，能做多少次浮点计算。回头看 prefill 和 decode 的对比：prefill 的大矩阵乘让同一份 $W$ 被许多 token 行共享，计算强度高；decode 每次只用一行 $X'$，$W$ 的读取开销难以被大量计算摊薄，计算强度低。这正是两者性能特征不同的核心原因。
 
-计算强度越高，越可能是 compute-bound；计算强度越低，越可能是 memory-bound。实际判断还要看硬件、精度、具体实现、缓存复用和访问模式，但这个概念足以帮助初学者建立第一层判断。第 5 节还会把它直接用于性能瓶颈分类。
+**计算强度越高，越可能是 compute-bound；计算强度越低，越可能是 memory-bound。实际判断还要看硬件、精度、具体实现、缓存复用和访问模式，但这个概念足以帮助初学者建立第一层判断。**
 
-现在，$Y=XW$ 又多了一层含义：它不仅是一组并行点积，还是一场数据搬运与复用的组织问题。上面几节回答了“数据从哪里来”；下一节回答“数据到达计算附近后，哪些硬件单元真正消耗它”。
+现在，$Y=XW$ 又多了一层含义：它不仅是一组并行点积，还是一场数据搬运与复用的组织问题。上面几节我们回答了数据从哪里来，下一节我们将围绕数据到达计算附近后，哪些硬件单元真正消耗它这个主题去做展开。
 
-## 3. SM 架构
+## 3. SM架构
 
 ### 3.1 SM 是 GPU 的基本计算单元
 
-上一节讲的是数据怎么靠近计算发生的位置。现在再看真正执行计算的硬件。可以先把 GPU 想成由很多计算“车间”组成，每个主要车间就是一个 SM（Streaming Multiprocessor）。不同 GPU 代际的 SM 细节会变化，初学者也不需要一开始记住所有硬件细节，先抓住几个稳定组件即可：
+上一节讲的是数据怎么靠近计算发生的位置，现在再看真正执行计算的硬件。可以先把 GPU 想成由很多计算车间组成，每个主要车间就是一个 SM（Streaming Multiprocessor）。不同 GPU 代际的 SM 细节会变化，初学者也不需要一开始记住所有硬件细节，先抓住几个稳定组件即可：
 
-| 组件 | 作用 | 说明 |
-| --- | --- | --- |
-| Warp Scheduler | 选择就绪 Warp 并发射指令 | 本篇 3.2 展开：用切换 Warp 的方式隐藏访存延迟； |
-| Register File | 为线程提供私有寄存器 | 寄存器用量会影响一个 SM 上能同时安排多少工作，见 4.3； |
-| Shared Memory / L1 | SM 附近的片上存储 | 一组线程协作复用数据的关键，贯穿整篇讨论； |
-| CUDA Core | 通用标量/向量计算单元 | 适合通用算术逻辑；与 Tensor Core 的对比见 3.3； |
-| Tensor Core | 矩阵乘累加专用单元 | 本篇 3.3 展开：LLM 中 GEMM、QKV projection、MLP 等高度依赖它； |
+![SM 内部结构放大剖析|900](imgs/gpu-sm-architecture-zoom-handdrawn-cn.png)
 
-以 A100 产品实现为例，它启用了 108 个 SM。这个数字意味着什么？它不是说只有 108 个任务能并行，而是说 GPU 有 108 个主要计算“车间”。每个 SM 内部又可以同时安排多组线程，大量线程会在这些 SM 上分批执行。更底层的 GA100 芯片规格与具体产品启用配置可能不同，所以教程里谈硬件数量时要尽量说明产品形态。
+| 组件                 | 作用              | 说明                                              |
+| ------------------ | --------------- | ----------------------------------------------- |
+| Warp Scheduler     | 选择就绪 Warp 并发射指令 | 本篇 3.2 展开：用切换 Warp 的方式隐藏访存延迟；                   |
+| Register File      | 为线程提供私有寄存器      | 寄存器用量会影响一个 SM 上能同时安排多少工作，见 4.3；                 |
+| Shared Memory / L1 | SM 附近的片上存储      | 一组线程协作复用数据的关键，贯穿整篇讨论；                           |
+| CUDA Core          | 通用标量/向量计算单元     | 适合通用算术逻辑；与 Tensor Core 的对比见 3.3；                |
+| Tensor Core        | 矩阵乘累加专用单元       | 本篇 3.3 展开：LLM 中 GEMM、QKV projection、MLP 等高度依赖它； |
 
-继续看 $4096 \times 4096$ 的输出矩阵。如果假设一个输出 tile 是 $128 \times 128$，那么输出矩阵可以被切成：
+以 A100 产品实现为例，它启用了 108 个 SM，这个数字意味着什么？它不是说只有 108 个任务能并行，而是说 GPU 有 108 个主要计算车间。每个 SM 内部又可以同时安排多组线程，大量线程会在这些 SM 上分批执行。
 
+仍然以 $4096 \times 4096$ 的输出矩阵为例，如果假设一个输出 tile 是 $128 \times 128$，那么输出矩阵可以被切成：
 $$
 32 \times 32 = 1024
 $$
 
-个输出 tile。可以先粗略理解为：这些 tile 会被分批分配到不同 SM 上执行。真实 cuBLAS 或 CUTLASS 风格的矩阵乘实现会更复杂：它们会沿 $M/N/K$ 维度选择不同 tile 形状，使用流水、双缓冲和寄存器累加。这里暂时不展开这些优化细节；1024 个 tile 已经足以说明 GPU 为什么能把一个矩阵乘变成许多并行工作。
+个输出 tile。可以先粗略理解为：**这些 tile 会被分批分配到不同 SM 上执行。**
 
-### 3.2 Warp：32 个线程绑在一起执行
+真实 cuBLAS 或 CUTLASS 风格的矩阵乘实现会更复杂：它们会沿 $M/N/K$ 维度选择不同 tile 形状，使用流水、双缓冲和寄存器累加。这里暂时不展开这些优化细节；1024 个 tile 已经足以说明 GPU 为什么能把一个矩阵乘变成许多并行工作。
 
-CUDA 编程里最小的显式执行实例是 Thread，但 NVIDIA GPU 的硬件调度常以 Warp 为单位。一个 Warp 通常包含 32 个 Thread。
+### 3.2 什么是Warp
+
+CUDA 编程里最小的显式执行实例是 Thread，但 NVIDIA GPU 的硬件调度常以 Warp 为单位，一个 Warp 通常包含 32 个 Thread。
 
 NVIDIA 把这种模型称为 SIMT（Single Instruction, Multiple Threads）。可以把它理解为：同一个 Warp 内的线程通常执行同一条指令，但每个线程处理不同数据。Volta 之后的架构引入了更细粒度的 Independent Thread Scheduling，不过对性能直觉来说，同一 Warp 内控制流越一致、访存越规整，通常仍然越容易获得高效率。对矩阵乘来说，这很自然：一组线程可以同时处理不同输出元素、不同矩阵片段，执行路径高度相似。
 
-Warp 模型带来两个关键后果。
+![SIMT 与 Warp 执行模型|900](imgs/gpu-warp-simt-model-handdrawn-cn.png)
+
+Warp 模型带来两个关键后果：
 
 第一，访存模式很重要。如果同一个 Warp 内相邻线程访问连续地址，硬件更容易把访问合并成高效的内存事务；如果线程访问地址很分散，就会浪费带宽。
 
@@ -218,15 +236,14 @@ Warp 模型带来两个关键后果。
 
 CUDA Core 可以执行通用数值计算，但 LLM 中最重要的一类工作是矩阵乘累加。为此，NVIDIA GPU 提供了 Tensor Core 这样的专用矩阵计算单元。
 
-Tensor Core 做的不是“理解神经网络”，而是高吞吐地执行类似下面的矩阵 tile 操作：
-
+Tensor Core 能够高吞吐地执行类似下面的矩阵 tile 操作：
 $$
 D = A \times B + C
 $$
 
-其中 $A$、$B$、$C$、$D$ 是小矩阵 tile。大型 GEMM 会被拆成许多这样的 tile 级操作，再组合成完整输出。
+其中 $A$、$B$、$C$、$D$ 是小矩阵 tile，大型 GEMM 会被拆成许多这样的 tile 级操作，再组合成完整输出。
 
-![SM、Warp、CUDA Core 与 Tensor Core|900](imgs/gpu-sm-warp-tensorcore-handdrawn-cn-v2.png)
+![Tensor Core 如何执行 tile 乘加|900](imgs/gpu-tensor-core-mma-tile-handdrawn-cn.png)
 
 用 A100 的官方峰值做量级对比：FP32 CUDA Core 峰值约 19.5 TFLOPS，而 FP16 Tensor Core 峰值约 312 TFLOPS，不考虑稀疏加速时峰值差距约为 16 倍。这不是说任意 `float16` 代码都会自动快 16 倍，而是说明：当问题能被组织成 Tensor Core 友好的矩阵乘，并且数据供应、tile 形状、精度路径、具体实现都匹配时，硬件提供了远高于通用路径的矩阵吞吐上限。
 
@@ -240,8 +257,6 @@ $$
 | BF16 | 指数范围接近 FP32，LLM 训练和推理常用；
 | FP8 | Hopper/H100、Blackwell 等后续架构上的重要低精度矩阵计算方向，A100 不提供 FP8 Tensor Core 路径；
 | INT8 / INT4 | 推理量化常见，但量化策略不属于本篇主线；
-
-这里要克制边界：本篇只解释“为什么低精度矩阵路径能更快”，不展开 INT8/INT4 量化如何校准、哪些层要保护、反量化开销如何权衡。这些属于后续量化与推理优化专题。
 
 ### 3.4 Tensor Core 如何消费一个输出 tile
 
@@ -264,7 +279,7 @@ $$
 
 ### 4.1 从软件层次映射到硬件
 
-大多数大模型学习者不需要一开始就手写 CUDA，但必须知道框架 API 最终会落到怎样的执行模型上。以 NVIDIA GPU 为代表，CUDA 就是连接“软件请求”和“硬件执行”的核心抽象：上层框架提交一段 GPU 上执行的任务，CUDA 把它组织成一批可以被 GPU 调度的并行工作单元。
+虽然我们大多数人不需要或者很少接触CUDA编程，但必须知道框架API最终会落到怎样的执行模型上。以 NVIDIA GPU 为代表，CUDA 就是连接软件请求和硬件执行的核心抽象：上层框架提交一段 GPU 上执行的任务，CUDA 把它组织成一批可以被 GPU 调度的并行工作单元。
 
 从编程视角看，CUDA 的基本层次是：
 
@@ -280,22 +295,26 @@ Thread -> Warp -> Block -> SM
 
 它们的关系可以这样记：
 
-| 层级 | 含义 | 直觉 |
-| --- | --- | --- |
-| Kernel | 一段在 GPU 上执行的函数 | 一次提交给 GPU 的并行任务；
-| Grid | 一个 kernel 启动时的所有 Block | 整个任务网格；
-| Block | 一组可以协作的 Thread | 同一 Block 内可共享 Shared Memory，并可做同步；
-| Thread | 最小程序执行实例 | 处理一小份数据；
-| Warp | 通常 32 个 Thread 组成的硬件调度单位 | 理解 SIMT、合并访存和分支发散的关键；
-| SM | Block 被调度驻留的硬件执行单元 | 常规 thread block 语义下，同一个 Block 必须驻留在同一个 SM 上；
+| 层级     | 含义                       | 直觉                                           |
+| ------ | ------------------------ | -------------------------------------------- |
+| Kernel | 一段在 GPU 上执行的函数           | 一次提交给 GPU 的并行任务；                             |
+| Grid   | 一个 kernel 启动时的所有 Block   | 整个任务网格；                                      |
+| Block  | 一组可以协作的 Thread           | 同一 Block 内可共享 Shared Memory，并可做同步；           |
+| Thread | 最小程序执行实例                 | 处理一小份数据；                                     |
+| Warp   | 通常 32 个 Thread 组成的硬件调度单位 | 理解 SIMT、合并访存和分支发散的关键；                        |
+| SM     | Block 被调度驻留的硬件执行单元       | 常规 thread block 语义下，同一个 Block 必须驻留在同一个 SM 上； |
 
 ![CUDA 执行模型如何映射到 GPU 硬件|900](imgs/gpu-cuda-execution-mapping-handdrawn-cn-v2.png)
 
-“同一个 Block 必须驻留在同一个 SM 上”是常规 thread block 语义下非常关键的边界。因为 Block 内线程能够共享 Shared Memory，并且可以通过同步原语协作。如果一个 Block 跨多个 SM，Shared Memory 和同步语义就很难成立。CUDA 的设计把 Block 作为一个局部协作单位，把 Grid 作为全局并行任务集合。Hopper 之后的 thread block cluster 和 distributed shared memory 属于更高级的协作模型，本篇不展开。
+同一个 Block 必须驻留在同一个 SM 上是常规 thread block 语义下非常关键的边界。因为 Block 内线程能够共享 Shared Memory，并且可以通过同步原语协作。如果一个 Block 跨多个 SM，Shared Memory 和同步语义就很难成立。CUDA 的设计把 Block 作为一个局部协作单位，把 Grid 作为全局并行任务集合。Hopper 之后的 thread block cluster 和 distributed shared memory 属于更高级的协作模型，本篇不展开。
 
 把 $Y=XW$ 交给 CUDA 时，一个直观映射是：Grid 覆盖整个输出矩阵；每个 Block 负责一个或多个输出 tile；Block 内的 Thread 被组织成若干 Warp；Warp 内线程协同加载数据、执行乘加、累加局部结果；最终把对应的 $Y$ tile 写回显存。真实高性能库会比这个模型复杂，但初学者先抓住这个映射，就能把 PyTorch 里的 `matmul` 和 GPU 硬件联系起来。
 
-### 4.2 Kernel launch 与异步执行：为什么测量会错
+把视角再拉远一点，整个输出矩阵可能有上千个 tile。CUDA 要解决的是如何把这些 tile 组织成一个可以提交、编号、调度和分配的任务集合。一个 CUDA kernel 覆盖整个矩阵乘任务；kernel 启动一个 Grid；Grid 里的 Block 分别负责不同输出 tile；GPU 调度器再把这些 Block 分批安排到多个 SM 上执行。程序员通常不需要手动指定“这个 Block 去第 7 号 SM”，CUDA 的执行模型会把这种调度决策交给运行时和硬件。
+
+因此，3.4 讲的是**单个任务单元内部**如何沿 K 维度推进、如何用 Tensor Core 和寄存器完成一个输出 tile；4.1 讲的是**整个任务集合**如何被 Grid / Block / Thread 组织起来，并铺到多个 SM 上。两者合在一起，才是从 `torch.matmul(x, w)` 到硬件执行的完整链路。
+
+### 4.2 Kernel launch 与异步执行
 
 CUDA kernel 启动通常是异步的。CPU 提交 kernel 后，不一定等 GPU 完成计算才继续执行下一行代码。框架会通过 stream、event 和同步点组织依赖。
 
@@ -345,45 +364,33 @@ Occupancy 描述的是一个 SM 上实际驻留的 Warp 数量与理论最大可
 
 Occupancy 的意义在于 latency hiding。访问 HBM 的延迟很高，如果一个 SM 上只有很少 Warp，一旦它们都在等数据，计算单元就会空闲。更高的 occupancy 往往意味着有更多就绪 Warp 可供调度器切换，从而隐藏内存延迟。
 
-但“occupancy 越高越好”也是错误的。它和性能的关系取决于算子类型。
+但occupancy 越高越好也是错误的，它和性能的关系取决于算子类型。
 
-| 算子类型 | Occupancy 的重要性 | 更关键的观察 |
-| --- | --- | --- |
-| Memory-bound | 通常更敏感 | LayerNorm、Softmax、element-wise、decode KV cache 读取等场景，需要更多并发来隐藏访存延迟；
-| Compute-bound | 不一定越高越好 | 大 GEMM 更关键的是 Tensor Core 利用率、tile 形状、数据复用、流水是否充分；
-| 混合型算子 | 需要 profiler 判断 | attention、fused kernel、采样等可能同时受计算、访存和调度影响；
+| 算子类型          | Occupancy 的重要性 | 更关键的观察                                                              |
+| ------------- | -------------- | ------------------------------------------------------------------- |
+| Memory-bound  | 通常更敏感          | LayerNorm、Softmax、element-wise、decode KV cache 读取等场景，需要更多并发来隐藏访存延迟； |
+| Compute-bound | 不一定越高越好        | 大 GEMM 更关键的是 Tensor Core 利用率、tile 形状、数据复用、流水是否充分；                   |
+| 混合型算子         | 需要 profiler 判断 | attention、fused kernel、采样等可能同时受计算、访存和调度影响；                          |
 
 高性能 GEMM kernel 有时会故意使用更多寄存器或 Shared Memory 来提高数据复用，导致 occupancy 不是满的，但整体更快。相反，一个逐元素算子如果 occupancy 太低，可能根本没有足够 Warp 来覆盖显存访问延迟。
 
-因此，正确表述不是“occupancy 不重要”，而是：
+因此，一个正确的认知应该是：**occupancy是延迟隐藏能力的重要线索，但不是最终目标；最终目标是让当前算子的主要瓶颈被正确缓解。**
 
-**occupancy 是延迟隐藏能力的重要线索，但不是最终目标；最终目标是让当前算子的主要瓶颈被正确缓解。**
-
-### 4.4 从单个 tile 到整个 Grid
-
-3.4 描述的是单个输出 tile 在硬件上如何执行。现在把视角拉远：整个输出矩阵有 1024 个这样的 tile，CUDA 要解决的是如何把它们组织成一个可以提交、调度和分配的任务集合。
-
-映射关系是这样的：一个 CUDA kernel 覆盖整个矩阵乘任务，对应输出矩阵 $Y$ 的全部计算；kernel 启动一个 Grid，Grid 里的每个 Block 负责一个或多个输出 tile 的计算；Block 内的 Thread 被分组成若干 Warp，每个 Warp 分到更小的片段；GPU 的调度器把这些 Block 分批分配到 108 个 SM 上，每个 SM 上同时驻留若干 Block 并发执行。
-
-从程序员的角度看，写 `torch.matmul(x, w)` 时实际上在做的是：把一个 $4096 \times 4096$ 的输出空间切分成 1024 个任务单元，以 Grid→Block→Thread 的形式提交给 GPU，让调度器决定哪些 Block 先跑、跑在哪个 SM 上。程序员不需要手动指定“这个 Block 去第 7 号 SM”，CUDA 的执行模型把这个调度决策交给硬件。
-
-这和 3.4 的区别在于：3.4 讲的是一个 Block 内部，Warp 怎么沿 K 轮循环推进、Tensor Core 怎么消费 tile、累加器怎么留在寄存器——这是**单个任务单元的执行行为**；4.4 讲的是 1024 个任务单元怎么被编号、打包、提交、分配——这是**整个任务集合的组织与调度**。两者合在一起，才构成从 `torch.matmul` 到硬件执行的完整链路。
-
-这一节给 $Y=XW$ 加上的含义是“提交与分配”：矩阵乘不仅要在硬件上以 tile 为单位执行，还要先以 Grid/Block/Thread 为单位被组织和提交，才能让 GPU 调度器把工作铺到全部 SM 上。接下来，才能讨论这些工作为什么有时快、有时慢。
-
-## 5. 三类性能瓶颈
+## 5. 从硬件视角看性能瓶颈
 
 ### 5.1 先把瓶颈变成可判断的问题
 
-现在回到导读中的那些现象：为什么 batch size 翻倍后吞吐不一定翻倍，为什么 prefill 和 decode 的速度差异很大，为什么换了峰值更高的 GPU 也不一定线性变快。前面的几件事已经连起来了：工作要能拆开，数据要能送到计算附近，计算单元要持续有数据可算，软件还要把任务排进 GPU。带着这些背景再看性能瓶颈，compute-bound、memory-bound、communication-bound 就不再只是三个英文标签。
+现在回到导读中的那些现象：显存、带宽和峰值算力看起来都很漂亮，真实任务却不一定等比例变快；同一张卡跑 prefill 和 decode 的体验也可能完全不同。前面的几件事已经连起来了：工作要能被拆成规则 tile，数据要能从 HBM 被搬到计算附近，SM、Warp 和 Tensor Core 要持续有数据可算，CUDA 还要把任务组织成 Grid、Block 和 Thread 交给 GPU 调度。
+
+带着这些背景再看性能瓶颈，compute-bound、memory-bound、communication-bound 就不再只是三个英文标签，而是在回答三个具体问题：时间主要花在计算、搬数据，还是跨设备交换上。
 
 现在可以把前面的内容归纳成一个诊断框架：
 
-| 瓶颈类型 | 直觉 | 常见 LLM 场景 |
-| --- | --- | --- |
-| Compute-bound | 计算单元接近饱和，时间主要花在算 | 大 batch GEMM、prefill 中的大矩阵乘、训练中的 dense GEMM；
-| Memory-bound | 计算单元在等数据，时间主要花在搬运 | decode KV cache 读取、LayerNorm、Softmax、element-wise、小 batch 推理；
-| Communication-bound | 多设备之间等待数据交换或同步 | TP all-reduce、PP stage 边界、DP 梯度同步、多节点推理；
+| 瓶颈类型                | 直觉                | 常见 LLM 场景                                                     |
+| ------------------- | ----------------- | ------------------------------------------------------------- |
+| Compute-bound       | 计算单元接近饱和，时间主要花在算  | 大 batch GEMM、prefill 中的大矩阵乘、训练中的 dense GEMM；                  |
+| Memory-bound        | 计算单元在等数据，时间主要花在搬运 | decode KV cache 读取、LayerNorm、Softmax、element-wise、小 batch 推理； |
+| Communication-bound | 多设备之间等待数据交换或同步    | TP all-reduce、PP stage 边界、DP 梯度同步、多节点推理；                      |
 
 ![GPU 性能瓶颈诊断框架|900](imgs/gpu-bottleneck-diagnosis-prefill-decode-handdrawn-cn-v3.png)
 
@@ -413,13 +420,13 @@ Memory-bound 的直觉是：计算单元并没有被喂饱，它们经常在等�
 - 使用 fused kernel 减少中间结果落回 HBM；
 - 通过 batching 提高每次读入数据的计算利用率；
 
-这也解释了 FlashAttention 一类 IO-aware 方法为什么重要：它的核心教学价值不是“换了一个 attention 公式”，而是通过 tiling 和重计算等策略减少 HBM 访问，把原本昂贵的数据搬运压力降下来。
+这也解释了 FlashAttention 一类 IO-aware 方法为什么重要：它的核心教学价值不是换了一个 attention 公式，而是通过 tiling 和重计算等策略减少 HBM 访问，把原本昂贵的数据搬运压力降下来。
 
 在 $Y=XW$ 中，小 batch decode 阶段更容易 memory-bound。每次只处理少量新 token，权重和 KV cache 的读取压力难以被大量计算摊薄。即使 GPU 峰值 FLOPs 很高，也可能因为数据搬运跟不上而跑不满。
 
 ### 5.4 Communication-bound：多卡时通信是主矛盾
 
-单卡 GPU 学明白之后，后续还会进入多卡推理和训练。多卡不是把 GPU 数量乘上去就自动线性加速，因为设备之间需要交换数据。
+单卡 GPU 学明白之后，后续还会进入多卡推理和训练，多卡不是把 GPU 数量乘上去就自动线性加速，因为设备之间需要交换数据。
 
 常见通信包括：
 
@@ -428,25 +435,79 @@ Memory-bound 的直觉是：计算单元并没有被喂饱，它们经常在等�
 - Data Parallelism 中训练梯度同步；
 - Expert Parallelism 中 token dispatch 和 combine；
 
-当通信时间占主导时，单卡 kernel 本身可能并不慢，但整体 step time 或 token latency 被跨卡链路拖住。此时需要关注 NVLink、PCIe、InfiniBand、NCCL collective、通信重叠、分片策略和拓扑。
+当通信时间占主导时，单卡 kernel 本身可能并不慢，但整体 step time 或 token latency 被跨卡链路拖住，此时需要关注 NVLink、PCIe、InfiniBand、NCCL collective、通信重叠、分片策略和拓扑。
 
 本篇不展开多卡算法，只建立一个硬件直觉：**一旦张量被切到多张 GPU 上，性能就不只由每张卡的 SM 和 HBM 决定，还由卡与卡之间的数据交换决定。**
 
 ### 5.5 用 Arithmetic Intensity 做第一层判断
 
-2.3 节已经引入了 Arithmetic Intensity 的定义和 prefill/decode 的对比。这里把它直接用作三类瓶颈的诊断起点。
+2.3 节我们已经引入了 Arithmetic Intensity 的定义和 prefill/decode 的对比，这里把它直接用作三类瓶颈的诊断起点。
 
-面对一个具体算子，可以先问：它的计算强度高还是低？如果高，优先检查 compute-bound 方向——是否用上 Tensor Core，矩阵形状是否足够大，精度路径是否匹配；如果低，优先检查 memory-bound 方向——是否反复读写 HBM，是否能通过 fusion、tiling 或 batching 减少搬运次数；如果是多卡场景，还要单独问 communication-bound——collective 时间是否在关键路径上，通信能否与计算重叠。
+面对一个具体算子或者推理场景的性能瓶颈分析，可以先问：
+1. 它的计算强度高还是低？如果高，优先检查 compute-bound 方向：是否用上 Tensor Core，矩阵形状是否足够大，精度路径是否匹配；
+2. 如果低，优先检查 memory-bound 方向：是否反复读写 HBM，是否能通过 fusion、tiling 或 batching 减少搬运次数；
+3. 如果是多卡场景，还要单独问 communication-bound，collective 时间是否在关键路径上，通信能否与计算重叠等等；
 
-这不是最终判决，而是第一层提问方式。后续学习 FlashAttention、PagedAttention、TP、PP、EP、KV cache 管理、量化和 serving scheduler 时，都可以把这个框架带进去：很多“为什么这个优化有效”的答案，本质上都可以归入这三类瓶颈之一。
+这不是最终判决，而是首先应该想到的提问和分析方式，后续学习 FlashAttention、PagedAttention、TP、PP、EP、KV cache 管理、量化和 serving scheduler 时，都可以把这个框架带进去：很多为什么这个优化算法或策略有效的答案，本质上都可以归入这三类瓶颈之一。
 
-## 6. 本篇总结与系列导航
+## 6. NVIDIA生态
 
-GPU 不是“更快的 CPU”，而是为高吞吐并行计算设计的处理器。它牺牲了单线程低延迟和复杂控制能力，换来大量线程、SM、Warp、片上存储和专用矩阵计算单元。大模型之所以适合 GPU，是因为 Transformer 中存在大量规则张量计算，尤其是 $Y=XW$ 这类矩阵乘，天然可以被拆成海量 tile 并行执行。
+理解 GPU 架构之后，还需要知道 NVIDIA 生态里各层软件分别站在什么位置。很多初学者会把 driver、CUDA Toolkit、cuDNN、PyTorch、Docker 镜像和 `nvidia-smi` 混在一起，结果一遇到环境问题就不知道该检查哪一层。这里不追求安装手册式的穷尽，而是建立一条可复用的排查路径。
 
-理解 GPU 要同时抓住三条线：**计算如何组织**（SM、Warp、CUDA Core、Tensor Core）、**数据如何移动**（HBM、L2、Shared Memory、Registers）、**软件如何把任务交给硬件**（Kernel、Grid、Block、Thread）。这三条线汇聚成一个性能判断框架：compute-bound、memory-bound、communication-bound。
+![NVIDIA软件生态体系|900](imgs/gpu-nvidia-ecosystem-stack-handdrawn-cn-v2.png)
 
-带着这个框架往后学，遇到每一个新机制都可以先问三个问题：第一，它让计算更容易并行了吗；第二，它减少或重排了数据搬运吗；第三，它把问题切到多设备后引入了什么通信代价。FlashAttention 减少 HBM 访问次数，是 memory-bound 的应对；PagedAttention 改善 KV cache 显存利用率，是存储层级的延伸；TP/PP/EP 把张量切到多卡，通信开销随之而来，是 communication-bound 的起点；batching 和 serving scheduler 提升硬件利用率，是 compute/memory utilization 的工程实践。这个追问习惯，是大模型推理全栈学习里最值得建立的底层视角。
+### 6.1 软件生态怎么分层
+
+可以把 NVIDIA 生态粗略分成五层：
+
+| 层级 | 代表对象 | 作用 |
+| --- | --- | --- |
+| 硬件层 | GPU、HBM、NVLink、PCIe | 提供真实计算、显存和互联能力； |
+| 驱动层 | NVIDIA Driver、`nvidia-smi` | 让操作系统识别 GPU，并向上暴露设备、显存、功耗、进程等状态； |
+| CUDA 平台层 | CUDA Runtime、CUDA Driver API、`nvcc`、CUDA Toolkit | 提供 GPU 编程、编译、运行时和基础工具链； |
+| 数学库与通信库 | cuBLAS、cuDNN、NCCL、CUTLASS | 把 GEMM、卷积、collective 等高频操作封装成高性能实现； |
+| 框架与应用层 | PyTorch、TensorFlow、vLLM、TensorRT-LLM、Triton Inference Server | 让训练、推理、服务化和部署直接调用底层 GPU 能力； |
+
+这几层的依赖关系大致是自下而上的。比如 PyTorch 里一次 `x @ w` 可能最终调用 cuBLAS 或框架自己的 kernel；cuBLAS 依赖 CUDA Runtime 和驱动；驱动再控制硬件执行。环境排查时也应从下往上看：先确认 GPU 和驱动可见，再确认框架能使用对应 CUDA 运行时，最后才看具体模型或 serving 框架。
+
+一个常见误区是：**“装了 CUDA Toolkit”不等于“PyTorch 一定能用 GPU”，“PyTorch 能用 GPU”也不等于“本机一定需要单独安装完整 CUDA Toolkit”。** 许多框架安装包会自带所需的 CUDA runtime 组件；而需要本地编译 CUDA 扩展、编译自定义 kernel、使用 `nvcc` 或开发 CUDA 程序时，才更需要关注完整 Toolkit 和编译器链路。
+
+### 6.2 基本安装与验证流程
+
+安装流程最稳的心智模型是：先让系统看见硬件，再让框架看见 CUDA，最后让真实 workload 跑通。
+
+![安装指导流程|900](imgs/gpu-install-verification-flow-handdrawn-cn.png)
+
+可以按下面顺序检查：
+
+1. **确认硬件与驱动**：系统里需要有 CUDA-capable NVIDIA GPU，并安装匹配的 NVIDIA Driver。验证入口通常是 `nvidia-smi`，它能显示 GPU 型号、驱动版本、显存占用和正在使用 GPU 的进程；
+2. **确认 CUDA 运行时或 Toolkit**：如果只是使用 PyTorch、vLLM 等框架，通常先按框架官方安装命令选择合适的 CUDA 版本即可；如果要编译 CUDA 程序或本地扩展，再安装 CUDA Toolkit，并用 `nvcc --version`、示例程序或编译流程验证；
+3. **确认框架能看到 GPU**：在 PyTorch 中可用 `torch.cuda.is_available()`、`torch.version.cuda`、简单张量搬到 `cuda` 上运行等方式检查；
+4. **确认关键库路径**：如果出现 `libcuda`、`cudart`、`cuDNN`、`NCCL` 相关错误，要分清是驱动不可见、运行时版本不匹配，还是动态库搜索路径问题；
+5. **确认容器链路**：如果在 Docker 或 Kubernetes 中使用 GPU，需要额外确认 NVIDIA Container Toolkit、container runtime 配置和 `--gpus all` / device plugin 等链路；
+6. **确认真实任务**：最后再运行一个小矩阵乘、一个最小模型推理或目标 serving 框架的健康检查，确认不仅能“看到 GPU”，还真的能把计算交给 GPU；
+
+遇到环境问题时，不要一上来就重装所有东西。更好的排查顺序是：`nvidia-smi` 是否可用 → 框架是否能看到 CUDA → 简单 GPU 张量计算是否成功 → 目标模型或服务是否成功。这样可以快速判断问题是在驱动层、CUDA / runtime 层、框架层，还是具体应用配置层。
+
+## 7. 本篇总结与系列导航
+
+GPU不是更快的 CPU，而是为高吞吐并行计算设计的处理器。它牺牲了单线程低延迟和复杂控制能力，换来大量线程、SM、Warp、片上存储和专用矩阵计算单元。大模型之所以适合 GPU，是因为 Transformer 中存在大量规则张量计算，尤其是 $Y=XW$ 这类矩阵乘，天然可以被拆成海量 tile 并行执行。
+
+理解 GPU 要同时抓住四条线：**计算如何组织**（SM、Warp、CUDA Core、Tensor Core）、**数据如何移动**（HBM、L2、Shared Memory、Registers）、**软件如何把任务交给硬件**（Kernel、Grid、Block、Thread）、**生态如何把硬件能力暴露给应用**（Driver、CUDA、cuBLAS/cuDNN/NCCL、PyTorch/vLLM/TensorRT-LLM）。前面三条线汇聚成性能判断框架，第四条线则决定你能否在真实环境里稳定使用这些能力。
+
+带着这个认知往后学，遇到每一个新机制都可以先问三个问题：
+1. 第一，它让计算更容易并行了吗？
+2. 第二，它减少或重排了数据搬运吗？
+3. 第三，它把问题切到多设备后引入了什么通信代价；
+
+越往后面学，你就越能体会到这些基础认知的重要性，比如：
+1. FlashAttention 减少 HBM 访问次数，是 memory-bound 的应对；
+2. PagedAttention 改善 KV cache 显存利用率，是存储层级的延伸；
+3. TP/PP/EP 把张量切到多卡，通信开销随之而来，是 communication-bound 的起点；
+4. batching 和 serving scheduler 提升硬件利用率，是 compute/memory utilization 的工程实践；
+5. NVIDIA Driver、CUDA runtime、数学库和框架版本之间的匹配，是工程环境能否复现这些性能判断的前提；
+
+这个追问习惯，是大模型推理全栈学习里最值得建立的底层视角。
 
 ## 参考资料
 
@@ -461,6 +522,9 @@ GPU 不是“更快的 CPU”，而是为高吞吐并行计算设计的处理器
 9. NVIDIA Nsight Systems Documentation：系统时间线、CPU/GPU 并发、kernel launch 与多进程/多线程分析；https://docs.nvidia.com/nsight-systems/；
 10. FlashAttention: Fast and Memory-Efficient Exact Attention with IO-Awareness：IO-aware attention 与减少 HBM 读写的典型论文；https://arxiv.org/abs/2205.14135；
 11. vLLM / PagedAttention：KV cache block 管理和推理 serving 中的内存管理背景；https://docs.vllm.ai/en/latest/design/paged_attention/；
+12. NVIDIA CUDA Installation Guide for Microsoft Windows：CUDA-capable GPU、Toolkit 安装与验证流程；https://docs.nvidia.com/cuda/cuda-installation-guide-microsoft-windows/；
+13. NVIDIA Container Toolkit Installation Guide：容器环境中使用 NVIDIA GPU 的安装与 runtime 配置；https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html；
+14. PyTorch Get Started：按 OS、包管理器和 CUDA 平台选择 PyTorch 安装命令；https://pytorch.org/get-started/locally/；
 
 ## 学习测评
 
@@ -580,6 +644,24 @@ GPU 不是“更快的 CPU”，而是为高吞吐并行计算设计的处理器
     C. occupancy 是延迟隐藏线索，但最终目标是缓解当前算子的主要瓶颈；
     D. Tensor Core 只能在 occupancy 达到 100% 时工作；
 
+20. 多选：关于 NVIDIA 软件生态分层，哪些说法更准确？
+    A. NVIDIA Driver 让操作系统识别 GPU，并向上暴露设备状态；
+    B. cuBLAS、cuDNN、NCCL 属于高性能数学库或通信库，不是业务框架本身；
+    C. PyTorch、vLLM、TensorRT-LLM 等框架或应用会调用底层 CUDA 与高性能库；
+    D. 只要安装了 CUDA Toolkit，就一定不需要安装或更新 NVIDIA Driver；
+
+21. 单选：排查一台机器“PyTorch 不能使用 GPU”的问题时，哪个顺序更合理？
+    A. 先重装模型代码，再重装操作系统，最后看 `nvidia-smi`；
+    B. 先确认 `nvidia-smi` 能看到 GPU，再确认 PyTorch 是否能看到 CUDA，最后运行最小 GPU 张量计算；
+    C. 只检查 batch size，因为 GPU 是否可用只由 batch size 决定；
+    D. 只要 `nvcc --version` 有输出，就说明 PyTorch 一定能用 GPU；
+
+22. 多选：哪些场景更可能需要关注完整 CUDA Toolkit 或容器 GPU 链路，而不只是安装框架包？
+    A. 需要本地编译 CUDA 扩展或自定义 kernel；
+    B. 需要在 Docker / Kubernetes 中让容器访问 NVIDIA GPU；
+    C. 只是运行一个框架自带 CUDA runtime 的普通 PyTorch wheel，且不编译扩展；
+    D. 需要使用 `nvcc` 编译 CUDA 程序；
+
 ### 答案与解析
 
 1. 答案：A。CPU 更偏向低延迟和复杂控制，GPU 更偏向高吞吐和大量相似工作并行。B、C、D 都把差异说窄或说错了；
@@ -619,3 +701,9 @@ GPU 不是“更快的 CPU”，而是为高吞吐并行计算设计的处理器
 18. 答案：A、B、D。batch 变大通常有机会提高硬件利用率，但不会自动保证线性吞吐提升。瓶颈可能转移到显存读写、KV cache、调度、显存容量或多卡通信上。C 把 batch 与 Tensor Core 利用率的关系绝对化了；
 
 19. 答案：C。occupancy 能帮助判断 SM 是否有足够 Warp 隐藏延迟，但它不是最终目标。对大 GEMM 来说，更好的 tile 形状、寄存器累加和片上复用可能比满 occupancy 更重要；
+
+20. 答案：A、B、C。Driver 位于驱动层，负责让系统识别和控制 GPU；cuBLAS、cuDNN、NCCL 属于高性能库；框架和推理服务会调用更底层的 CUDA 与库能力。D 错，Toolkit 不能替代驱动；
+
+21. 答案：B。环境排查应从底层到上层：先看驱动和硬件是否可见，再看框架是否能使用 CUDA，最后运行最小 GPU 计算。A 顺序代价过高且不定位问题，C 无关，D 把 `nvcc` 与框架运行时可用性混为一谈；
+
+22. 答案：A、B、D。本地编译 CUDA 扩展、自定义 kernel 或 CUDA 程序时通常需要关注 Toolkit、`nvcc` 和编译链路；容器场景还需要确认 NVIDIA Container Toolkit 或运行时配置。C 场景下可能只需按框架官方命令安装匹配的 CUDA wheel，并不一定需要完整 Toolkit；
