@@ -4,121 +4,111 @@ tags:
   - attention
   - transformer
   - deep-learning
-updated: 2026-05-27
-description: 从软寻址、Q/K/V、Scaled Dot-Product、mask、多头机制和工程复杂度解释 Attention，帮助建立进入 Transformer 与现代 LLM 架构之前最关键的算子级心智模型。
+updated: 2026-06-08
+description: 从软寻址、Q/K/V、Scaled Dot-Product、mask、多头机制、MHA/MQA/GQA 与工程边界解释 Attention，帮助建立进入 Transformer 与现代 LLM 架构之前最关键的算子级心智模型。
 ---
 
-# 大模型精讲系列 00-A：深入理解 Attention 机制
+# 03 深入理解 Attention 机制
 
 > [!Quote] 本篇导读
-> Attention 不是一个神秘的“注意力”比喻，而是一种可微分的信息检索机制。它让当前位置用 Query 去查询上下文里的 Key，再按相关度加权取回 Value。理解 Attention，最重要的不是背公式，而是看清三件事：它如何把“需要什么信息”与“哪里有这些信息”连接起来；为什么要用 softmax 和 $\sqrt{d_k}$ 缩放；以及 mask、多头、KV cache 等工程设计如何改变它在大模型里的行为边界。
-
-阅读路径：本文是 [[04_Transformer架构及原理|00-B Transformer 架构及原理]] 的机制前置篇；如果已经熟悉 Q/K/V、mask 与 Multi-Head Attention，可以直接进入 Transformer 的整体架构。
-
-## 1. 从信息检索进入
-
-### 1.1 Attention 解决的不是记忆问题，而是取用问题
-
-上一篇末尾我们看到，早期序列模型把所有历史压进一个固定大小的 hidden state，当序列变长时信息不可避免地衰减或覆盖。Encoder-Decoder + Attention 的出现打开了这个瓶颈：让当前位置在计算时直接访问上下文中的所有候选位置，而不必先把它们挤进单一向量。
-
-但上一篇只给出了直觉。这一篇要回答的问题是：这个”直接访问”到底怎么实现？它的数学形式、工程设计和能力边界分别是什么？
-
-先从一个具体场景建立感受。考虑一句话：
-
+> 先想一个很普通的句子：
+>
 > “小林把合同交给法务，因为他担心条款里还有风险。”
+>
+> 当模型读到“他”时，它不能只看相邻的“因为”，也不能把前文压成一个模糊摘要就结束。它要回头判断：这里的“他”更可能指“小林”，同时“合同”“法务”“条款”“风险”这些词也会影响这句话的理解。
+>
+> Attention 要解决的正是这种问题：当前位置怎样从上下文中取回有用信息。它不是让模型像人一样“集中注意力”，而是把“我要查什么”“哪里可能有答案”“查到后取回什么内容”组织成一套可训练的计算过程。
 
-当模型处理”他”这个位置时，需要回到前文判断它更可能指向”小林”而不是”法务”。这个判断不是靠相邻词就能完成的。模型必须知道：当前位置正在提出一个查询，前文多个位置都可能提供候选信息，最后要按相关性取回最有用的内容。
+上一篇 [[02_大模型基础速通|02 大模型基础速通]] 已经从旧序列模型讲到 Encoder-Decoder + Attention：早期 RNN/LSTM 需要把历史信息不断压进 hidden state，序列越长，信息越容易被覆盖或稀释；Attention 打开的关键入口，是让当前位置可以直接访问上下文中的候选位置。
 
-这就是 Attention 的核心动作：
+本文不急着背公式，而是沿着一个更自然的学习顺序推进：
 
-**Attention = 可微分的软寻址。**
+1. Attention 为什么可以看成“软寻址”；
+2. Q/K/V 为什么要把同一个 token 拆成三种角色；
+3. Scaled Dot-Product Attention 的公式每一步在做什么；
+4. mask 如何决定信息可见性；
+5. Multi-Head Attention 为什么要在多个子空间中并行建模；
+6. MHA、MQA、GQA 如何把 Attention 从训练表达能力推进到推理工程效率；
 
-“寻址”表示当前位置可以去上下文里查找信息；”软”表示它不是只选中一个位置，而是给所有位置分配权重，再把内容加权混合回来。
+理解这些之后，再进入 Transformer 架构、长上下文优化和分布式推理，很多概念就不会显得突兀。
 
-![Attention 软寻址心智模型|900](imgs/attention-soft-addressing-handdrawn-cn.png)
+## 1. Attention 是软寻址
 
-这张图可以按从左到右的顺序读：
+在程序里，“寻址”通常很硬。数组下标 `arr[3]` 只会取第 4 个元素；数据库按主键查 `id = 42`，要么命中这条记录，要么没有命中。硬寻址清晰、离散、精确，但它不适合作为神经网络里的核心操作，因为神经网络需要连续计算，也需要通过梯度学习“该看哪里”。
 
-1. 当前 token 产生一个 Query，表示“我现在需要什么信息”；
-2. 上下文中的每个 token 产生 Key，表示“我这里有什么索引特征”；
-3. Query 与每个 Key 计算 score，得到一组相关度；
-4. softmax 把相关度转成权重，使权重非负且总和为 1；
-5. 这些权重再作用到 Value 上，得到当前位置的新表示；
+语言理解却很少是这种单点命中。仍然看导读里的句子：
 
-注意这里的 Value 才是真正被取回并混合的内容。Key 更像目录索引，Query 更像检索请求，score 和 softmax 决定每本“书”被参考多少。
+```text
+小林 / 把 / 合同 / 交给 / 法务 / 因为 / 他 / 担心 / 条款 / 里 / 还有 / 风险
+```
 
-### 1.2 硬寻址与软寻址
+当模型处理“他”时，最重要的候选可能是“小林”，但“法务”也会参与歧义判断，“合同”“条款”“风险”又会帮助理解后面的语义场景。如果只允许模型硬选一个位置，它会丢掉很多弱但有用的证据。
 
-为什么用”寻址”而不是”匹配”来描述 Attention？因为它和程序世界里的地址查找有直接对应，但做了一个关键的”变软”操作。
+Attention 的想法是把硬寻址变成软寻址：
 
-传统程序里的寻址通常是硬寻址。比如数组下标 `arr[3]`，数据库主键查询 `id = 42`，命中就是命中，没命中就是没命中。硬寻址清晰、精确，但不可微，不能方便地作为神经网络中的连续计算单元。
+- 不再只命中一个位置，而是给多个候选位置分配权重；
+- 权重越高，表示当前位置越多地取用这个位置的信息；
+- 最后不是复制某一个 token，而是把多个位置的内容按权重混合成新的表示；
 
-Attention 的软寻址有两个特点：
+![硬寻址与软寻址对比|900](imgs/attention-hard-vs-soft-addressing-handdrawn-cn.png)
 
-- 它允许多个位置同时贡献信息；
-- 它可以通过梯度学习”怎样打分”和”怎样取回”；
+这张图里，硬寻址像是“我只选一个地址”；软寻址则像是“我主要参考小林，也少量参考合同、法务和条款”。这个“按相关度取回多份信息”的动作，就是理解 Attention 的第一层心智模型。
 
-语言中的很多关系本来就不是单点关系。一个词的含义可能同时依赖主语、谓语、修饰语、前文主题和局部短语。Attention 用加权混合的方式，把这种”主要参考 A，少量参考 B，也保留一点 C”的连续关系表达出来。
+更准确地说，Attention 并不是先在外部建立一张人工规则表，再让模型照表查找。它会通过训练学出一套打分方式：什么样的当前位置应该去匹配什么样的上下文位置，哪些信息应该被更高权重地混合回来。正因为它是连续的、可微的，模型才能在大量训练样本中自动调整这种“查找与取回”的策略。
 
-### 1.3 先给一个紧凑定义
+到这里先不要急着问公式。只要先记住一句话：
 
-在现代 Transformer 语境中，Attention 通常指 Scaled Dot-Product Attention：
+**Attention = 对上下文做可训练的软寻址，并把被寻址位置的内容加权取回。**
 
-$$
-\operatorname{Attention}(Q,K,V)
-= \operatorname{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V
-$$
+## 2. Q/K/V：三种角色
 
-其中：
+软寻址还只是直觉。要把它放进神经网络里，需要把“当前位置在查什么”“上下文位置怎样被查到”“查到后返回什么”拆成可计算的对象，这就是 Q/K/V。
 
-- $Q$ 是 Query 矩阵，表示每个位置发出的查询；
-- $K$ 是 Key 矩阵，表示每个位置可被匹配的索引；
-- $V$ 是 Value 矩阵，表示每个位置真正提供的内容；
-- $d_k$ 是 Query 与 Key 的向量维度；
-- $QK^T$ 得到所有 Query 对所有 Key 的打分矩阵；
-- softmax 按行归一化，使每个 Query 对所有 Key 的权重和为 1；
+### 2.1 为什么需要 Q/K/V
 
-如果只记一句话：
+一个 token 进入模型后，已经有自己的向量表示。初学者很容易问：既然已经有向量了，为什么不直接拿这些向量互相比较，非要再投影成 Query、Key、Value 三套向量？
 
-**Query 决定“我要查什么”，Key 决定“我能被怎样查到”，Value 决定“查到后返回什么”。**
+原因是：同一个位置在 Attention 里同时扮演三种不同角色。
 
-## 2. Q/K/V 的机制
-
-### 2.1 为什么同一个 token 要拆成三种向量
-
-初学者常问：既然输入 token 已经有 embedding，为什么还要投影成 Q、K、V 三套向量？
-
-原因是一个位置在 Attention 中扮演了三种不同角色：
-
-| 角色 | 直觉 | 在计算中的作用 |
+| 角色 | 中文直觉 | 在计算中的作用 |
 | --- | --- | --- |
-| Query | 我现在想找什么 | 当前行拿它去匹配所有 Key |
-| Key | 我有什么可匹配特征 | 被其他 Query 用来计算相关度 |
-| Value | 我能贡献什么内容 | 被权重加权求和后进入输出 |
+| Query | 我现在想找什么 | 由当前位置发出，用来和所有 Key 打分 |
+| Key | 我能怎样被查到 | 由候选位置提供，暴露可匹配的索引特征 |
+| Value | 我真正贡献什么内容 | 由候选位置提供，被权重加权混合进输出 |
 
-同一个词在不同角色下需要保留的特征不完全相同。
+这三个角色不能简单混成一份向量。比如“合同”这个词：
 
-例如“合同”这个词：
+- 当它作为 Query 时，可能在问“哪些词解释我的动作或状态？”；
+- 当它作为 Key 时，可能需要暴露“我是一个法律文件实体”这一类可被匹配的特征；
+- 当它作为 Value 时，携带的是可以被其他位置取回的语义内容；
 
-- 当它作为 Query 时，可能在问“哪些词解释我的状态或动作？”；
-- 当它作为 Key 时，可能需要暴露“我是一个法律文件实体”；
-- 当它作为 Value 时，可能携带具体语义内容，供别的位置取用；
-
-因此 Transformer 不直接拿原始输入向量互相点积，而是学习三组线性投影：
+同一个词在不同角色下需要强调的特征不同，所以 Transformer 会学习三组线性投影：
 
 $$
 Q = XW^Q,\quad K = XW^K,\quad V = XW^V
 $$
 
-这里的 $W^Q$、$W^K$、$W^V$ 都是可学习参数。它们让模型在不同表示子空间里分别组织“查询特征”“索引特征”和“内容特征”。
+这里的 $X$ 是输入序列的表示矩阵，$W^Q$、$W^K$、$W^V$ 是可学习参数。它们把同一份输入分别投影到“查询空间”“索引空间”和“内容空间”。
 
-### 2.2 一个小例子：生成“北京”时看哪里
+如果回到“他”的例子，可以这样理解：
 
-假设模型正在翻译：
+1. “他”这个位置生成 Query，表达“我需要找到指代对象”；
+2. “小林”“合同”“法务”“条款”等位置生成 Key，表达“我有哪些可被匹配的特征”；
+3. Query 与每个 Key 打分，得到“他”对每个候选位置的相关度；
+4. 权重再作用到这些位置的 Value 上，把内容混合回“他”的新表示；
 
-> 我 爱 北京 天安门
+注意：真正被取回的是 Value。Key 更像目录索引，Query 更像检索请求，score 和 softmax 决定每份内容被参考多少。
 
-当 Decoder 准备生成 “Beijing” 时，当前状态会形成一个 Query。这个 Query 会依次和源句中每个位置的 Key 计算相关度：
+### 2.2 一个生成例子
+
+再看一个翻译场景：
+
+```text
+源句：我 爱 北京 天安门
+目标：I love ___
+```
+
+当 Decoder 准备生成 “Beijing” 时，当前位置会形成一个 Query。这个 Query 会和源句中每个位置的 Key 计算相关度：
 
 | 源 token | 可能的语义 | 相关度直觉 |
 | --- | --- | --- |
@@ -127,36 +117,44 @@ $$
 | 北京 | 地点实体 | 高 |
 | 天安门 | 地点实体的一部分或相关地点 | 中到高 |
 
-softmax 后，“北京”对应的权重会更大，“天安门”可能也有一定权重。最终上下文向量不是只复制“北京”，而是把多个 Value 按权重混合。这个混合向量再参与后续生成。
+softmax 之后，“北京”对应的权重会更大，“天安门”可能也有一定权重。最终上下文向量不是只复制“北京”，而是把多个 Value 按权重混合。这个混合向量再参与后续生成。
 
-这就是 Attention 与传统对齐的区别。它可以表现出“主要对齐到北京，同时参考天安门”的软关系。
+这就是 Attention 和传统离散对齐的差别：它可以表达“主要对齐到北京，同时参考天安门”的软关系。
 
 ### 2.3 Self-Attention 与 Cross-Attention
 
-到目前为止，所有例子里的 Q、K、V 都来自同一个序列。但如果当前要生成的内容，需要从另一段已经编码好的文本里取信息呢？比如翻译场景中，Decoder 正在生成英文，但信息来源是 Encoder 处理过的中文。这就引出了 Q/K/V 来源不同的情形。
+理解 Q/K/V 之后，再区分 Self-Attention 和 Cross-Attention 就很自然了。两者的核心区别不是公式不同，而是 Q、K、V 的来源不同。
+
+![Self-Attention 与 Cross-Attention|900](imgs/attention-self-vs-cross-handdrawn-cn.png)
+
+Self-Attention 中，Q、K、V 来自同一段序列。比如一句话中的每个 token 都从同一句话里生成 Query、Key、Value，然后句内所有位置互相建模。Encoder-Only 模型里的双向 Attention、Decoder-Only LLM 里的 masked self-attention，本质上都属于 Self-Attention，只是 mask 不同。
+
+Cross-Attention 中，Q 来自当前正在生成或解码的一侧，K/V 来自另一段已经编码好的信息。典型例子是 Encoder-Decoder 翻译模型：Decoder 当前状态提供 Query，Encoder 的源句输出提供 Key 和 Value。它的语义是：
+
+**当前生成位置向源序列发出查询，并从源序列编码结果中取回内容。**
+
+两者可以放在一张表里：
 
 | 类型 | Q 来自 | K/V 来自 | 典型用途 |
 | --- | --- | --- | --- |
 | Self-Attention | 当前序列 | 当前序列 | 同一段文本内部各位置互相建模 |
 | Cross-Attention | 目标序列或 Decoder 状态 | 源序列或 Encoder 输出 | 生成时查询另一段编码结果 |
 
-Self-Attention 是 Transformer Encoder 和 Decoder 的核心。它让同一序列中的每个位置都能在一层内直接访问其他位置。
+现代 Decoder-Only LLM 的主干通常没有传统 Encoder-Decoder 式 Cross-Attention，主体是 masked self-attention。检索增强、多模态模型、工具或外部 memory 融合等场景，可能会重新引入 cross-attention 或与它相似的信息融合结构。
 
-Cross-Attention 常见于 Encoder-Decoder 架构。Decoder 当前要生成的 token 形成 Query，而 Encoder 的输出提供 Key 和 Value。它的语义是：**当前生成位置向源语言编码结果发出查询，按相关度取用源句信息。**
+## 3. Scaled Dot-Product Attention
 
-现代 Decoder-Only LLM 通常没有 Encoder-Decoder 式 Cross-Attention，主干几乎全是 masked self-attention。检索增强、工具调用、多模态输入等场景可能重新引入 cross-attention 或类似的外部信息融合结构。
+前两节已经建立了角色：Query 发出查询，Key 提供索引，Value 提供内容。接下来才适合进入公式，因为公式只是把刚才的软寻址过程写成矩阵计算。
 
-## 3. Scaled Dot-Product
+### 3.1 从单个位置到矩阵
 
-### 3.1 从向量打分到矩阵计算
-
-单个 Query 与单个 Key 的相关度可以写成：
+先看一个 Query 对多个 Key 的打分。单个 Query $q$ 与某个 Key $k_i$ 的相关度通常用点积：
 
 $$
 s_i = q \cdot k_i
 $$
 
-如果当前序列有 $n$ 个位置，单个 Query 会得到 $n$ 个 score。softmax 之后得到权重：
+如果当前序列有 $n$ 个候选位置，单个 Query 会得到 $n$ 个 score。softmax 之后得到权重：
 
 $$
 \alpha_i = \frac{\exp(s_i)}{\sum_{j=1}^{n}\exp(s_j)}
@@ -168,11 +166,13 @@ $$
 o = \sum_{i=1}^{n}\alpha_i v_i
 $$
 
-Transformer 的关键是把所有位置一次性矩阵化：
+Transformer 的关键是把所有位置一次性矩阵化。设输入：
 
-![Scaled Dot-Product Attention 矩阵流程|900](imgs/attention-scaled-dot-product-flow-handdrawn-cn.png)
+$$
+X \in \mathbb{R}^{n \times d_{\text{model}}}
+$$
 
-设输入 $X \in \mathbb{R}^{n \times d_{\text{model}}}$，投影后：
+投影后：
 
 $$
 Q \in \mathbb{R}^{n \times d_k},\quad
@@ -180,28 +180,42 @@ K \in \mathbb{R}^{n \times d_k},\quad
 V \in \mathbb{R}^{n \times d_v}
 $$
 
-则：
+那么所有 Query 对所有 Key 的打分可以一次写成：
 
 $$
 QK^T \in \mathbb{R}^{n \times n}
 $$
 
-这个 $n \times n$ 矩阵非常重要。它的第 $i$ 行表示第 $i$ 个位置作为 Query 时，对所有 Key 的相关度；第 $j$ 列表示第 $j$ 个位置作为 Key 时，被所有 Query 匹配的程度。
+这个 $n \times n$ 矩阵非常重要。第 $i$ 行表示第 $i$ 个位置作为 Query 时，对所有 Key 的相关度；第 $j$ 列表示第 $j$ 个位置作为 Key 时，被所有 Query 匹配的程度。
 
-softmax 通常按行做，因为每一行对应一个 Query 的“注意力分布”。最后乘以 $V$：
+完整的 Scaled Dot-Product Attention 写作：
 
 $$
-\operatorname{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V
-\in \mathbb{R}^{n \times d_v}
+\operatorname{Attention}(Q,K,V)
+= \operatorname{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V
 $$
 
-得到每个位置的新表示。
+![Scaled Dot-Product Attention 矩阵流程|900](imgs/attention-scaled-dot-product-flow-handdrawn-cn.png)
 
-### 3.2 为什么要除以 $\sqrt{d_k}$
+读这张图时要按顺序看：
 
-如果只做点积 $q \cdot k$，当维度 $d_k$ 变大时，点积的方差会变大。
+1. 输入 $X$ 通过三组线性投影得到 $Q$、$K$、$V$；
+2. $QK^T$ 生成所有位置之间的打分矩阵；
+3. 除以 $\sqrt{d_k}$ 调整分数尺度；
+4. softmax 按行归一化，得到每个 Query 对所有 Key 的权重分布；
+5. 权重矩阵乘以 $V$，得到每个位置的新表示；
 
-一个简化推导如下。假设 $q$ 和 $k$ 的各维独立，均值为 0，方差为 1，则：
+如果只记一句话：
+
+**Query 决定“我要查什么”，Key 决定“我能被怎样查到”，Value 决定“查到后返回什么”。**
+
+### 3.2 公式里的几个细节
+
+公式看起来短，但里面有几个容易被忽略的关键细节。
+
+第一，为什么要除以 $\sqrt{d_k}$？
+
+如果只做点积 $q \cdot k$，当维度 $d_k$ 变大时，点积的方差会变大。一个简化推导如下。假设 $q$ 和 $k$ 的各维独立，均值为 0，方差为 1，则：
 
 $$
 q \cdot k = \sum_{r=1}^{d_k} q_r k_r
@@ -213,7 +227,7 @@ $$
 \operatorname{Var}(q \cdot k) \approx d_k
 $$
 
-也就是说，维度越大，点积分数越容易变得很大或很小。softmax 的输入一旦过大，就会进入饱和区：最大的值接近 1，其他值接近 0，梯度变得非常弱。模型会过早变成“硬选择”，训练不稳定。
+维度越大，点积分数越容易变得很大或很小。softmax 的输入一旦过大，就会进入饱和区：最大的值接近 1，其他值接近 0，梯度会变弱，模型过早变成接近硬选择的状态。
 
 除以 $\sqrt{d_k}$ 后：
 
@@ -224,50 +238,34 @@ $$
 
 这一步不是装饰性的常数，而是把分数尺度拉回 softmax 更容易工作的范围。它让 Attention 在较大维度下仍能稳定训练。
 
-### 3.3 softmax 的意义与代价
+第二，softmax 为什么按行做？
 
-softmax 有三个作用：
+因为每一行对应一个 Query。第 $i$ 行表示“第 $i$ 个位置要从哪些位置取信息”。这一行经过 softmax 后，所有候选 Key 的权重非负且总和为 1。于是每个 Query 都得到自己的一份注意力分布。
 
-- 把任意实数 score 转成非负权重；
-- 让每个 Query 的所有权重和为 1；
-- 放大高相关位置，压低低相关位置；
+第三，softmax 带来的不是简单选择，而是竞争性分配。
 
-但 softmax 也带来代价。它会让 Attention 更像“竞争性分配”：某些位置权重变大时，其他位置权重会相对变小。这种竞争让模型能突出重点，也可能在长上下文中稀释小但重要的证据。
+某些位置权重变大时，其他位置权重会相对变小。这种竞争让模型能突出重点，也可能在长上下文中稀释小但重要的证据。很多后续改进都围绕这件事展开：有的改变可见范围，如局部窗口或稀疏 Attention；有的保持数学结果但优化实现路径，如 FlashAttention 的 IO-aware 分块计算；有的改变推理阶段缓存的组织方式，后文会再展开。
 
-因此，后来的许多改进都在围绕 Attention 的权重分布做文章，例如稀疏 Attention、局部窗口、线性 Attention、FlashAttention 的 IO 优化等。它们的目标各不相同：有的改变可见范围，有的改变计算路径，有的不改变数学结果但减少显存读写。
+最后要注意一个实现细节：真实框架里 Attention 通常还会插入 mask、dropout、数值稳定处理和融合 kernel。以 PyTorch 的 `scaled_dot_product_attention` 为例，它把 scale、mask、causal 约束和数值稳定细节组织进同一个接口里；这些工程细节不改变核心公式的直觉，但会影响实际行为。
 
-### 3.4 Attention 权重不等于模型解释
+## 4. Mask 决定可见性
 
-既然 softmax 会把高相关位置的权重放大，一个自然的疑问是：能不能直接看权重大小来解释模型在想什么？
+到这里，我们已经知道 Attention 如何打分、缩放、归一化和取回 Value。但还有一个前提没有解决：所有位置都应该互相可见吗？
 
-这个直觉有帮助，但不能过度使用。
+答案是否定的。Attention 的默认形式会让每个位置都看见所有位置，而真实任务经常需要限制信息边界。这个限制就是 mask。
 
-原因至少有三点：
+### 4.1 mask 如何进入 Attention
 
-- Value 的内容会经过多层非线性变换，权重大不等于最终决策贡献最大；
-- 多头、多层 Attention 会把信息反复混合，单层权重只是局部路径；
-- 后续 FFN、残差、LayerNorm 都会继续改变表示；
+mask 通常作用在 softmax 之前。先得到打分矩阵，再把不可见位置的 score 加上一个极大的负数，理想化写作 $-\infty$。这样 softmax 后，这些位置的权重就会变成 0 或近似 0。
 
-因此，Attention 权重可以作为观察窗口，但不能直接等同于模型因果解释。它适合帮助理解机制，不适合作为唯一的可解释性证据。
-
-## 4. Mask 与可见性
-
-到这里，我们已经知道 Attention 如何打分、如何缩放、如何加权取回 Value。但还有一个前提问题没有讨论：所有位置都应该互相可见吗？
-
-### 4.1 为什么 Attention 需要 mask
-
-基础 Attention 默认每个位置都能看见所有位置。但真实任务经常需要限制可见范围。
-
-最常见的两类 mask 是：
-
-- Padding Mask：忽略为了对齐 batch 长度而补上的 PAD token；
-- Causal Mask：在自回归生成中禁止当前位置看到未来 token；
-
-mask 的核心动作通常是：在 softmax 之前，把不可见位置的 score 加上一个极大的负数，理想化写作 $-\infty$。这样 softmax 后，这些位置的概率近似为 0。
+也就是说，mask 不是在输出后“擦掉结果”，而是在权重分布形成之前就规定哪些位置不能参与竞争。
 
 ![Attention mask 类型|900](imgs/attention-mask-types-handdrawn-cn-v2.png)
 
-读 Causal Mask 时要抓住一个严格规则：第 $i$ 行只能保留第 $1..i$ 列，所有 $j>i$ 的位置都属于未来 token，应在 softmax 前被设为 $-\infty$，softmax 后权重为 0。
+图中有两类最常见的 mask：
+
+- Padding Mask：忽略为了对齐 batch 长度而补上的 PAD token；
+- Causal Mask：在自回归生成中禁止当前位置看到未来 token；
 
 ### 4.2 Padding Mask
 
@@ -284,7 +282,7 @@ mask 的核心动作通常是：在 softmax 之前，把不可见位置的 score
 
 PAD token 不是语义内容。如果 Attention 把它当成普通 token，就会把无意义信息混入输出。因此 Padding Mask 会把 PAD 对应的 Key 位置屏蔽掉，使所有 Query 都不会从 PAD 位置取 Value。
 
-这里要注意一个实现细节：不同框架里布尔 mask 的语义可能相反。有的 API 用 `True` 表示“要屏蔽”，有的用 `True` 表示“允许参与”。但数学上最终都等价于：不可见位置在 softmax 前被压到极小值。
+这里有一个容易踩坑的实现细节：不同框架里布尔 mask 的语义可能相反。有的 API 用 `True` 表示“允许参与”，有的用 `True` 表示“要屏蔽”。写代码时不能只看变量名，必须确认当前 API 的约定。数学上最终都等价于：不可见位置在 softmax 前被压到极小值。
 
 ### 4.3 Causal Mask
 
@@ -303,42 +301,49 @@ Causal Mask 通常是一个上三角屏蔽矩阵：
 - 第 3 个位置可以看第 1、2、3 个位置；
 - 以此类推；
 
-这让训练时可以一次并行计算所有位置，但每个位置的可见信息仍然符合自回归约束。
+这样一来，训练时仍然可以并行计算所有位置，但每个位置的可见信息都符合自回归约束。
 
-### 4.4 Mask 不只是“训练技巧”
+### 4.4 mask 是架构语义
 
-mask 决定了模型的信息边界，因此它本质上是架构语义的一部分。
+mask 不只是训练技巧，它决定了模型的信息边界。
 
 | Mask 类型 | 信息边界 | 对能力的影响 |
 | --- | --- | --- |
-| 无 mask 的双向 Self-Attention | 每个位置可看左右两侧 | 适合理解任务，如 BERT-style encoder |
+| 无 causal mask 的双向 Self-Attention | 每个位置可看左右两侧 | 适合理解任务，如 BERT-style encoder |
 | Causal Mask | 每个位置只能看过去和当前 | 适合自回归生成，如 GPT-style decoder |
 | Padding Mask | 屏蔽非真实 token | 保证 batch 对齐不污染语义 |
 | 局部窗口 mask | 只看附近窗口 | 降低长序列成本，但牺牲全局可见性 |
 
-同样是 Self-Attention，只要 mask 不同，模型的任务属性就会不同。Encoder-Only（如 BERT）用双向 Attention，Decoder-Only（如 GPT）用 causal mask，Encoder-Decoder 两者兼有——mask 是区分这三种架构形态的关键变量之一。
+同样是 Self-Attention，只要 mask 不同，模型的任务属性就会不同。Encoder-Only 模型通常使用双向 Self-Attention；Decoder-Only LLM 使用 Causal Mask；Encoder-Decoder 架构则在 Encoder、Decoder self-attention 和 Decoder cross-attention 中分别使用不同的信息边界。
+
+因此，学习 Transformer 时不要把 mask 当成公式之外的小补丁。它是 Attention 能否用于理解、生成、翻译和长上下文建模的关键开关。
 
 ## 5. Multi-Head Attention
 
-### 5.1 单头为什么不够
+现在我们已经知道一个 Attention head 如何完成软寻址。接下来要问的是：一个 head 够不够？
 
-一个 Attention head 会产生一张注意力分布。它可以同时给多个位置分配权重，但这些权重仍然来自同一个表示子空间、同一套 Q/K/V 投影。
+答案通常是不够。语言中的关系类型太多，一个位置可能同时需要看局部短语、远处主语、代词指向、标点结构、实体定义和领域术语。如果只有一套 Q/K/V 投影，模型必须在同一个表示子空间里同时处理这些关系，表达能力会被压缩。
 
-想象一个具体场景。在句子"小林把合同交给法务，因为他担心条款里还有风险"中，当模型处理"担心"时，它至少需要同时建立两类关系：一是回到主语"小林"确认动作主体，二是向前看"条款"和"风险"理解担心的对象。这两类关系的匹配特征完全不同——前者靠句法角色，后者靠语义关联。如果只有一个 head，它的单套 Q/K/V 投影只能在一个子空间里打分，很难让这两类特征同时被高效匹配。
+### 5.1 单头的限制
 
-语言中这样的多类型关系无处不在。一个 token 可能同时需要：
+看这个句子：
 
-- 看局部短语边界；
-- 看远处主语；
-- 看代词指向；
-- 看标点或句法结构；
-- 看领域词与定义之间的关系；
+```text
+小林把合同交给法务，因为他担心条款里还有风险。
+```
 
-单头的表达能力在这种多关系共存的场景下被压缩了。Multi-Head Attention 的做法是：把模型维度分成多个子空间，让每个 head 在自己的子空间里独立计算 Attention，再把结果拼接回来。
+当模型处理“担心”时，它至少需要建立两类关系：
+
+- 回到“小林”，确认动作主体；
+- 看到“条款”“风险”，理解担心的对象；
+
+这两类关系的匹配特征完全不同：前者更像句法和指代，后者更像语义和主题。如果只有一个 head，它只能在一套 Q/K/V 子空间里打分，很难让这些关系都被高效捕获。
+
+Multi-Head Attention 的做法是：把模型维度分成多个子空间，让每个 head 在自己的子空间中独立计算 Attention，再把结果拼接回来。
 
 ![Multi-Head Attention 子空间心智模型|900](imgs/attention-multi-head-subspaces-handdrawn-cn.png)
 
-### 5.2 多头不是简单重复
+### 5.2 多头不是重复计算
 
 多头机制可以写成：
 
@@ -358,43 +363,55 @@ $$
 
 第二，拼接后的 $W^O$ 会重新混合各 head 的输出。head 之间不是彼此隔离的专家，而是先并行提取不同关系，再通过输出投影合成为统一表示。
 
-需要注意的是，真实模型中每个 head 的分工不一定能被人类命名为”语法头””指代头”等。实际学到的分工可能更细碎、重叠，甚至存在冗余。
-
-### 5.3 维度如何分配
-
-原始 Transformer 中：
+原始 Transformer Base 中：
 
 $$
 d_{\text{model}} = 512,\quad h = 8,\quad d_k = d_v = 64
 $$
 
-也就是把 512 维表示拆成 8 个 64 维 head。一般情况下：
+一般情况下：
 
 $$
 d_k = d_v = \frac{d_{\text{model}}}{h}
 $$
 
-这样做的一个好处是，总计算量大致保持稳定。多头并不是把计算量简单乘以 $h$，因为每个 head 的维度变小了。相较于一个 512 维单头，8 个 64 维头在主要矩阵乘法上的总量接近，但表达结构更丰富。
+这样做的一个好处是，总计算量大致保持稳定。多头并不是把计算量简单乘以 $h$，因为每个 head 的维度变小了。相较于一个 512 维单头，8 个 64 维头在主要矩阵乘法上的总量接近，但表示结构更丰富。
 
-### 5.4 MHA、MQA、GQA 的边界
+真实模型中，每个 head 的分工不一定能被人类稳定命名为“语法头”“指代头”“局部头”。它们可能有重叠、冗余，也可能在不同层中承担不同功能。把多头理解成“多个子空间的并行信息路由”会比给每个 head 强行贴人类语义标签更稳妥。
 
-训练阶段，多头的主要考量是表达能力和计算效率。但进入推理阶段后，一个新的瓶颈浮现出来：自回归生成时，模型每生成一个 token 都需要查询所有历史 token 的 Key 和 Value。为了避免重复计算，系统会把历史 K/V 缓存下来，这就是 KV cache。
+### 5.3 MHA、MQA 与 GQA
 
-问题在于，KV cache 的显存占用与"头数 × 序列长度 × 层数"成正比。当模型变大、上下文变长时，KV cache 可能占到推理显存的主体。于是人们开始问：每个 Query 头真的都需要独立的 K/V 头吗？
+训练阶段，多头的主要价值是表达能力。但进入推理阶段后，一个新的瓶颈会变得非常突出：自回归生成时，模型每生成一个 token，都要让当前 Query 查询所有历史 token 的 Key 和 Value。为了避免重复计算，系统会把历史 K/V 缓存下来，也就是后续推理章节会反复遇到的 KV cache。
 
-这引出了几种变体：
+KV cache 的显存占用与层数、序列长度、batch、K/V 头数和每头维度都有关。上下文越长、并发越高，K/V 的存储和读取压力越大。于是人们开始问：
 
-| 机制 | Query 头 | Key/Value 头 | 主要目的 |
-| --- | --- | --- | --- |
-| MHA | 多个 | 同样多个 | 表达能力强，KV cache 最大 |
-| MQA | 多个 | 1 组共享 | 大幅减少 KV cache，可能损失质量 |
-| GQA | 多个 | 若干组共享 | 在质量与 KV cache 之间折中 |
+**每个 Query head 是否真的都需要独立的一套 K/V head？**
 
-这些变体不改变 Attention 的基本思想，改变的是 Q 与 K/V 的分组关系。后续学习 LLaMA、Mistral、DeepSeek 等现代架构时，KV cache 与 GQA 会变成非常重要的工程主题。
+这个问题引出了 MHA、MQA 和 GQA。
 
-## 6. 成本、误区与心智模型
+![MHA、MQA 与 GQA 的 K/V 头共享方式|900](imgs/attention-mha-mqa-gqa-handdrawn-cn.png)
 
-### 6.1 Attention 的复杂度
+MHA（Multi-Head Attention）是最直观的形式：多个 Query head 对应多个 Key/Value head。假设有 8 个 Q head，就有 8 组 K/V head。它的表达能力强，但推理时每一层都要缓存多组 K/V，KV cache 占用也最大。
+
+MQA（Multi-Query Attention）保留多个 Query head，但所有 Query head 共享同一组 Key/Value head。这样做会显著减少 K/V 张量大小，也降低增量解码时反复读取 K/V 的内存带宽压力。代价是：不同 Query head 可用的 K/V 表示被共享，表达自由度下降，质量可能受到影响。
+
+GQA（Grouped-Query Attention）位于 MHA 和 MQA 之间。它把多个 Query head 分成若干组，每组共享一组 K/V head。比如 32 个 Q head 对应 8 组 K/V head，那么每 4 个 Query head 共享一组 K/V。这样既能减少 KV cache，又比所有 head 共享一组 K/V 更保留表达能力。
+
+可以把三者放在一张表里：
+
+| 机制 | Query head | Key/Value head | 推理侧影响 | 适用直觉 |
+| --- | --- | --- | --- | --- |
+| MHA | 多个 | 同样多个 | KV cache 最大，表达能力强 | 训练和小规模推理中最直观 |
+| MQA | 多个 | 1 组共享 | KV cache 最小，带宽压力最低 | 极端压缩 K/V，追求解码效率 |
+| GQA | 多个 | 若干组共享 | KV cache 与质量折中 | 现代 LLM 常见折中方案 |
+
+需要强调的是，MHA、MQA、GQA 不改变 Attention 的基本动作：仍然是 Q 与 K 打分，softmax 后加权取回 V。它们改变的是 K/V 在 head 维度上的共享关系。这个设计一旦和长上下文、batch serving、KV cache、TP 分片结合起来，就会直接影响推理吞吐、显存容量和工程部署方式。
+
+## 6. 工程边界与深入理解
+
+Attention 的数学直觉很漂亮，但工程上它并不免费。真正理解 Attention，不只是会写公式，还要知道它在哪些地方昂贵、在哪些地方容易误读、哪些优化是在改变数学，哪些只是改变实现。
+
+### 6.1 二次复杂度
 
 标准 Self-Attention 的主要成本来自 $QK^T$ 和权重乘 $V$。
 
@@ -412,55 +429,68 @@ $$
 
 级别的中间显存占用。
 
-这也是为什么 Attention 在长上下文场景中会遇到根本压力：序列长度翻倍，注意力矩阵大小约变成四倍。FlashAttention 通过分块和 IO-aware 计算减少显存读写与中间矩阵保存，但它保持的是精确 Attention 的数学结果；局部窗口、稀疏 Attention 等方法则会改变可见范围或近似方式。
+这也是为什么 Attention 在长上下文场景中会遇到根本压力：序列长度翻倍，注意力矩阵大小约变成四倍。长上下文不是“把窗口数字调大”这么简单，它会同时压迫计算、显存、中间激活、KV cache、带宽和调度。
 
-### 6.2 常见误区
+### 6.2 精确优化与近似优化
 
-**误区一：“Attention 就是找最重要的词。”**
+面对二次复杂度，不同优化路线解决的问题并不一样。
 
-更准确地说，Attention 是对 Value 的加权混合。它可以突出某些位置，但输出不是一个离散选择，也不是人类意义上的注意力解释。
+FlashAttention 这类方法通常保持精确 Attention 的数学结果，但改变计算组织方式。它通过分块、在线 softmax 和 IO-aware 的内存访问设计，减少 HBM 与片上 SRAM 之间的读写，避免显式保存完整注意力矩阵。它解决的是“同一个数学结果如何更高效地算出来”。
 
-**误区二：“Q、K、V 是三份不同输入。”**
+局部窗口、稀疏 Attention、滑动窗口 Attention 等方法则会改变可见范围或近似方式。它们解决的是“是否真的需要每个位置都看见所有位置”。这类方法可能降低复杂度，但也会改变模型能直接访问的信息边界。
 
-在 Self-Attention 里，Q、K、V 通常都来自同一个输入序列，只是经过不同线性投影。在 Cross-Attention 里，Q 与 K/V 才来自不同序列或不同模块。
+MQA/GQA 又是另一类优化。它们不主要改变 $QK^T$ 的序列长度二次项，而是减少 K/V head 的数量，从而降低 KV cache 显存占用和增量解码时的读取带宽。
 
-**误区三：“mask 只是避免 padding 的小技巧。”**
+所以学习 Attention 优化时，要先分清它在优化哪一类瓶颈：
 
-mask 决定信息可见性。Causal Mask 直接塑造了自回归生成能力；无 causal mask 的双向 Attention 则更适合理解任务。
+| 优化方向 | 主要改变 | 是否保持标准 Attention 数学结果 |
+| --- | --- | --- |
+| FlashAttention | 计算与显存读写路径 | 通常保持精确结果 |
+| 局部/稀疏 Attention | 可见范围或连接模式 | 改变或近似 |
+| MQA/GQA | K/V head 共享关系 | 基本动作不变，但表示容量变化 |
+| KV cache | 推理阶段复用历史 K/V | 不改变单步 Attention 公式 |
 
-**误区四：“多头越多越好。”**
+### 6.3 Attention 权重不是完整解释
 
-head 数增加会改变每个 head 的维度、并行粒度和 KV cache 布局。过多 head 不一定提高能力，可能带来冗余、通信成本或显存压力。
+Attention 权重很容易被误读成“模型真正关注了什么”。这个直觉有帮助，但不能直接等同于模型解释。
 
-**误区五：“Attention 解决了所有长程依赖问题。”**
+原因至少有三点：
 
-Attention 缩短了任意位置之间的信息路径，但没有免费解决长上下文成本、噪声干扰、位置泛化、检索可靠性和训练数据覆盖问题。
+- Value 的内容会被加权混合，权重大不代表最终决策贡献一定最大；
+- 多层、多头会反复混合信息，单层权重只是局部路径；
+- 后续 FFN、残差、归一化和输出层都会继续改变表示；
 
-### 6.3 最终心智模型
+因此，Attention 权重适合帮助观察一层内部的信息混合方式，不适合作为完整因果解释。更稳妥的说法是：
 
-可以把 Attention 压缩成一个四步模型：
+**Attention 权重显示的是当前层的一条信息路由线索，而不是模型最终预测的全部原因。**
 
-1. 每个位置提出查询：我现在需要什么；
-2. 每个位置暴露索引：我可以怎样被匹配；
-3. 查询与索引打分：哪些位置对我更相关；
-4. 按权重取回内容：把相关位置的 Value 混合成新表示；
+### 6.4 最终心智模型
+
+可以把 Attention 压缩成一个六步模型：
+
+1. 每个位置产生 Query：我现在需要什么；
+2. 每个位置产生 Key：我可以怎样被匹配；
+3. 每个位置产生 Value：我能贡献什么内容；
+4. Query 与 Key 打分，并经过缩放和 mask；
+5. softmax 生成每个 Query 的权重分布；
+6. 权重乘以 Value，得到当前位置的新表示；
 
 Transformer 之所以强大，不是因为 Attention 像人类一样“注意”，而是因为它把序列中的任意位置变成了可直接交互的节点。信息不再必须沿时间链一步步传递，而是在一层内通过矩阵乘法建立全局连接。
 
 这也是进入 Transformer 架构的桥梁：如果 Attention 已经能让所有位置直接通信，那么下一步问题就是，如何让这种机制知道顺序、稳定堆叠、表达非线性变换，并用于训练和生成完整序列。
 
-下一篇阅读：[[04_Transformer架构及原理|00-B Transformer 架构及原理]] 会把 Attention 放进完整网络骨架里，继续解释位置编码、Encoder/Decoder、FFN、残差归一化与训练/推理数据流。
+下一篇阅读：[[04_Transformer架构及原理|04 Transformer 架构及原理]] 会把 Attention 放进完整网络骨架里，继续解释位置编码、Encoder/Decoder、FFN、残差归一化与训练/推理数据流。
 
 ## 7. 参考资料
 
-1. Vaswani, A., et al. (2017). *Attention Is All You Need*. https://arxiv.org/abs/1706.03762
-2. Bahdanau, D., Cho, K., & Bengio, Y. (2014). *Neural Machine Translation by Jointly Learning to Align and Translate*. https://arxiv.org/abs/1409.0473
-3. Luong, M. T., Pham, H., & Manning, C. D. (2015). *Effective Approaches to Attention-based Neural Machine Translation*. https://arxiv.org/abs/1508.04025
-4. Harvard NLP. *The Annotated Transformer*. https://nlp.seas.harvard.edu/annotated-transformer/
-5. PyTorch Documentation. *torch.nn.functional.scaled_dot_product_attention*. https://docs.pytorch.org/docs/stable/generated/torch.nn.functional.scaled_dot_product_attention.html
-6. Dao, T., et al. (2022). *FlashAttention: Fast and Memory-Efficient Exact Attention with IO-Awareness*. https://arxiv.org/abs/2205.14135
-7. Shazeer, N. (2019). *Fast Transformer Decoding: One Write-Head is All You Need*. https://arxiv.org/abs/1911.02150
-8. Ainslie, J., et al. (2023). *GQA: Training Generalized Multi-Query Transformer Models from Multi-Head Checkpoints*. https://arxiv.org/abs/2305.13245
+1. Vaswani, A., et al. (2017). *Attention Is All You Need*. https://arxiv.org/abs/1706.03762；
+2. Bahdanau, D., Cho, K., & Bengio, Y. (2014). *Neural Machine Translation by Jointly Learning to Align and Translate*. https://arxiv.org/abs/1409.0473；
+3. Luong, M. T., Pham, H., & Manning, C. D. (2015). *Effective Approaches to Attention-based Neural Machine Translation*. https://arxiv.org/abs/1508.04025；
+4. Shazeer, N. (2019). *Fast Transformer Decoding: One Write-Head is All You Need*. https://arxiv.org/abs/1911.02150；
+5. Ainslie, J., et al. (2023). *GQA: Training Generalized Multi-Query Transformer Models from Multi-Head Checkpoints*. https://arxiv.org/abs/2305.13245；
+6. Dao, T., et al. (2022). *FlashAttention: Fast and Memory-Efficient Exact Attention with IO-Awareness*. https://arxiv.org/abs/2205.14135；
+7. Harvard NLP. *The Annotated Transformer*. https://nlp.seas.harvard.edu/annotated-transformer/；
+8. PyTorch Documentation. *torch.nn.functional.scaled_dot_product_attention*. https://docs.pytorch.org/docs/stable/generated/torch.nn.functional.scaled_dot_product_attention.html；
 
 ## 8. 学习测评
 
@@ -550,11 +580,17 @@ Transformer 之所以强大，不是因为 Attention 像人类一样“注意”
     C. 不需要 Key；
     D. 不需要可学习投影；
 
-15. 下列哪种说法最准确地区分 Attention 权重与模型解释？
-    A. 权重越大就一定是最终预测的唯一原因；
-    B. 权重表示当前层的一种混合路径，但不能单独构成完整因果解释；
-    C. 权重没有数值意义；
-    D. 权重只在训练时存在，推理时不存在；
+15. 下列哪种说法最准确地区分 MHA、MQA 与 GQA？
+    A. 三者都只有一个 Query head；
+    B. 三者主要区别在 Q head 与 K/V head 的共享关系；
+    C. MQA 会取消 softmax；
+    D. GQA 只用于 Encoder，不用于 Decoder；
+
+16. FlashAttention 这类 IO-aware 精确 Attention 优化主要改变的是什么？
+    A. 改变 Transformer 的训练目标；
+    B. 改变可见范围，让每个 token 只能看局部窗口；
+    C. 改变计算组织和显存读写路径，通常保持标准 Attention 数学结果；
+    D. 删除 Value 矩阵；
 
 ### 8.2 答案与题解
 
@@ -578,7 +614,7 @@ Transformer 之所以强大，不是因为 Attention 像人类一样“注意”
 
 10. B。标准 Self-Attention 需要所有位置两两交互，注意力矩阵随序列长度平方增长。
 
-11. B。MQA/GQA 减少 Key/Value 头的数量或共享范围，主要降低自回归推理中的 KV cache 显存占用和带宽压力。
+11. B。MQA/GQA 减少 Key/Value head 的数量或共享范围，主要降低自回归推理中的 KV cache 显存占用和带宽压力。
 
 12. B。没有 causal mask 的双向 Attention 可以看完整输入，更适合理解型任务；自回归生成需要防止看到未来 token。
 
@@ -586,4 +622,6 @@ Transformer 之所以强大，不是因为 Attention 像人类一样“注意”
 
 14. B。软寻址不是命中单个地址，而是给多个候选位置分配连续权重，并按这些权重混合取回 Value。
 
-15. B。Attention 权重能显示当前层的一条信息混合路径，但最终预测还受到 Value 内容、后续层、FFN、残差和输出头影响，不能单独当作完整因果解释。
+15. B。MHA、MQA、GQA 的主要差别在于多个 Query head 是否拥有独立 K/V head，还是共享一组或分组共享 K/V head。
+
+16. C。FlashAttention 的核心是重组计算和内存访问，减少显存读写与中间矩阵保存；它通常保持标准 Attention 的数学结果，而不是改成局部窗口或删除 Value。
