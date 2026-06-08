@@ -197,6 +197,8 @@
   },
   "active": "433a032bfb786d4a",
   "lastOpenFiles": [
+    "notes/LLM/大模型与推理全栈精讲系列/imgs/transformer-backbone-information-boundaries-handdrawn-cn.png",
+    "notes/LLM/大模型与推理全栈精讲系列/imgs/transformer-rope-relative-position-handdrawn-cn.png",
     "notes/LLM/大模型与推理全栈精讲系列/imgs/attention-mha-mqa-gqa-handdrawn-cn.png",
     "notes/LLM/大模型与推理全栈精讲系列/imgs/attention-self-vs-cross-handdrawn-cn.png",
     "notes/LLM/大模型与推理全栈精讲系列/imgs/attention-hard-vs-soft-addressing-handdrawn-cn.png",
@@ -210,8 +212,6 @@
     "notes/LLM/大模型与推理全栈精讲系列/imgs/llm-autoregressive-generation-loop-handdrawn-cn.png",
     "notes/LLM/大模型与推理全栈精讲系列/01_理解GPU架构及其原理.md",
     "notes/LLM/大模型与推理全栈精讲系列/imgs/gpu-tensor-core-mma-tile-handdrawn-cn.png",
-    "notes/LLM/大模型与推理全栈精讲系列/imgs/gpu-warp-simt-model-handdrawn-cn.png",
-    "notes/LLM/大模型与推理全栈精讲系列/imgs/gpu-sm-architecture-zoom-handdrawn-cn.png",
     "notes/LLM/大模型与推理全栈精讲系列/01_从CNN、RNN到Attention（废弃）.md",
     "notes/LLM/大模型与推理全栈精讲系列/04_Transformer架构及原理.md.tmp.9232.bae8588111b3",
     "notes/LLM/大模型与推理全栈精讲系列/_03_编排分析报告.md",
