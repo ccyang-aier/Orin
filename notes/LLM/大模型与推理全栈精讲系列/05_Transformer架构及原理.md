@@ -331,6 +331,8 @@ Pre-LN 通常更利于训练非常深的 Transformer，因为残差主路径上�
 
 ## 6. Transformer的训练、推理与计算代价
 
+【批注，重构内容编排，内容太碎了！！就像6.2、6.3、6.4这种，就几十个字，值当单独一个小节吗？？？】
+
 ### 6.1 训练为什么可以并行
 
 Transformer 训练时通常已知整段输入和目标序列。以翻译为例，目标序列会右移一位作为 Decoder 输入；causal mask 会屏蔽未来位置，但所有位置仍然可以在一次矩阵计算中并行处理。
@@ -418,19 +420,6 @@ Decoder-Only 的优势包括：
 代价也很明确：理解任务也必须通过生成式接口表达；双向完整可见性不如 Encoder-Only 自然；长上下文 decode 阶段会受到 KV cache 容量和读取带宽约束。
 
 所以 Decoder-Only 不是在理论上压倒所有架构，而是在大规模预训练、统一生成接口和推理系统工程之间形成了最强的综合路径。
-
-### 7.3 读任意 Transformer 实现的检查框架
-
-遇到一个具体 Transformer 实现时，不要只问“它是不是 Transformer”。更有用的问题是：它在这些结构点上怎么取舍？
-
-1. 信息边界：是双向、causal、Encoder-Decoder，还是局部窗口 / 混合 attention；
-2. 位置策略：是绝对位置、RoPE、ALiBi，还是其他相对位置方案；
-3. Attention 头：是 MHA、MQA、GQA，head 数和 KV head 数如何设置；
-4. Block 结构：是 Post-LN、Pre-LN、RMSNorm，FFN 是 ReLU、GELU、SwiGLU 还是 MoE；
-5. 推理状态：是否使用 KV cache，cache 如何布局，长上下文如何管理；
-6. 工程切分：是否做 TP、PP、DP、EP 等并行策略；
-
-这份检查框架能把“Transformer”这个大词拆成可验证的工程部件。现代模型之间的差异，往往不是“有没有 Transformer”，而是这些部件在规模、效率、稳定性和部署约束下如何组合。
 
 ### 7.4 常见误区与最终心智模型
 
