@@ -23,8 +23,10 @@ description: 本文基于本地 vLLM V1 源码快照，系统讲解 KVCacheManag
 
 ![KVCacheManager 作为运行时状态中枢](imgs/04_state_hub.png)
 
+【批注，这段话对这张图的讲解太少，不够全面深入，更详细展开，帮助读者先建立一个全局认知】
 先抓住一个判断：`KVCacheManager` 不只是“存 KV Cache 的地方”。它面对 Scheduler 时像资源仲裁器，面对 Worker 时像 block ID 生产者，面对 PagedAttention 时像地址翻译的上游，面对 BlockPool 时又像显存页分配策略的组织者。它的价值不在于某个单独方法，而在于把这些角色压进同一个一致的状态系统里。
 
+【批注，内容编排上优化下，我觉得是不是应该加一些前置章节先深入全面的讲解下prefix cache这些必要的
 ## 1. 从全局架构走进状态中枢
 
 LLM 推理的难点不是只把一个 prompt 跑完，而是在服务化场景中同时处理大量长度不一、阶段不同、复用机会不同的请求。每个请求都在不断增长：Prefill 阶段一次写入大量 prompt KV，Decode 阶段每一步追加少量新 token 的 KV；有些请求命中 prefix cache，有些请求需要重新计算；有些请求因为显存 block 不足要暂缓，甚至要触发 preemption。
