@@ -64,7 +64,7 @@
             }
           }
         ],
-        "currentTab": 3
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -199,13 +199,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "notes/vLLM/vLLM架构与原理精讲系列/02_初识vLLM推理引擎.md",
+                "file": "notes/vLLM/vLLM架构与原理精讲系列/01_推理系统导论.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "02_初识vLLM推理引擎 的大纲"
+              "title": "01_推理系统导论 的大纲"
             }
           },
           {
@@ -238,7 +238,7 @@
       "bases:新建数据库": false
     }
   },
-  "active": "f5fafbfe4e0fa315",
+  "active": "3e72c8f6b7a67113",
   "lastOpenFiles": [
     "notes/vLLM/01_初识vLLM推理引擎.md",
     "notes/vLLM/vLLM架构与原理精讲系列/02_初识vLLM推理引擎.md",
