@@ -24,17 +24,31 @@ description: 围绕高性能推理引擎的职责展开，解释 vLLM 如何把�
 
 vLLM 把模型执行、请求队列、动态批处理、KV Cache 管理、流式返回和服务接口组织到同一个推理系统里。理解这一点之后，再看 PagedAttention，就不会把它误解成某种注意力公式优化，而会看到它真正改变的是推理系统的内存管理方式。
 
-## 1. vLLM 是什么
+## 1. vLLM项目概述
 
-vLLM 官方文档将它定位为一个用于 LLM inference and serving 的快速、易用库，也常被概括为高吞吐、高内存效率的 LLM 推理与服务引擎。这个表述看起来很轻，但里面包含两层含义。
+正如vLLM官方所描述的那样，vLLM是一种用于LLM的**高吞吐量、高内存效率**的推理和服务引擎。它不仅通过一系列优化架构和推理加速技术：诸如PagedAttention、APC（自动前缀缓存）、连续批处理、推测解码、FlashAttention等极大地提升了推理效率，还通过统一的服务层对外提供OpenAI、Anthropic API或CLI等多样式的推理调用能力。
 
-第一层是 **inference**：vLLM 能加载模型权重，接收 prompt，执行生成，返回 token。这是所有推理框架都必须具备的基础能力。
+vLLM起源于2023年，它源于加州大学伯克利分校（UC Berkeley）Sky Computing Lab的一项研究工作。
 
-第二层是 **serving**：vLLM 不只面向单次脚本调用，还面向在线服务。它要处理多个请求同时到达、请求长短不一、输出长度未知、用户希望流式返回、服务端还要监控吞吐和延迟这些问题。
+故事要从2022年夏天说起，彼时，Sky Lab的一批博士生正在研究如何将大型深度学习模型的工作负载分布到多块GPU上，当他们架设Demo时，却发现推理速度**极为缓慢**。
 
-vLLM 的起点也与这个系统问题有关。2023 年，UC Berkeley Sky Computing Lab 的研究者在服务大模型工作负载时发现，推理速度的关键瓶颈不只是算子执行，也不是模型能否被加载，而是大量动态请求产生的 KV Cache 难以被高效管理。PagedAttention 正是在这个背景下被提出，vLLM 则以它为核心，把操作系统分页思想引入 LLM serving 的显存管理。
+"速度慢得离谱"，核心开发者之一Zhuohan Li回忆道，团队随即意识到：**内存管理正在成为服务这些模型的关键瓶颈**。
 
-因此，与其把 vLLM 理解成 **比 Transformers 更快的 generate()**，不如把它理解成一个推理引擎：它把模型调用包装成可持续服务的系统。
+于是，Li与另一位研究者Woosuk Kwon深入钻研，借鉴操作系统中经典的虚拟内存与分页机制，提出了PagedAttention算法，并以此为核心构建了vLLM系统。
+
+2023年6月，vLLM正式以开源形式发布，同年9月，相关论文《Efficient Memory Management for Large Language Model Serving with PagedAttention》发表于操作系统顶级会议SOSP 2023，奠定了项目的学术根基。
+
+论文的主要作者团队包括：Woosuk Kwon、Zhuohan Li、Simon Mo等人，指导教授为Ion Stoica（曾带领团队创建了Spark和Ray等知名开源项目）。
+
+![682|663x433](imgs/Pasted%20image%2020260329220653.png)
+
+vLLM发布后，GitHub Star数量便一路飙升，社区热度持续攀升。截至目前，vLLM的Github Star数已达到74K+，吸引了超过2000+名贡献者，支持上百种模型架构，涵盖几乎所有主流开源模型，在2026年初，核心创始团队还以vLLM为核心组建了商业公司**Inferact**，并完成了1.5亿美元种子轮融资，估值8亿美元。
+
+如今，vLLM俨然已经成为开源LLM推理领域的**事实标准**，理解它，就是理解现代LLM推理系统工程的核心。
+
+### 1.1 推理引擎的系统边界
+
+在项目背景之后，还需要把 vLLM 的工程边界说清楚。与其把 vLLM 理解成 **比 Transformers 更快的 generate()**，不如把它理解成一个推理引擎：它把模型调用包装成可持续服务的系统。
 
 可以从三个边界来理解 vLLM：
 
