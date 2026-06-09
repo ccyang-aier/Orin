@@ -5,65 +5,68 @@ tags:
   - inference-engine
   - distributed-inference
   - rank
-updated: 2026-05-28
+updated: 2026-06-09
 description: 本文基于本地 vLLM 源码快照建立 V1 引擎的整体架构地图，解释组件职责、请求执行流、rank 坐标体系以及 TP、PP、DP、EP 等分布式推理部署视图。
 ---
-【批注，1）正文不要滥用中文引号，确实需要强调的概念、判断或短句，优先使用加粗；2）控制小段落中的句号密度，能顺畅连接的解释用逗号、分号或重写句式承接，避免每个短句都被句号切碎；3）教程正文避免用作者撰文的过程说明去替代教学内容，不写类似 `接下来会`、`本文将` 这类让读者关心写作安排的句式；需要引导时直接写稳定的学习路径、对象关系或机制递进； 全文排查】
+
 # 03 vLLM 引擎架构总览
 
-【这两段参考上面批注优化】
-前两章已经把问题从“模型能不能生成文本”推进到了“推理系统如何在动态请求、显存约束和服务化场景下稳定运行”。这一章继续往下走，但仍然不急着深入 PagedAttention、Scheduler、KV Cache Manager、ModelRunner 或某个算子实现。
+前两章已经把问题从**模型生成文本**推进到**推理系统在动态请求、显存约束和服务化场景下稳定运行**。进入 vLLM 引擎架构时，最重要的不是立刻钻进 PagedAttention、Scheduler、KV Cache Manager、ModelRunner 或某个算子实现，而是先建立一张能承载后续细节的系统地图。
 
-本章的目标是先建立 vLLM 这台机器的完整地图：请求从哪里进来，怎样变成引擎内部状态，EngineCore 在每一步做什么，Executor 和 Worker 如何把调度结果变成 GPU 上的 forward，rank 又如何把进程、GPU、模型分片和通信组组织起来。本文不是完整分布式部署手册，而是用分布式视角补全引擎架构地图。
-
-【批注，删除这种段落，无价值】
-本文以 `code/opensource/vllm` 的本地源码快照为依据，源码分支为 `main`，短提交哈希为 `52a31ccec`。由于 vLLM 已进入 V1 架构，本文默认以 V1 路径解释，例如 `vllm/v1/engine`、`vllm/v1/core`、`vllm/v1/executor`、`vllm/v1/worker` 和 `vllm/distributed/parallel_state.py`。vLLM V1 内部仍在快速演进，尤其是 DP/EP、异步调度和服务化拓扑，后续复查时应先确认源码快照。
+这张地图围绕四个问题展开：请求从哪里进入系统，怎样变成引擎内部状态，EngineCore 在每个 step 中协调哪些对象，Executor 和 Worker 如何把调度结果落到 GPU forward，rank 又如何把进程、GPU、模型分片和通信组组织起来。它不是完整分布式部署手册，而是用分布式视角补全 vLLM 引擎的整体骨架。
 
 ![vLLM V1 引擎架构总览](imgs/03_engine_overview.png)
 
-读这张图时，可以先抓住一条主线：**API Server 负责面对用户，EngineCore 负责维护推理系统状态，Executor 负责组织执行，Worker/GPU 负责真正跑模型**。先看状态在哪一层被维护，再看请求跨过哪些边界进入 GPU 执行。vLLM 的价值不在于把这些名字堆在一起，而在于把它们放进一个高吞吐、可并发、可分布式扩展的执行循环里。
+这张总览图适合从左到右读，但真正的主线不是组件名称，而是**状态如何被接住、推进和交还**。API Server 面向用户和协议，EngineCore 维护推理系统内部状态，Executor 把一次调度结果分发到执行后端，Worker/GPU 承担模型计算与采样。请求每跨过一层，形态都会变得更接近 GPU 可执行的 batch，同时也会携带更多运行时状态，例如 token 进度、KV block、调度预算、rank 坐标和输出位置。
+
+因此，vLLM 的引擎架构可以理解成一个持续运转的执行循环，而不是一条简单调用链。前端请求不断进入系统，EngineCore 反复判断哪些请求应该推进，Scheduler 受 token budget 和 KV cache 约束形成本 step 的工作集，Executor 把这份工作集交给 worker，GPU 执行后再把新 token、完成状态和缓存生命周期反馈回来。后续理解 PagedAttention、Scheduler 或分布式部署时，都可以把细节放回这条循环中检查。
 
 ## 1. vLLM 引擎架构总览
 
-从在线服务视角看，vLLM V1 可以被拆成四层。
+vLLM 的历史路径里同时能看到 V0 兼容接口和 V1 主线实现。学习引擎架构时直接从 V1 视角进入更合适，因为当前服务化架构的职责边界已经围绕 V1 重组：前端对象、EngineCore、Executor、Worker、DP Coordinator 和分布式通信组之间的关系更清晰，也更接近实际部署时需要理解的进程拓扑。
 
-第一层是前端入口层。用户通过 OpenAI-compatible API 或 Python `LLM` / `AsyncLLM` 接口提交请求。在线服务中，API Server 处理 HTTP、鉴权相关协议、请求解析、tokenization、多模态输入预处理，以及 streaming 输出。
+从在线服务视角看，vLLM V1 可以被拆成四层：
 
-第二层是引擎协调层。V1 中更关键的名字是 `EngineCore`。它是推理系统的内循环，负责接收 `EngineCoreRequest`，维护请求状态，调用 Scheduler，管理 KV Cache 元数据，并把每一步的调度结果交给模型执行侧。
-
-第三层是执行编排层。`Executor` 屏蔽了单进程、multiprocessing、Ray 等执行后端差异。对于多 GPU 场景，它负责创建和管理 worker 进程，向所有 worker 广播 `SchedulerOutput`，并从指定输出 rank 收集 `ModelRunnerOutput`。
-
-第四层是设备执行层。每个 GPU 通常由一个 worker 进程管理。worker 持有 `ModelRunner`、模型权重、GPU KV Cache，并执行 forward、采样、KV cache 初始化和显存 profiling 等工作。
+1. 第一层是前端入口层。用户通过 OpenAI-compatible API 或 Python `LLM` / `AsyncLLM` 接口提交请求。在线服务中，API Server 处理 HTTP、鉴权相关协议、请求解析、tokenization、多模态输入预处理，以及 streaming 输出；
+2. 第二层是引擎协调层。V1 中更关键的名字是 `EngineCore`。它是推理系统的内循环，负责接收 `EngineCoreRequest`，维护请求状态，调用 Scheduler，管理 KV Cache 元数据，并把每一步的调度结果交给模型执行侧；
+3. 第三层是执行编排层。`Executor` 屏蔽了单进程、multiprocessing、Ray 等执行后端差异。对于多 GPU 场景，它负责创建和管理 worker 进程，向所有 worker 广播 `SchedulerOutput`，并从指定输出 rank 收集 `ModelRunnerOutput`；
+4. 第四层是设备执行层。每个 GPU 通常由一个 worker 进程管理。worker 持有 `ModelRunner`、模型权重、GPU KV Cache，并执行 forward、采样、KV cache 初始化和显存 profiling 等工作。
 
 ![vLLM V1 进程拓扑](imgs/03_v1_process_topology.png)
 
-官方设计文档对 V1 进程架构的描述非常直接：API Server 处理 HTTP 与输入输出；EngineCore 运行 scheduler、管理 KV cache 并协调 GPU worker；GPU worker 执行模型 forward；当使用 data parallelism 时，每个 DP rank 有一个 EngineCore，`data_parallel_size > 1` 时 V1 进程架构还会包含一个 DP Coordinator。对 non-MoE 的 internal / hybrid LB，它可以参与队列统计发布和负载信息汇聚；对 MoE 的 DP+EP 场景，它还承担 wave coordination、dummy forward 同步等职责。这个进程视角很重要，因为后文所有 rank 关系最终都会落到“哪个进程控制哪块 GPU、属于哪个通信组”。
+在官方文档里，对 vLLM V1 架构的描述可以压缩成几条进程关系：
 
-一个容易混淆的点是：`LLMEngine` 和 `AsyncLLMEngine` 这些名字仍然会出现在文档和代码里，但 V1 里的核心执行路径已经更明确地拆成了 `AsyncLLM` / `LLMEngine` 前端对象、`EngineCoreClient`、后台 `EngineCore`、`Executor` 和 `Worker`。阅读时要区分 `vllm/engine/*` 中仍然存在的兼容或 V0 路径，以及 `vllm/v1/engine/*` 中当前主线的 V1 路径。
+- API Server 处理 HTTP 请求、输入预处理和输出返回；
+- EngineCore 运行 Scheduler、管理 KV cache，并协调 GPU worker；
+- GPU worker 执行模型 forward，并持有设备侧模型与缓存状态；
+- 使用 data parallelism 时，每个 DP rank 有一个 EngineCore，`data_parallel_size > 1` 时还会出现 DP Coordinator；
+- DP Coordinator 在 internal / hybrid LB 中可参与队列统计发布和负载信息汇聚，在 MoE 的 DP+EP 场景中还承担 wave coordination、dummy forward 同步等职责；
 
-## 2. 核心组件地图
+这个进程视角很重要，因为后文所有 rank 关系最终都会落到三个具体问题上：哪个进程接收请求，哪个进程控制哪张 GPU，哪些进程属于同一个通信组。
 
-先不要把 vLLM 想成一个巨大的 `model.forward()` 包装器。更准确的理解是：vLLM 把“服务请求”和“模型执行”之间的中间状态显式管理起来。哪些请求已经进入系统，哪些请求正在运行，哪些 token 已经被计算，哪些 KV block 已经分配，哪个 DP rank 当前更适合接收新请求，这些都是引擎需要维护的状态。
+## 2. 核心组件视图
+
+从组件边界看，vLLM 的关键工作是把**服务请求**和**模型执行**之间的中间状态显式管理起来。哪些请求已经进入系统，哪些请求正在运行，哪些 token 已经被计算，哪些 KV block 已经分配，哪个 DP rank 当前更适合接收新请求，这些都不是单次 GPU 计算能够独立回答的问题，而是引擎需要长期维护的系统状态。
 
 ![vLLM 组件职责边界](imgs/03_component_responsibility_map.png)
 
-下面用组件地图把主要对象压缩到一个表里。初读时先只记四个主轴：入口负责请求与输出，EngineCore 负责状态与调度，Executor 负责进程编排，Worker 负责 GPU 执行。读表时不要逐格背诵，而是追问每一行“它维护什么状态、它把什么交给下一层”。表格用于后续回查，不需要第一次就把所有字段背下来。
+组件地图的作用不是让读者记住一串类名，而是帮助判断状态归属。入口层负责请求与输出，EngineCore 负责状态与调度，Executor 负责进程编排，Worker 负责 GPU 执行。读表时重点看每一行维护什么状态、接收什么输入、把什么交给下一层。
 
-| 组件 | 主要职责 | 典型输入 | 典型输出或状态 |
-| --- | --- | --- | --- |
-| API Server / Entrypoints | 接收 HTTP 或 Python 调用，完成协议层处理，触发输入预处理和输出 streaming | OpenAI API 请求、Python prompt、sampling params | 面向引擎的请求对象、面向客户端的增量输出 |
-| `InputProcessor` | 把外部输入规范化为引擎内部请求 | prompt、tokenization 参数、多模态输入、LoRA 请求 | `EngineCoreRequest` |
-| `OutputProcessor` | 把引擎输出转换为用户可见的请求输出 | `EngineCoreOutputs`、token id、finish reason | streaming chunk、最终 `RequestOutput` |
-| `EngineCoreClient` | 连接前端进程和后台 EngineCore | add/abort 请求、utility RPC | 通过 ZMQ 或本地路径发送请求、接收输出 |
-| `EngineCore` | 推理内循环，维护 scheduler、KV cache、executor 之间的协调 | `EngineCoreRequest`、abort、pause、reconfigure 等控制消息 | `EngineCoreOutputs`、scheduler stats、请求完成状态 |
-| `Scheduler` | 决定每一步哪些请求计算多少 token，并申请 KV block | waiting/running 请求、token budget、KV cache 可用块 | `SchedulerOutput` |
-| `KVCacheManager` | 管理 KV block 的分配、释放、prefix cache 命中和 block 元数据 | request、num_new_tokens、block hashes | 新分配的 KV blocks、可复用 blocks、释放事件 |
-| `Executor` | 管理 worker 后端，广播调度结果，收集执行结果 | `SchedulerOutput`、worker RPC | `ModelRunnerOutput`、worker 状态 |
-| `Worker` | 每个设备上的执行进程，负责模型加载、显存 profiling、KV cache 初始化、forward | worker rank、local rank、KV cache config、scheduler output | GPU 上的模型输出、采样结果、KV cache 状态 |
-| `ModelRunner` | 将调度结果变成模型可执行的张量输入，调用模型 forward | token ids、positions、block table、attention metadata | logits、sampled token、hidden states 或 pooling 输出 |
-| `parallel_state.py` | 初始化 TP、PP、DP、EP 等通信组 | world size、global rank、parallel config | `get_tp_group()`、`get_pp_group()`、`get_dp_group()`、`get_ep_group()` |
+| 组件                       | 主要职责                                                | 输入                                                      | 输出或状态                                                               |
+| ------------------------ | --------------------------------------------------- | ------------------------------------------------------- | ------------------------------------------------------------------- |
+| API Server / Entrypoints | 接收 HTTP 或 Python 调用，完成协议层处理，触发输入预处理和输出 streaming    | OpenAI API 请求、Python prompt、sampling params             | 面向引擎的请求对象、面向客户端的增量输出                                                |
+| `InputProcessor`         | 把外部输入规范化为引擎内部请求                                     | prompt、tokenization 参数、多模态输入、LoRA 请求                    | `EngineCoreRequest`                                                 |
+| `OutputProcessor`        | 把引擎输出转换为用户可见的请求输出                                   | `EngineCoreOutputs`、token id、finish reason              | streaming chunk、最终 `RequestOutput`                                  |
+| `EngineCoreClient`       | 连接前端进程和后台 EngineCore                                | add/abort 请求、utility RPC                                | 通过 ZMQ 或本地路径发送请求、接收输出                                               |
+| `EngineCore`             | 推理内循环，维护 scheduler、KV cache、executor 之间的协调          | `EngineCoreRequest`、abort、pause、reconfigure 等控制消息       | `EngineCoreOutputs`、scheduler stats、请求完成状态                          |
+| `Scheduler`              | 决定每一步哪些请求计算多少 token，并申请 KV block                    | waiting/running 请求、token budget、KV cache 可用块            | `SchedulerOutput`                                                   |
+| `KVCacheManager`         | 管理 KV block 的分配、释放、prefix cache 命中和 block 元数据       | request、num_new_tokens、block hashes                     | 新分配的 KV blocks、可复用 blocks、释放事件                                      |
+| `Executor`               | 管理 worker 后端，广播调度结果，收集执行结果                          | `SchedulerOutput`、worker RPC                            | `ModelRunnerOutput`、worker 状态                                       |
+| `Worker`                 | 每个设备上的执行进程，负责模型加载、显存 profiling、KV cache 初始化、forward | worker rank、local rank、KV cache config、scheduler output | GPU 上的模型输出、采样结果、KV cache 状态                                         |
+| `ModelRunner`            | 将调度结果变成模型可执行的张量输入，调用模型 forward                      | token ids、positions、block table、attention metadata      | logits、sampled token、hidden states 或 pooling 输出                     |
+| `parallel_state.py`      | 初始化 TP、PP、DP、EP 等通信组                                | world size、global rank、parallel config                  | `get_tp_group()`、`get_pp_group()`、`get_dp_group()`、`get_ep_group()` |
 
-源码上，`EngineCore.__init__` 的顺序很能说明架构：它先构造 `model_executor`，再初始化 KV cache 并更新 cache config，然后根据 scheduler config 创建 scheduler，最后准备 batch queue、prefix cache hash、异步调度等运行时状态。也就是说，EngineCore 不是单纯“调用模型”的对象，而是把模型执行、KV cache 资源、调度策略和请求状态组织到同一个循环里的对象。
+EngineCore 要正常运转，必须同时具备四类能力：可以驱动模型执行的 executor，可以描述和分配缓存资源的 KV cache 配置，可以决定每个 step 工作量的 scheduler，以及能够记录请求、batch queue、prefix cache hash、异步调度等运行时状态的内部数据结构。也就是说，EngineCore 的核心职责不是触发一次模型计算，而是把模型执行、KV cache 资源、调度策略和请求生命周期组织到同一个循环里。
 
 ![EngineCore 内循环](imgs/03_engine_core_loop.png)
 
@@ -76,23 +79,21 @@ description: 本文基于本地 vLLM 源码快照建立 V1 引擎的整体架构
 5. EngineCore 根据 `ModelRunnerOutput` 更新请求、KV cache、finish 状态和输出；
 6. `OutputProcessor` 将增量 token 或完成信号返回给客户端。
 
-这就是为什么本章先讲架构总览。后续无论深入 Scheduler、KV Cache、PagedAttention 还是分布式通信，都只是这个循环中的一个局部机制。
+Scheduler、KV Cache、PagedAttention 和分布式通信都可以放回这个循环理解：它们分别回答某个局部问题，但共同服务于同一个目标，也就是让动态请求在有限显存和多设备拓扑下持续推进。
 
 ## 3. 请求执行流
 
-为了让组件地图变得具体，下面用一个请求和一批请求共同看执行流。两者不是两个独立机制，而是同一套系统的不同观察角度：单请求帮助理解生命周期；批请求帮助理解调度、KV block 和 GPU batch。
-
-假设有三个请求进入系统：
+请求执行流最好从一批动态到达的请求看起，因为 vLLM 的 batch 不是用户手工拼出的静态数组，而是每个 engine step 根据当前系统状态重新形成的执行单元。假设有三个请求进入系统：
 
 - 请求 A：短 prompt，希望生成 32 个 token；
 - 请求 B：长 prompt，希望生成 256 个 token；
 - 请求 C：与 A 共享一段 system prompt，但到达时间稍晚；
 
-进入 API Server 后，请求首先经过输入处理。文本会被 tokenizer 变成 token ids；chat 请求会被 renderer 套用 chat template；多模态输入会被加载和规范化；sampling params 会被克隆并补齐默认值。随后 `InputProcessor` 产生 `EngineCoreRequest`，其中包含 request id、prompt token ids、sampling params、arrival time、priority、LoRA 信息、trace headers，以及可选的 `data_parallel_rank`。
+进入 API Server 后，请求首先经过输入处理。文本被 tokenizer 转成 token ids，chat 请求套用 chat template，多模态输入完成加载与规范化，sampling params 被克隆并补齐默认值。随后 `InputProcessor` 产生 `EngineCoreRequest`，其中包含 request id、prompt token ids、sampling params、arrival time、priority、LoRA 信息、trace headers，以及可选的 `data_parallel_rank`。
 
-![单请求生命周期](imgs/03_request_lifecycle.png)
+![请求生命周期](imgs/03_request_lifecycle.png)
 
-进入 EngineCore 后，`Request.from_engine_core_request()` 会把 `EngineCoreRequest` 转成内部 `Request`。这个对象是理解 vLLM 请求状态的核心，它至少包含这些长期状态：
+进入 EngineCore 后，外部请求会变成内部 `Request`。这个对象是理解 vLLM 请求状态的核心，它至少包含这些长期状态：
 
 - `status`：通常初始为 `WAITING`；结构化输出、远端 KV、流式输入等路径可能进入 `WAITING_FOR_STRUCTURED_OUTPUT_GRAMMAR`、`WAITING_FOR_REMOTE_KVS` 或 `WAITING_FOR_STREAMING_REQ`，之后再进入 `RUNNING`、`PREEMPTED` 或各种 `FINISHED_*` 状态；
 - `num_prompt_tokens`：prompt 长度；
@@ -103,9 +104,9 @@ description: 本文基于本地 vLLM 源码快照建立 V1 引擎的整体架构
 - `num_preemptions`：被抢占次数；
 - `kv_transfer_params`：P/D 分离或 KV connector 场景中的远端 KV 参数；
 
-这里最值得停一下的是 `num_computed_tokens`。在源码注释中，V1 Scheduler 明确指出它内部并没有固定的“prefill phase”或“decoding phase”。每个请求只是有 `num_computed_tokens` 和 `num_tokens_with_spec`，Scheduler 每一步尝试给请求分配要计算的新 token，使 `num_computed_tokens` 追上目标长度。这样一个抽象可以同时覆盖 chunked prefill、prefix caching、speculative decoding 等场景。
+这里最值得停一下的是 `num_computed_tokens`。V1 Scheduler 的关键抽象不是把请求硬切成固定的 prefill phase 和 decoding phase，而是记录每个请求已经计算到哪里、还需要推进多少 token。Scheduler 每一步尝试给请求分配要计算的新 token，使 `num_computed_tokens` 追上目标长度，这个抽象可以同时覆盖 chunked prefill、prefix caching、speculative decoding 等场景。
 
-这和初学时的“prefill 后 decode”并不矛盾。prefill/decode 仍然是理解推理成本的关键视角，但在 Scheduler 的实现抽象里，请求不是被硬塞进两个阶段，而是在每个 step 中按“还差多少 token 没算”来推进。
+这和初学时的 prefill 后 decode 并不矛盾。prefill/decode 仍然是理解推理成本的关键视角，但在 Scheduler 的运行抽象里，请求不是被硬塞进两个阶段，而是在每个 step 中按**还差多少 token 没算**来推进。
 
 ![一批请求如何形成执行 step](imgs/03_batch_scheduling_view.png)
 
@@ -125,13 +126,15 @@ description: 本文基于本地 vLLM 源码快照建立 V1 引擎的整体架构
 
 这时再回到请求 C。C 与 A 共享一段 system prompt，如果 C 被路由到与 A 相同的 DP rank，并且 prefix cache 条件满足，那么 C 可能复用 A 已经计算过的前缀 block；如果 C 被负载均衡到另一个 DP rank，它会落到另一份独立 KV Cache 上，即使文本前缀相同，也不能直接复用 A 所在 DP rank 的本地 KV blocks。这个例子把请求流、KV block 和 DP 路由三件事连在了一起。
 
-在这个视角里，“batch”不是外部用户手工凑出来的静态数组，而是 vLLM 每个 step 根据请求状态、token budget、KV cache 和调度策略动态形成的执行单元。这也是 continuous batching 的系统含义：请求可以在不同时间进入系统，但在每个 engine step 被重新组合成对 GPU 更友好的工作批次。
+在这个视角里，**batch**不是外部用户手工凑出来的静态数组，而是 vLLM 每个 step 根据请求状态、token budget、KV cache 和调度策略动态形成的执行单元。这也是 continuous batching 的系统含义：请求可以在不同时间进入系统，但在每个 engine step 被重新组合成对 GPU 更友好的工作批次。
 
-到这里，单机视角已经解释了请求状态怎样推进。多 GPU 视角还要再回答一个问题：这次推进到底落在哪个 worker、哪张 GPU、哪个通信组上。rank 就是把“请求流”连接到“实际执行拓扑”的坐标系。
+请求状态推进解释的是**一次 step 算什么**，多 GPU 场景还要继续追问**这次 step 由谁来算**。当模型副本、张量分片、pipeline stage 和 MoE expert 同时存在时，worker 不能只用第几张 GPU 来描述，必须放进 rank 坐标系里定位。rank 就是把请求流连接到实际执行拓扑的基础语义。
 
-## 4. Rank 关系总览
+## 4. Rank 坐标
 
-理解分布式推理之前，必须先把 rank 关系理顺。rank 不是“第几块 GPU”这么简单，而是同一个 worker 进程在不同坐标系里的身份。
+分布式推理部署已经是 vLLM 的日常使用场景：单机多卡需要 TP，跨节点大模型需要 PP，高吞吐服务需要 DP，MoE 模型还会引入 EP。它们都会把同一批 worker 切成不同通信组，如果不先理解 rank，后面的部署命令、日志、group 初始化和错误排查都会变成参数名堆叠。
+
+rank 不是简单的**第几块 GPU**，而是同一个 worker 进程在不同坐标系里的身份。
 
 ![rank 是一个坐标，不只是 GPU 编号](imgs/03_rank_coordinate_system.png)
 
@@ -147,13 +150,13 @@ vLLM 中常见的 rank 和局部编号包括下面几类。
 | EP rank | expert parallel group 内编号 | MoE 专家层的 expert shard 和 all-to-all 通信 |
 | rank_in_group | 任意通信组内部的编号 | `GroupCoordinator` 内部广播、发送、接收、判断首尾 rank |
 
-`local_rank` 和 `rank_in_group` 特别容易混淆。`local_rank` 更接近物理设备选择，例如某个 worker 用本节点的第几张卡；`rank_in_group` 是逻辑通信组里的位置，例如同一个进程在 TP group 内可能是 1，在 PP group 内可能是 0，在 DP group 内又可能是 1。
+`local_rank` 和 `rank_in_group` 特别容易混淆。`local_rank` 更接近物理设备选择，例如某个 worker 用本节点的第几张卡。`rank_in_group` 是逻辑通信组里的位置，例如同一个进程在 TP group 内可能是 1，在 PP group 内可能是 0，在 DP group 内又可能是 1。
 
-源码中 `GroupCoordinator` 会记录 `rank`、`ranks`、`world_size`、`local_rank` 和 `rank_in_group`。其中 `rank` 是 global rank，`ranks` 是当前 group 包含的 global rank 列表，`rank_in_group` 是当前 global rank 在这个列表中的下标。这解释了为什么同一个 worker 会同时有多个“rank”：它属于多个通信组，每个组都给它一个局部编号。
+在 vLLM 的通信组抽象里，`rank` 通常指 global rank，`ranks` 是当前 group 包含的 global rank 列表，`rank_in_group` 是当前 global rank 在这个列表中的下标。这解释了为什么同一个 worker 会同时有多个 rank：它属于多个通信组，每个组都会给它一个局部编号。
 
 ![TP、PP、DP 通信组如何从 global ranks 切出来](imgs/03_group_ranks_tp_pp_dp.png)
 
-读这张图时重点看三种“同坐标”的含义：TP group 固定 DP/PP，只横向切同一 stage；PP group 固定 DP/TP，只纵向串 stage；DP group 固定 PP/TP，只在副本之间对应。以 `DP=2, PP=2, TP=2` 为例，global ranks 可以被看成一个三维网格。vLLM 在 `parallel_state.py` 中把 rank layout 注释为 `ExternalDP x DP x PP x TP`，默认不考虑 ExternalDP 和 PCP 时，可以先记成 `DP x PP x TP`。ExternalDP、PCP、DCP 等名字在源码里会继续出现，本章只需要知道它们是额外维度，先用 `DP x PP x TP` 建立主模型即可：
+读这张图时重点看三种**同坐标**关系。TP group 固定 DP/PP，只横向切同一 stage；PP group 固定 DP/TP，只纵向串 stage；DP group 固定 PP/TP，只在副本之间对应。以 `DP=2, PP=2, TP=2` 为例，global ranks 可以被看成一个三维网格。vLLM 的完整 rank layout 还可能包含 ExternalDP、PCP、DCP 等额外维度，初学时先用 `DP x PP x TP` 建立主模型即可：
 
 ```text
 DP0:
@@ -171,13 +174,15 @@ DP1:
 - PP groups 是同一个 DP rank、同一个 TP rank 上的纵向 stage 链，例如 `[0, 2]`、`[1, 3]`、`[4, 6]`、`[5, 7]`；
 - DP groups 是同一个 PP rank、同一个 TP rank 坐标上的不同模型副本，例如 `[0, 4]`、`[1, 5]`、`[2, 6]`、`[3, 7]`；
 
-这个切法能帮助你读懂很多日志。例如某个进程打印“global rank 5, DP rank 1, PP rank 0, TP rank 1”，并不意味着它是“第 5 张卡上的第 1 个 TP”。它的含义是：它是全局第 5 个 worker，属于第二个 DP 副本，处于第一个 pipeline stage，在该 stage 的 TP group 里是第 1 号。
+这个切法能帮助你读懂很多日志。例如某个进程打印 `global rank 5, DP rank 1, PP rank 0, TP rank 1`，并不表示它是第 5 张卡上的第 1 个 TP，而是表示它是全局第 5 个 worker，属于第二个 DP 副本，处于第一个 pipeline stage，在该 stage 的 TP group 里是第 1 号。
 
 还要注意 `world_size` 的语境。`ParallelConfig.world_size` 在普通模型并行语境里是 `pipeline_parallel_size * tensor_parallel_size * prefill_context_parallel_size`；而 `world_size_across_dp` 会再乘以 `data_parallel_size`。当 DP 被纳入 torch distributed 初始化时，vLLM 会把 rank 按 DP rank 做 offset，并把 world size 调整成跨 DP 的总规模。
 
 ## 5. 分布式推理部署视图
 
-rank 坐标清楚后，再看 TP、PP、DP、EP 的部署视图会容易很多。可以先用一句话区分四种并行：
+rank 坐标清楚后，TP、PP、DP、EP 就不再只是命令行参数。每一种并行都会改变某类坐标：TP 改变同一层内部的 shard 关系，PP 改变层与 stage 的放置关系，DP 改变请求路由和副本关系，EP 改变 MoE expert 的放置与 token dispatch 关系。
+
+可以先用一句话区分四种并行：
 
 - TP：切同一层里的张量；
 - PP：切模型层；
@@ -249,7 +254,7 @@ Data Parallel 复制模型权重，让不同 DP rank 处理不同请求批次。
 
 ![Data Parallel 内部负载均衡](imgs/03_data_parallel_internal_lb.png)
 
-内部负载均衡模式下，vLLM 暴露一个 HTTP endpoint，API Server 内部把请求分发给不同 DP rank。每个 DP rank 有自己的 EngineCore、Scheduler、waiting/running 队列和 KV Cache。这个“KV Cache 不共享”是理解 DP 路由的关键：如果两个请求共享长前缀，但被分到不同 DP rank，它们无法直接复用同一份本地 prefix cache。
+内部负载均衡模式下，vLLM 暴露一个 HTTP endpoint，API Server 内部把请求分发给不同 DP rank。每个 DP rank 有自己的 EngineCore、Scheduler、waiting/running 队列和 KV Cache。**KV Cache 不共享**是理解 DP 路由的关键：如果两个请求共享长前缀，但被分到不同 DP rank，它们无法直接复用同一份本地 prefix cache。
 
 单节点 DP 可以这样启动：
 
@@ -281,7 +286,7 @@ vllm serve $MODEL \
   --data-parallel-rpc-port 13345
 ```
 
-对于 dense 模型，如果你已经有外部网关，也可以把多个独立 vLLM 实例放到外部负载均衡后面，不一定需要使用 vLLM 的 `--data-parallel-*` 参数。但对于 MoE 的 DP+EP 场景，vLLM 的 DP 参数还承担同步和协调作用，不能简单理解成“多起几个服务”。
+对于 dense 模型，如果你已经有外部网关，也可以把多个独立 vLLM 实例放到外部负载均衡后面，不一定需要使用 vLLM 的 `--data-parallel-*` 参数。但对于 MoE 的 DP+EP 场景，vLLM 的 DP 参数还承担同步和协调作用，不能简单理解成多起几个服务。
 
 ### 5.4 External 与 Hybrid DP
 
@@ -305,7 +310,7 @@ CUDA_VISIBLE_DEVICES=1 vllm serve $MODEL \
   --port 8001
 ```
 
-Hybrid LB 介于 internal 和 external 之间：每个节点有自己的 API Server，只在本节点内部分发给本地 DP ranks；全局跨节点分流交给上游负载均衡器。读图时重点看“谁决定请求进哪个 DP rank”：internal 由 vLLM 内部入口决定，external 由上游决定，hybrid 则把节点内路由和全局路由拆开。这个模式可以减少大规模 DP 下单个 head node 的压力，并把路由限制在节点本地 DP ranks。按当前官方说明，internal DP LB 主要依据各 EngineCore 的 running / waiting 队列状态；KV-cache-aware routing 更适合作为未来演进方向来理解。
+Hybrid LB 介于 internal 和 external 之间：每个节点有自己的 API Server，只在本节点内部分发给本地 DP ranks；全局跨节点分流交给上游负载均衡器。读图时重点看**谁决定请求进哪个 DP rank**。internal 由 vLLM 内部入口决定，external 由上游决定，hybrid 则把节点内路由和全局路由拆开。这个模式可以减少大规模 DP 下单个 head node 的压力，并把路由限制在节点本地 DP ranks。按当前官方说明，internal DP LB 主要依据各 EngineCore 的 running / waiting 队列状态；KV-cache-aware routing 更适合作为未来演进方向来理解。
 
 ### 5.5 Expert Parallel
 
@@ -407,15 +412,15 @@ vllm serve deepseek-ai/DeepSeek-V3-0324 \
 - 误解四：EP 会改变所有层的并行方式。实际 EP 主要作用于 MoE expert layers，dense attention 层仍按 DP/TP 等规则处理；
 - 误解五：部署命令本身就是架构。命令最终要落回进程、GPU、模型分片、请求路由和通信组，rank 坐标才是理解这些参数的稳定入口；
 
-## 6. 源码阅读地图
+## 6. 进阶定位地图
 
-本章不做逐行源码导读，但读完之后应该知道下一步从哪里看。下面这张图把“要回答的问题”映射到当前本地源码中的主要路径。
+架构地图建立之后，后续复查实现时可以按问题进入对应路径，而不是从目录树第一层开始顺序翻。下面这张图把**要回答的问题**映射到当前本地源码和官方文档中的主要位置。
 
 ![vLLM V1 源码阅读地图](imgs/03_source_reading_map.png)
 
-建议按三条线阅读，并给每条线设置一个验收问题。
+进阶定位可以按三条线展开，每条线都对应一个验收问题。
 
-第一条线是服务入口到 EngineCore。读完这条线，应能回答：一个外部 HTTP 或 Python 请求怎样变成 `EngineCoreRequest`，又怎样被转回用户可见输出。
+第一条线是服务入口到 EngineCore。完成这条线后，应能回答：一个外部 HTTP 或 Python 请求怎样变成 `EngineCoreRequest`，又怎样被转回用户可见输出。
 
 - `vllm/entrypoints/cli/serve.py`：`vllm serve` 命令入口；
 - `vllm/entrypoints/openai/`：OpenAI-compatible API server 相关实现；
@@ -423,7 +428,7 @@ vllm serve deepseek-ai/DeepSeek-V3-0324 \
 - `vllm/v1/engine/input_processor.py`：外部输入到 `EngineCoreRequest`；
 - `vllm/v1/engine/output_processor.py`：`EngineCoreOutputs` 到用户输出；
 
-第二条线是 EngineCore 到 worker。读完这条线，应能回答：一个 `SchedulerOutput` 怎样变成一次 GPU forward，以及执行结果怎样回到请求状态和 KV cache 生命周期。
+第二条线是 EngineCore 到 worker。完成这条线后，应能回答：一个 `SchedulerOutput` 怎样变成一次 GPU forward，以及执行结果怎样回到请求状态和 KV cache 生命周期。
 
 - `vllm/v1/engine/core.py`：EngineCore 初始化、KV cache 初始化、scheduler 创建、step loop；
 - `vllm/v1/core/sched/scheduler.py`：请求 waiting/running、token budget、KV block 申请；
@@ -433,7 +438,7 @@ vllm serve deepseek-ai/DeepSeek-V3-0324 \
 - `vllm/v1/executor/ray_executor.py`、`ray_executor_v2.py`：Ray worker 管理；
 - `vllm/v1/worker/gpu_worker.py`：GPU worker 的设备初始化、模型加载、KV cache 初始化、执行模型；
 
-第三条线是分布式配置和通信组。读完这条线，应能回答：TP、PP、DP、EP 的 group 是怎样从 global ranks 中切出来的，以及启动参数怎样改变这些 group。
+第三条线是分布式配置和通信组。完成这条线后，应能回答：TP、PP、DP、EP 的 group 是怎样从 global ranks 中切出来的，以及启动参数怎样改变这些 group。
 
 - `vllm/config/parallel.py`：TP、PP、DP、EP、backend、node rank、world size 等配置；
 - `vllm/distributed/parallel_state.py`：world group、TP group、PP group、DP group、EP group 初始化；
@@ -442,7 +447,7 @@ vllm serve deepseek-ai/DeepSeek-V3-0324 \
 - `docs/serving/data_parallel_deployment.md`：DP 内部、外部、混合负载均衡；
 - `docs/serving/expert_parallel_deployment.md`：MoE EP、all-to-all backend、EPLB；
 
-读源码时建议先带着问题进入，而不是从文件 1 行读到最后 1 行。例如：
+需要深入实现时，最好带着问题进入对应路径：
 
 - 想理解请求生命周期：先看 `AsyncLLM.add_request`、`InputProcessor.process_inputs`、`Request`、`EngineCore.add_request`；
 - 想理解一个 step 如何形成：先看 `Scheduler.schedule()` 的注释和输出结构；
@@ -456,7 +461,7 @@ vLLM 的核心不是某一个孤立技巧，而是一套围绕动态请求和 KV
 
 分布式推理的关键是 rank 坐标。TP、PP、DP、EP 不是四个互相独立的口号，而是从 global ranks 中切出不同通信组的方式。TP 解释层内张量如何切，PP 解释模型层如何切，DP 解释副本和请求路由如何扩展，EP 解释 MoE expert 如何切和如何 all-to-all。只要能把一个 worker 放回 global rank、local_rank、TP rank、PP rank、DP rank、EP rank 的坐标系里，就能读懂多数 vLLM 分布式部署图。
 
-后续章节再深入 PagedAttention、Scheduler、KV Cache Manager 或 ModelRunner 时，可以把本章作为地图：每一个细节机制都应该能放回“请求怎样推进、状态在哪里维护、GPU worker 如何执行、rank group 如何通信”这四条主线中。
+在 PagedAttention、Scheduler、KV Cache Manager 或 ModelRunner 等专题中，每一个细节机制都应该能放回本章的四条主线：请求怎样推进，状态在哪里维护，GPU worker 如何执行，rank group 如何通信。
 
 ## 参考资料
 
@@ -470,7 +475,7 @@ vLLM 的核心不是某一个孤立技巧，而是一套围绕动态请求和 KV
 8. vLLM V1 executor and worker source：`code/opensource/vllm/vllm/v1/executor/`、`code/opensource/vllm/vllm/v1/worker/`；
 9. vLLM parallel config and group initialization：`code/opensource/vllm/vllm/config/parallel.py`、`code/opensource/vllm/vllm/distributed/parallel_state.py`；
 
-## Learning Assessment
+## 学习测评
 
 ### 题目
 
@@ -505,7 +510,7 @@ vLLM 的核心不是某一个孤立技巧，而是一套围绕动态请求和 KV
    D. `block_hashes`；
    E. API Server 的监听端口；
 
-6. 单选题：文章强调 V1 Scheduler 内部“不固定区分 prefill phase 和 decode phase”，最准确的理解是：
+6. 单选题：文章强调 V1 Scheduler 内部不固定区分 prefill phase 和 decode phase，最准确的理解是：
    A. vLLM 不再有 prefill/decode 的成本差异；
    B. Scheduler 用 `num_computed_tokens` 等状态统一描述每一步还需要推进多少 token；
    C. decode 请求不会进入 Scheduler；
@@ -607,7 +612,7 @@ vLLM 的核心不是某一个孤立技巧，而是一套围绕动态请求和 KV
 
 5. A、B、C、D。`status`、`num_computed_tokens`、`output_token_ids`、`block_hashes` 都影响请求生命周期、调度推进或 prefix caching。监听端口不是内部 `Request` 的推进状态；
 
-6. B。这不是否认 prefill/decode 的工程差异，而是说 Scheduler 内部用“已经算到哪里、还差多少 token”统一推进请求，从而兼容 chunked prefill、prefix caching、speculative decoding 等场景；
+6. B。这不是否认 prefill/decode 的工程差异，而是说 Scheduler 内部用**已经算到哪里、还差多少 token**统一推进请求，从而兼容 chunked prefill、prefix caching、speculative decoding 等场景；
 
 7. A、B、D。vLLM 的 batch 是每个 engine step 动态形成的执行单元，不是用户提交后固定不变的静态数组；
 

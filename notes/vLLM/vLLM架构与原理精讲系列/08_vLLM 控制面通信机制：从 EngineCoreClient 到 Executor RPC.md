@@ -10,7 +10,7 @@ tags:
 updated: 2026-05-31
 description: 本文基于本地 vLLM V1 源码快照，系统拆解前端到 EngineCore、EngineCore 到 Worker 的控制面通信路径，说明 ZMQ、msgpack、collective_rpc、MessageQueue、output_rank 如何共同支撑一次推理控制流。
 ---
-
+【批注，1）正文不要滥用中文引号，确实需要强调的概念、判断或短句，优先使用加粗；2）控制小段落中的句号密度，能顺畅连接的解释用逗号、分号或重写句式承接，避免每个短句都被句号切碎；3）教程正文避免用作者撰文的过程说明去替代教学内容，不写类似 `接下来会`、`本文将` 这类让读者关心写作安排的句式；需要引导时直接写稳定的学习路径、对象关系或机制递进； 全文排查】
 # 08 vLLM 控制面通信机制：从 EngineCoreClient 到 Executor RPC
 
 第 7 篇已经把 `Executor`、`Worker` 与 `ModelRunner` 的协同关系讲清楚了：`Scheduler` 产出 `SchedulerOutput`，`Executor` 把执行任务交给 worker，worker 内部的 `ModelRunner` 再把调度结果变成模型输入并返回 `ModelRunnerOutput`。

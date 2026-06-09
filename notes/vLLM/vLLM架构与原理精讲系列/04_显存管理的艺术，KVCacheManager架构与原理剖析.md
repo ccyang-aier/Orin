@@ -8,13 +8,17 @@ tags:
 updated: 2026-05-28
 description: 本文基于本地 vLLM V1 源码快照，系统讲解 KVCacheManager 的分层架构、运行逻辑、Scheduler 交互、PagedAttention 地址翻译以及预热与容量估算机制。
 ---
+【批注，1）正文不要滥用中文引号，确实需要强调的概念、判断或短句，优先使用加粗；2）控制小段落中的句号密度，能顺畅连接的解释用逗号、分号或重写句式承接，避免每个短句都被句号切碎；3）教程正文避免用作者撰文的过程说明去替代教学内容，不写类似 `接下来会`、`本文将` 这类让读者关心写作安排的句式；需要引导时直接写稳定的学习路径、对象关系或机制递进；4）避免段落用大量并列短句+分号的方式去呈现 全文排查】
+# 04 显存管理的艺术，KVCacheManager架构与原理剖析
 
-# 04 深入 KVCacheManager
+在前面几个章节，我们已经初步建立了 vLLM V1 的整体地图：API Server 面向用户，EngineCore 维护推理系统状态，Scheduler 决定每一步让哪些请求前进，Executor 和 Worker 负责把调度结果送到 GPU 上执行。
 
-前一章已经建立了 vLLM V1 的整体地图：API Server 面向用户，EngineCore 维护推理系统状态，Scheduler 决定每一步让哪些请求前进，Executor 和 Worker 负责把调度结果送到 GPU 上执行。理解这张地图之后，本章开始进入第一个真正需要深挖的核心组件：`KVCacheManager`。
+理解这张地图之后，从本章开始，我们将深入到vLLM的各个核心组件之中，理解它们的架构设计和执行原理，首先，我们来分析和学习vLLM是如何管理显存的，即：`KVCacheManager`。
 
+【批注，选择它作为第一个组件章并不是因为类名排在前面，这个叙述比较笨，换个说法】
 选择它作为第一个组件章并不是因为类名排在前面，而是因为它是很多后续机制的共同地基。Scheduler 要依赖它判断请求能不能进入本轮 batch；PagedAttention 要依赖它产出的 block table 才能在物理不连续的 KV Cache 上做注意力；prefix caching、KV transfer、sliding window、spec decode、preemption 等机制也都绕不开 KV block 的分配、复用、释放和可见性管理。换句话说，`KVCacheManager` 是 vLLM 把“动态 token 序列”变成“可调度运行时状态”的中枢。
 
+【批注，删除这段，不要写成源码解读文档】
 本文以 `code/opensource/vllm` 的本地源码快照为依据，源码分支为 `main`，短提交哈希为 `52a31ccec`。文章会立足源码和本地设计文档，但不会逐行展开；重点是把源码背后的架构意图和运行时机制讲清楚。
 
 ![KVCacheManager 作为运行时状态中枢](imgs/04_state_hub.png)
