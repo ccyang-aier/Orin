@@ -8,7 +8,7 @@ updated: 2026-06-09
 description: 从机器翻译与自回归生成问题出发，解释 Transformer 如何把 Attention 组织成完整可训练、可并行、可生成的序列架构，并连接位置编码、Encoder-Decoder、Block、训练推理与现代 LLM 主干。
 ---
 
-# 04 Transformer 架构及原理
+# 05 Transformer 架构及原理
 
 > [!Quote] 本篇导读
 > 先看一个翻译任务：
@@ -22,7 +22,7 @@ description: 从机器翻译与自回归生成问题出发，解释 Transformer 
 >
 > Attention 已经让序列中的位置可以彼此取回信息，但如果只有 Attention，仍然缺少顺序、深层非线性变换、稳定堆叠和生成边界。Transformer 的真正价值，是把 Attention 放进一套完整网络骨架里，让它既能并行训练，又能按自回归方式一步步生成。
 
-上一篇 [[03_深入理解Attention机制|03 深入理解 Attention 机制]] 已经解释了 Q/K/V、Scaled Dot-Product Attention、mask 和 Multi-Head Attention。本文不重新推导 Attention 公式，而是回答一个更架构化的问题：
+上一篇 [[04_深入理解Attention机制|04 深入理解 Attention 机制]] 已经解释了 Q/K/V、Scaled Dot-Product Attention、mask 和 Multi-Head Attention。本文不重新推导 Attention 公式，而是回答一个更架构化的问题：
 
 **怎样把 Attention 组织成一个可训练、可扩展、可用于真实序列任务的模型？**
 

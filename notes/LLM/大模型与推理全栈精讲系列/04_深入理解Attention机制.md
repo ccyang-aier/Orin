@@ -4,13 +4,14 @@ tags:
   - attention
   - transformer
   - deep-learning
-updated: 2026-06-08
+updated: 2026-06-09
 description: 从软寻址、Q/K/V、Scaled Dot-Product、mask、多头机制、MHA/MQA/GQA 与工程边界解释 Attention，帮助建立进入 Transformer 与现代 LLM 架构之前最关键的算子级心智模型。
 ---
 
-# 03 深入理解 Attention 机制
+# 04 深入理解 Attention 机制
 
 > [!Quote] 本篇导读
+> 【批注，导读还是过于生硬，不要直接亮出attention，加一些过渡】
 > 先想一个很普通的句子：
 >
 > “小林把合同交给法务，因为他担心条款里还有风险。”
@@ -19,7 +20,7 @@ description: 从软寻址、Q/K/V、Scaled Dot-Product、mask、多头机制、M
 >
 > Attention 要解决的正是这种问题：当前位置怎样从上下文中取回有用信息。它不是让模型像人一样“集中注意力”，而是把“我要查什么”“哪里可能有答案”“查到后取回什么内容”组织成一套可训练的计算过程。
 
-上一篇 [[02_大模型基础速通|02 大模型基础速通]] 已经从旧序列模型讲到 Encoder-Decoder + Attention：早期 RNN/LSTM 需要把历史信息不断压进 hidden state，序列越长，信息越容易被覆盖或稀释；Attention 打开的关键入口，是让当前位置可以直接访问上下文中的候选位置。
+上一篇 [[03_从语言理解本质到序列模型演进|03 从语言理解本质到序列模型演进]] 已经从旧序列模型讲到 Encoder-Decoder + Attention：早期 RNN/LSTM 需要把历史信息不断压进 hidden state，序列越长，信息越容易被覆盖或稀释；Attention 打开的关键入口，是让当前位置可以直接访问上下文中的候选位置。
 
 本文不急着背公式，而是沿着一个更自然的学习顺序推进：
 
@@ -32,6 +33,7 @@ description: 从软寻址、Q/K/V、Scaled Dot-Product、mask、多头机制、M
 
 理解这些之后，再进入 Transformer 架构、长上下文优化和分布式推理，很多概念就不会显得突兀。
 
+【批注，第一节太生硬，直接就是Attention是xx，先引出attention，再去介绍attention，然后才能去安排后续内容】
 ## 1. Attention 是软寻址
 
 在程序里，“寻址”通常很硬。数组下标 `arr[3]` 只会取第 4 个元素；数据库按主键查 `id = 42`，要么命中这条记录，要么没有命中。硬寻址清晰、离散、精确，但它不适合作为神经网络里的核心操作，因为神经网络需要连续计算，也需要通过梯度学习“该看哪里”。
@@ -61,6 +63,8 @@ Attention 的想法是把硬寻址变成软寻址：
 **Attention = 对上下文做可训练的软寻址，并把被寻址位置的内容加权取回。**
 
 ## 2. Q/K/V：三种角色
+
+【批注，全文排查，不要加什么“初学者xxx”的句子，很low】
 
 软寻址还只是直觉。要把它放进神经网络里，需要把“当前位置在查什么”“上下文位置怎样被查到”“查到后返回什么”拆成可计算的对象，这就是 Q/K/V。
 
@@ -479,7 +483,7 @@ Transformer 之所以强大，不是因为 Attention 像人类一样“注意”
 
 这也是进入 Transformer 架构的桥梁：如果 Attention 已经能让所有位置直接通信，那么下一步问题就是，如何让这种机制知道顺序、稳定堆叠、表达非线性变换，并用于训练和生成完整序列。
 
-下一篇阅读：[[04_Transformer架构及原理|04 Transformer 架构及原理]] 会把 Attention 放进完整网络骨架里，继续解释位置编码、Encoder/Decoder、FFN、残差归一化与训练/推理数据流。
+下一篇阅读：[[05_Transformer架构及原理|05 Transformer 架构及原理]] 会把 Attention 放进完整网络骨架里，继续解释位置编码、Encoder/Decoder、FFN、残差归一化与训练/推理数据流。
 
 ## 7. 参考资料
 
