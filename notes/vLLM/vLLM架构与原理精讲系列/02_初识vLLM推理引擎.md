@@ -5,37 +5,36 @@ tags:
   - inference-engine
   - paged-attention
   - kv-cache
-updated: 2026-05-27
-description: 本文从 vLLM 的定位、早期推理框架演进与 KV Cache 管理难题出发，解释 PagedAttention 为什么成为 vLLM 推理引擎的关键转折点。
+updated: 2026-06-09
+description: 围绕高性能推理引擎的职责展开，解释 vLLM 如何把在线 LLM serving 的核心矛盾收束到 KV Cache 管理与 PagedAttention。
 ---
-【批注，1）全局排查去除所有内容的引号：“”，对于确实需求强调的内容或短句用加粗去表示 2）不要频繁的用句号，很多小段落里的句子句号太多，很多地方其实用逗号即可】
 # 02 初识 vLLM 推理引擎
 
-【批注，首段太突兀，突然就抛出中心问题，没有一个小案例或者一个柔和的过渡，我觉得这个导读段不要过多说什么上一篇讲了什么，这一篇我们讲什么或者不讲什么，这个导读段先不要引出vllm，就利用这第一章插图，点明：在上一篇引出的众多推理挑战的基础上，一个合格的，优秀的、高性能的推理引擎应该做到哪些等等 围绕这个方向我们可以做一些专业的、柔和的引入】
+一次看似普通的聊天请求，会在服务端展开成一条很长的系统链路：文本要被切成 token，Prompt 要先经历 Prefill，第一个输出 token 出现后，Decode 还要一步一步推进，历史 Key/Value 状态不断写入和读取，最终结果再被流式返回给用户。
 
-本文默认读者已经知道 LLM 自回归生成、Prefill、Decode 和 KV Cache 的基本含义。即使没有读过上一篇，也可以先抓住这一章的中心问题：为什么 vLLM 的核心不是单次 `generate()` 调用，而是动态请求下的 KV Cache 管理。
+![一次推理请求牵出的系统职责](imgs/01_inference_request_flow.png)
 
-上一篇已经把问题拉到了系统层面：LLM 推理不是一次简单的 `model.forward()`，而是一个由 Prefill、Decode、KV Cache、调度、显存、吞吐和延迟共同构成的在线系统问题。
+当这样的请求只有一个时，系统还能把它看成一次模型调用；当请求不断流入、长短不一、输出长度未知、用户还希望第一个 token 尽快出现时，推理系统就必须同时做好几件事：让 Prefill 尽快建立上下文，让 Decode 稳定推进，把多个请求组织成有效 batch，在有限显存里保存和回收 KV Cache，并用 TTFT、TPOT、吞吐等指标判断服务是否健康。
 
-这一篇正式进入 vLLM。这里暂时不急着展开 Scheduler、Executor、Worker、EngineCore 这些内部组件，因为那样很容易把“初识”写成源码导读。更好的进入方式，是先问一个更朴素的问题：为什么在 Hugging Face Transformers 已经可以调用模型生成文本、TGI 已经可以把模型服务化之后，还需要 vLLM 这样的推理引擎。
+一个合格的高性能推理引擎，不只是让模型能跑，还要让模型在动态在线负载下高效地跑。它面对的核心矛盾不是某一次 `generate()` 调用能否成功，而是**如何在请求持续变化时管理有限 GPU 资源**。
 
-答案藏在一个看似局部、实际非常核心的问题里：**KV Cache 如何管理**。
+这正是进入 vLLM 的合适入口。vLLM 的很多能力都可以沿着一个问题理解：**KV Cache 如何管理**。Scheduler、Executor、Worker、EngineCore 等组件后续都会登场，但它们不是孤立名词，而是围绕请求状态、显存资源和模型执行协同起来的系统角色。
 
 ![vLLM 是推理与服务引擎](imgs/02_vllm_is_engine.png)
 
-vLLM 的关键价值，不只是让模型“能跑”，而是让模型在真实服务场景下更高效地跑。它把模型执行、请求队列、动态批处理、KV Cache 管理、流式返回和服务接口组织到同一个推理系统里。理解这一点之后，再看 PagedAttention，就不会把它误解成“又一个注意力公式优化”，而会看到它背后真正改变的是推理系统的内存管理方式。
+vLLM 把模型执行、请求队列、动态批处理、KV Cache 管理、流式返回和服务接口组织到同一个推理系统里。理解这一点之后，再看 PagedAttention，就不会把它误解成某种注意力公式优化，而会看到它真正改变的是推理系统的内存管理方式。
 
 ## 1. vLLM 是什么
 
-【批注，这一节我觉得可以参考notes/vLLM/01_初识vLLM推理引擎的第一节：1. vLLM项目概述，可以直接引入它的内容和插图，当然我们这里的内容也可以酌情保留，前面适合引入1. vLLM项目概述的内容，这一小节的后半部分适合放我们这一节的内容，因为1. vLLM项目概述这一节只是比较有趣的点明了vllm的来源】
-
-vLLM 官方文档将它定位为一个用于 LLM inference and serving 的快速、易用库。这个表述看起来很轻，但里面包含两层含义。
+vLLM 官方文档将它定位为一个用于 LLM inference and serving 的快速、易用库，也常被概括为高吞吐、高内存效率的 LLM 推理与服务引擎。这个表述看起来很轻，但里面包含两层含义。
 
 第一层是 **inference**：vLLM 能加载模型权重，接收 prompt，执行生成，返回 token。这是所有推理框架都必须具备的基础能力。
 
 第二层是 **serving**：vLLM 不只面向单次脚本调用，还面向在线服务。它要处理多个请求同时到达、请求长短不一、输出长度未知、用户希望流式返回、服务端还要监控吞吐和延迟这些问题。
 
-因此，与其把 vLLM 理解成“比 Transformers 更快的 generate()”，不如把它理解成一个推理引擎：它把模型调用包装成可持续服务的系统。
+vLLM 的起点也与这个系统问题有关。2023 年，UC Berkeley Sky Computing Lab 的研究者在服务大模型工作负载时发现，推理速度的关键瓶颈不只是算子执行，也不是模型能否被加载，而是大量动态请求产生的 KV Cache 难以被高效管理。PagedAttention 正是在这个背景下被提出，vLLM 则以它为核心，把操作系统分页思想引入 LLM serving 的显存管理。
+
+因此，与其把 vLLM 理解成 **比 Transformers 更快的 generate()**，不如把它理解成一个推理引擎：它把模型调用包装成可持续服务的系统。
 
 可以从三个边界来理解 vLLM：
 
@@ -46,14 +45,13 @@ vLLM 官方文档将它定位为一个用于 LLM inference and serving 的快速
 | 典型问题 | 如何生成文本                      | 如何部署服务               | 如何在显存受限下提高吞吐并控制延迟           |
 | 学习入口 | API 调用                      | 服务启动与部署              | 推理系统资源管理                    |
 
-这个边界并不是说模型库和服务框架不重要。恰恰相反，vLLM 站在它们的基础上继续往前走：当“能生成”和“能服务”已经不够时，问题就变成了“怎样以更少硬件服务更多动态请求”。
+这个边界并不是说模型库和服务框架不重要。恰恰相反，vLLM 站在它们的基础上继续往前走：当 **能生成** 和 **能服务** 已经不够时，问题就变成了 **怎样以更少硬件服务更多动态请求**。
 
-【批注，尽量少用这种叙述手法，不要像是给读者在讲我要怎样怎样，然后怎样怎样这样的叙述，读者不需要关心这些，删除或者换个叙述方式，把这个规则沉淀到项目运作规则里】
-接下来会先用 Transformers 和 TGI 说明“服务化”为什么仍然没有完全解决推理系统问题，再把主线收束到 KV Cache 的显存管理，最后进入 PagedAttention。为了避免把机制讲散，可以先记住一个贯穿例子：请求 A 是短 prompt 短输出，请求 B 是长 prompt 长输出，请求 C 与 A 共享相同的 System Prompt。后文的静态 batch、连续 batch、连续预留、block 分配和前缀复用，都可以放回这三个请求中理解。
+后面的机制都可以放进一个贯穿例子里理解：请求 A 是短 prompt、短输出，请求 B 是长 prompt、长输出，请求 C 与 A 共享相同的 System Prompt。静态 batch、连续 batch、连续预留、block 分配和前缀复用，本质上都在回答这三个请求如何共享同一组 GPU 资源。
 
 ## 2. LLM 推理的核心挑战
 
-理解 vLLM 之前，仍然需要把 LLM 推理的基本矛盾再压缩回顾一遍。上一篇已经展开过细节，这里只保留对 vLLM 最关键的几条线索。
+要理解高性能推理引擎，LLM 推理的基本矛盾可以先压缩成四条线索，这些线索决定了 vLLM 为什么必须把请求、调度和显存放在同一个系统问题里处理。
 
 ![LLM 推理挑战回顾](imgs/02_inference_challenges_recap.png)
 
@@ -69,13 +67,13 @@ vLLM 官方文档将它定位为一个用于 LLM inference and serving 的快速
 
 ## 3. 服务化为什么还不够
 
-vLLM 的出现不是凭空发生的。为了教学清晰，本文把推理系统能力拆成三层：先解决“能生成”，再解决“能服务”，最后解决“如何高效服务大量动态请求”。这是一条概念分层路线，不是严格的版本时间线。现实中 TGI、vLLM、SGLang 等系统的能力会相互影响并持续重叠，例如当前 TGI 文档也列出了 Continuous Batching、Paged Attention、Streaming、Prometheus 和 OpenTelemetry 等 serving 能力，同时提示 TGI 进入 maintenance mode，并建议新项目优先关注 vLLM、SGLang 等新一代 serving 框架。
+下图可以看成推理系统能力的三层叠加：早期模型库先解决 **能生成**，服务框架进一步解决 **能对外服务**，新一代推理引擎则要解决 **如何高效服务大量动态请求**。这不是严格版本时间线，现实中 TGI、vLLM、SGLang 等系统的能力会相互影响并持续重叠，例如当前 TGI 文档也列出了 Continuous Batching、Paged Attention、Streaming、Prometheus 和 OpenTelemetry 等 serving 能力，同时提示 TGI 进入 maintenance mode，并建议新项目优先关注 vLLM、SGLang 等新一代 serving 框架。
 
 ![HF Transformers 到 TGI 再到 vLLM](imgs/02_framework_evolution.png)
 
 ### 3.1 HF Transformers：从模型调用开始
 
-Hugging Face Transformers 是许多人进入 LLM 推理的第一站。它的接口非常直观：加载模型，加载 tokenizer，调用 `generate()`，得到输出。
+Hugging Face Transformers 曾是早期非常常用的 LLM 模型调用入口之一。它的接口非常直观：加载模型，加载 tokenizer，调用 `generate()`，得到输出。
 
 这种方式特别适合实验、离线脚本、小规模验证和模型功能探索。它把复杂的模型结构、权重加载、分词、采样策略都封装成了相对统一的 API。
 
@@ -89,13 +87,13 @@ Hugging Face Transformers 是许多人进入 LLM 推理的第一站。它的接�
 
 Transformers 自身也提供了多种 cache 策略，例如默认的 `DynamicCache` 会随着生成增长，`StaticCache` 会预分配固定大小以配合编译优化。但这类能力的重点仍然是模型生成 API 内部的缓存策略，而不是完整在线推理服务的全局调度系统。
 
-如果把这一步画成一张图，它的核心是“模型调用”。
+如果把这一步画成一张图，它的核心是**模型调用**。
 
 ```text
 prompt -> tokenizer -> model.generate() -> output
 ```
 
-这条链路可以把单个请求跑通，却还没有回答“多个动态请求如何共享同一组 GPU 资源”。
+这条链路可以把单个请求跑通，却还没有回答**多个动态请求如何共享同一组 GPU 资源**。
 
 ### 3.2 TGI：从模型调用走向服务框架
 
@@ -107,7 +105,7 @@ Hugging Face Text Generation Inference（TGI）把问题往服务化推进了一
 
 ![Static Batching 与 Continuous Batching](imgs/02_static_vs_continuous_batching.png)
 
-Continuous Batching 的核心直觉是：不要在“请求级别”固定一个 batch，而是在“生成迭代级别”不断更新 batch。某个请求完成后，可以从 batch 中移出；新请求如果资源允许，可以进入后续迭代。ORCA 论文把类似思想称为 iteration-level scheduling，也就是以一次生成迭代为粒度调度，而不是等整个请求完成后再调整 batch。
+Continuous Batching 的核心直觉是：不要在**请求级别**固定一个 batch，而是在**生成迭代级别**不断更新 batch。某个请求完成后，可以从 batch 中移出；新请求如果资源允许，可以进入后续迭代。ORCA 论文把类似思想称为 iteration-level scheduling，也就是以一次生成迭代为粒度调度，而不是等整个请求完成后再调整 batch。
 
 这解决了静态 batch 的一部分问题。放回前面的例子里，请求 A 很短，静态 batch 会让它等请求 B 这个长输出完成；Continuous Batching 则可以在 A 完成后释放位置，让新请求进入后续迭代，而不是等整个旧 batch 结束。
 
@@ -115,11 +113,17 @@ Continuous Batching 的核心直觉是：不要在“请求级别”固定一个
 
 ### 3.3 vLLM：把内存管理推到中心
 
-vLLM 的突破口正是在这里。它没有只停留在“把 batch 调度得更聪明”，而是继续追问：如果推理系统的核心状态是 KV Cache，那么能不能像操作系统管理内存一样管理 KV Cache。
+vLLM 的突破口正是在这里。它没有只停留在**把 batch 调度得更聪明**，而是继续追问：如果推理系统的核心状态是 KV Cache，那么能不能像操作系统管理内存一样管理 KV Cache。
 
 PagedAttention 论文的摘要明确指出，高吞吐 LLM serving 需要同时 batch 足够多的请求，但现有系统会受限于巨大的、动态增长和收缩的 KV Cache；如果管理低效，显存会被碎片和重复存储显著浪费，进而限制 batch size。
 
-这句话基本就是 vLLM 的历史入口：它把“推理吞吐问题”重新表述成“KV Cache 内存管理问题”。
+这句话基本就是 vLLM 的历史入口：它把**推理吞吐问题**重新表述成**KV Cache 内存管理问题**。
+
+这一步很关键，因为 Continuous Batching 只回答了请求何时进入和退出 batch，却没有自动回答每个请求的历史状态放在哪里。只要请求仍然需要一整段连续 KV 空间，调度器就会被显存分配反过来限制：明明 GPU 还有一些空闲块，系统却可能因为拿不到足够连续的空间而无法接纳新请求；明明短请求已经完成，它释放出来的空间也可能因为碎片化而难以被长请求利用。
+
+vLLM 的系统判断是：推理引擎不能只做执行层优化，还必须把 KV Cache 变成一种可调度资源。请求进入时，系统按需分配缓存；请求增长时，缓存能继续扩展；请求完成时，缓存能及时回收；多个请求存在相同前缀时，缓存还有机会被共享。只有内存管理具备这些能力，连续 batch 的调度灵活性才不会被显存布局拖住。
+
+因此，vLLM 的早期标志不是某个单独 API，而是一组互相支撑的系统能力：请求可以滚动进入 batch，KV Cache 可以按 block 管理，注意力内核可以通过映射关系访问分散的缓存，服务层则把这些能力包装成可持续运行的 inference and serving 系统。
 
 ## 4. KV Cache 管理为什么成为瓶颈
 
@@ -166,7 +170,7 @@ KV Cache bytes
 
 PagedAttention 论文指出，传统管理方式会受到 fragmentation 和 redundant duplication 的影响，使 KV Cache 内存显著浪费。论文的核心判断是：如果 KV Cache 不能被细粒度管理，那么 batch size 就会被显存而不是算力提前卡住。
 
-这也是为什么“模型已经成功加载到 GPU”并不等于“系统还能服务很多并发请求”。模型权重只是显存的固定部分，KV Cache 才是随着请求不断变化的动态部分。
+这也是为什么**模型已经成功加载到 GPU**并不等于**系统还能服务很多并发请求**。模型权重只是显存的固定部分，KV Cache 才是随着请求不断变化的动态部分。
 
 ### 4.2 动态工作负载与静态内存假设
 
@@ -180,11 +184,22 @@ LLM 在线推理天然是动态的。
 
 而连续预留隐含的假设却更接近静态：先给每个请求一大段足够长的连续空间，再让它慢慢填满。
 
-这就是矛盾所在：**工作负载越动态，连续大块预留越容易浪费；并发越高，浪费越会直接挤压吞吐**。
+把 A/B/C 的例子放进一条时间线里，这个矛盾会更明显。A 的 prompt 很短，可能只生成几十个 token，却因为最大输出上限被提前预留了很长缓存；B 的 prompt 很长，Decode 也很长，会长时间占用大段 KV 空间；C 与 A 共享 System Prompt，但如果内存管理只认连续请求私有空间，A 已经算过的前缀状态很难自然复用。此时，调度器看到的不是抽象请求，而是一组不断变化的缓存占用、空洞、上限和释放时机。
 
-## 5. 引入PagedAttention
+这种静态假设会带来四个后果。
 
-PagedAttention 的名字里有 Attention，但它真正想借鉴的是操作系统里的 Paging。
+- **接纳新请求更保守**：系统需要按最大长度或较大上限预估 KV Cache，而不是按请求已经实际使用的 token 数分配；
+- **短请求浪费更突出**：很多请求很快结束或只生成少量 token，尾部预留空间在请求生命周期内一直无法给其他请求使用；
+- **长请求更容易被碎片卡住**：总空闲显存看起来足够，但可用连续空间不足时，系统仍然可能无法扩展某个请求的 KV Cache；
+- **共享前缀难以表达**：相同 System Prompt、并行采样、beam search 或多轮对话里的公共前缀，本质上需要多个序列引用同一段缓存，连续私有空间模型很难优雅支持；
+
+这就是矛盾所在：**工作负载越动态，连续大块预留越容易浪费；并发越高，浪费越会直接挤压吞吐**。PagedAttention 要解决的不是单个 attention step 的数学问题，而是给动态 KV Cache 找到一种更适合在线服务的内存抽象。
+
+## 5. 引入 PagedAttention
+
+如果瓶颈来自动态工作负载和静态内存假设的冲突，解决方案就不能只停留在调 batch 或调参数。更自然的方向是换一种抽象：请求看到的 token 序列仍然保持逻辑连续，但底层 KV Cache 不再强制物理连续。
+
+PagedAttention 的名字里有 Attention，但它真正借鉴的是操作系统里的 Paging。
 
 操作系统不会要求每个进程必须占用一整块连续物理内存。它会给进程一个看起来连续的虚拟地址空间，再通过页表把虚拟页映射到分散的物理页。进程看到的是连续地址，硬件实际访问的是被映射后的物理页。
 
@@ -202,7 +217,7 @@ vLLM 把这个思想迁移到了 KV Cache。
 | 按需分配页 | 按需分配 KV Block |
 | 逻辑连续、物理分散 | token 逻辑连续，KV Block 可分散存储 |
 
-### 5.1 从连续大块变成 KV Block
+### 5.1 Block 化的 KV Cache
 
 PagedAttention 的核心设计可以压缩成一句话：**把每个请求的 KV Cache 拆成固定大小的 block，用 Block Table 维护逻辑 token 序列到物理 KV Block 的映射**。
 
@@ -211,8 +226,6 @@ PagedAttention 的核心设计可以压缩成一句话：**把每个请求的 KV
 请求仍然可以把自己的上下文看成连续 token 序列，例如 L0、L1、L2、L3；但这些逻辑块不必连续放在 GPU 显存里。Block Table 会记录 L0 对应哪个物理块，L1 对应哪个物理块。注意力计算时，内核通过这张表找到对应的 K/V 数据。
 
 这样一来，系统不再需要为请求一次性预留完整最大长度。请求需要更多 token 空间时，就继续申请新的 block；请求完成后，就释放它占用的 block。
-
-### 5.2 为什么只浪费最后一个块
 
 假设 `block_size = 8`，一个请求现在有 21 个 tokens。如果采用按块分配，它只需要：
 
@@ -224,11 +237,11 @@ ceil(21 / 8) = 3 blocks
 
 ![按需分配减少内部碎片](imgs/02_on_demand_block_allocation.png)
 
-这与连续预留形成鲜明对比。连续预留可能为一个短请求保留几千 token 的空间，而 PagedAttention 把序列内部碎片压到了 block 粒度。
+这与连续预留形成鲜明对比。连续预留可能为一个短请求保留几千 token 的空间，而 PagedAttention 把序列内部碎片压到了 block 粒度。请求 A 只生成少量 token 时，它不必长期占着一整段最大长度缓存；请求 B 继续变长时，系统也可以给它追加新的物理 block，而不是要求后面必须还有一整块连续空间。
 
-当然，这里也要避免一个误区：PagedAttention 不是让显存浪费绝对归零。它仍然有尾部 block 的内部碎片，也会引入 Block Table、间接寻址、allocator、kernel layout 和实现层元数据成本。但相对大块连续预留，它把最主要的序列内部浪费从“按请求上限”压到了“按 block 粒度”。
+当然，这里也要避免一个误区：PagedAttention 不是让显存浪费绝对归零。它仍然有尾部 block 的内部碎片，也会引入 Block Table、间接寻址、allocator、kernel layout 和实现层元数据成本。但相对大块连续预留，它把最主要的序列内部浪费从**按请求上限**压到了**按 block 粒度**。
 
-### 5.3 注意力结果为什么不变
+### 5.2 注意力语义保持不变
 
 有读者可能会担心：KV Cache 物理上不连续，会不会改变注意力结果。
 
@@ -242,21 +255,25 @@ ceil(21 / 8) = 3 blocks
 
 只要目录正确，读者看到的章节顺序仍然是连续的。PagedAttention 要做的，就是让 GPU 内核能够沿着这张目录高效访问分散的 KV Block。
 
-vLLM 当前的 Paged Attention 设计文档也提醒读者：官方文档中的历史说明基于原始论文，已经不完全描述当前代码；但文档仍然指出，vLLM 的 attention kernel 需要兼容 paged KV caches，其中 key cache 和 value cache 被存储在独立 block 中。对本章而言，这个高层概念正是理解 vLLM 的关键。
+vLLM 的 Paged Attention 设计文档也提醒读者：官方文档中的历史说明基于原始论文，已经不完全描述当前代码；但文档仍然指出，vLLM 的 attention kernel 需要兼容 paged KV caches，其中 key cache 和 value cache 被存储在独立 block 中。对本章而言，这个高层概念正是理解 vLLM 的关键。
 
-### 5.4 共享与复用
+### 5.3 共享与复用
 
 PagedAttention 还有一个重要副作用：它更容易支持 KV Cache 的共享。
 
-如果多个请求共享同一段前缀，例如同一个 System Prompt，那么这些前缀 token 对应的 KV Block 理论上可以被复用，而不是每个请求重复保存一份。放回前面的例子，请求 A 和请求 C 共享 System Prompt，那么前缀 block 就有复用价值。vLLM 后续的 Automatic Prefix Caching 就是在 block 级别继续推进复用：它会对已处理请求的 KV Cache block 建立缓存，并在新请求拥有相同前缀时复用这些 block。
+如果多个请求共享同一段前缀，例如同一个 System Prompt，那么这些前缀 token 对应的 KV Block 理论上可以被复用，而不是每个请求重复保存一份。放回前面的例子，请求 A 和请求 C 共享 System Prompt，二者的前缀 block 就有复用价值；如果 C 后面接了不同用户问题，系统只需要在分叉之后继续分配新 block。
 
-这说明 PagedAttention 不只是“省掉一些碎片”。它真正带来的系统能力，是让 KV Cache 成为可以被细粒度分配、查找、共享、回收的资源。
+这种 block 级共享还适合解释并行采样和 beam search。多个候选序列在早期通常共享同一个 prompt 前缀，直到某一步生成出不同 token 才开始分叉。若缓存只能按请求私有连续空间保存，每个候选都要复制一份前缀 KV Cache；若缓存可以按 block 引用，系统就可以让多个序列指向同一批只读前缀 block，在分叉位置之后再写入各自的新 block。PagedAttention 论文正是利用类似思路降低 parallel sampling 和 beam search 中的重复缓存开销。
 
-## 6 vLLM 带来的范式变化
+vLLM 后续的 Automatic Prefix Caching 也是在 block 级别继续推进复用：系统会对已处理请求的 KV Cache block 建立缓存，并在新请求拥有相同前缀时复用这些 block。这里的复用不是无条件发生，它依赖 token 前缀一致、缓存查找命中、隔离策略允许，以及 block 尚未被回收；这些边界很重要，因为线上服务不能为了省显存牺牲正确性、安全隔离或可控性。
 
-现在可以把本章的逻辑线收束起来。
+这说明 PagedAttention 不只是**省掉一些碎片**。它真正带来的系统能力，是让 KV Cache 成为可以被细粒度分配、查找、共享、回收的资源。
 
-HF Transformers 让我们可以方便地调用模型生成文本；TGI 把模型调用推进到在线服务层，提供 Streaming、监控、Tensor Parallelism、Continuous Batching 等能力；ORCA 这类系统研究指出，生成式模型需要 iteration-level scheduling，因为请求级静态 batch 无法适应自回归、多迭代、长短不一的服务负载。
+## 6. vLLM 带来的范式变化
+
+本章的逻辑线可以收束为一条系统演进链。
+
+HF Transformers 提供了方便的模型生成调用入口；TGI 把模型调用推进到在线服务层，提供 Streaming、监控、Tensor Parallelism、Continuous Batching 等能力；ORCA 这类系统研究指出，生成式模型需要 iteration-level scheduling，因为请求级静态 batch 无法适应自回归、多迭代、长短不一的服务负载。
 
 vLLM 在这条演进线上继续向前走：它把 KV Cache 管理放到推理系统核心，用 PagedAttention 把连续大块缓存改造成按 block 管理的动态缓存。
 
@@ -264,9 +281,9 @@ vLLM 在这条演进线上继续向前走：它把 KV Cache 管理放到推理�
 
 这带来了三个重要变化。
 
-第一，推理系统从“算模型”变成“管理请求状态”。模型权重相对固定，真正持续变化的是请求、生成进度、KV Cache 和队列状态。
+第一，推理系统从**算模型**变成**管理请求状态**。模型权重相对固定，真正持续变化的是请求、生成进度、KV Cache 和队列状态。
 
-第二，显存从“静态装载空间”变成“动态调度资源”。显存不只是放模型，还要在大量请求之间分配 KV Block；分配粒度越细，系统越有机会提高并发。
+第二，显存从**静态装载空间**变成**动态调度资源**。显存不只是放模型，还要在大量请求之间分配 KV Block；分配粒度越细，系统越有机会提高并发。
 
 第三，吞吐优化不再只是 kernel 优化。Kernel 很重要，但系统吞吐还取决于 batch 如何组织、请求如何进入退出、KV Cache 如何释放复用、显存压力如何被控制。
 
@@ -282,7 +299,7 @@ vLLM 在这条演进线上继续向前走：它把 KV Cache 管理放到推理�
   -> 更高并发与更高吞吐成为可能
 ```
 
-理解到这里，“初识 vLLM”就完成了第一层目标。下一步再进入 vLLM 的具体架构时，Scheduler、KV Cache Manager、Executor、Worker 这些对象就不再是一串陌生组件名，而会自然落到一个问题上：它们各自在这条链路里承担什么系统职责。
+理解到这里，初识 vLLM 的第一层目标就已经完成。进入 vLLM 的具体架构时，Scheduler、KV Cache Manager、Executor、Worker 这些对象就不再是一串陌生组件名，而会自然落到一个问题上：它们各自在这条链路里承担什么系统职责。
 
 ## 参考资料
 
@@ -298,7 +315,7 @@ vLLM 在这条演进线上继续向前走：它把 KV Cache 管理放到推理�
 
 ### 题目
 
-1. 单选：本文为什么不把 vLLM 一开始就讲成 Scheduler、Executor、Worker 等组件集合？
+1. 单选：这一章为什么不把 vLLM 一开始就讲成 Scheduler、Executor、Worker 等组件集合？
    A. 因为这些组件已经不属于 vLLM；
    B. 因为初识阶段更重要的是理解 vLLM 为什么出现，以及它解决了什么系统矛盾；
    C. 因为 vLLM 只包含一个 PagedAttention kernel；
@@ -382,7 +399,7 @@ vLLM 在这条演进线上继续向前走：它把 KV Cache 管理放到推理�
     C. 它自动解决所有 KV Cache 预留和碎片问题；
     D. 它让 Decode 不再逐 token 推进；
 
-15. 多选：读完本文后，再继续学习 vLLM 架构时，应该重点追问哪些问题？
+15. 多选：读完这一章后，再继续学习 vLLM 架构时，应该重点追问哪些问题？
     A. Scheduler 如何决定哪些请求进入下一步；
     B. KV Cache Manager 如何分配、复用和释放 block；
     C. Executor / Worker 如何把调度结果变成模型执行；
@@ -398,9 +415,9 @@ vLLM 在这条演进线上继续向前走：它把 KV Cache 管理放到推理�
 6. **B**。生成长度不一致时，短请求可能被最长请求拖住，导致等待和资源浪费；
 7. **A**。ORCA 看到生成式推理是多迭代工作负载，因此提出以迭代为粒度调度，而不是只在请求级固定 batch；
 8. **A、B、C、D**。KV Cache 随 token 和并发增长，并占用昂贵 GPU 显存；continuous batching 让请求更频繁地进入和退出，也要求缓存能以更细粒度分配、释放和复用；
-9. **A、B**。连续预留的关键问题既包括“必须拿到一段连续空间，短请求和未知输出长度容易浪费”，也包括“按上限预留导致内部浪费和外部碎片”。C 把内存管理问题误说成 attention 公式复杂度变化；D 则把连续预留误解成 PagedAttention 的尾部 block 浪费；
+9. **A、B**。连续预留的关键问题既包括必须拿到一段连续空间，短请求和未知输出长度容易造成浪费，也包括按上限预留导致内部浪费和外部碎片。C 把内存管理问题误说成 attention 公式复杂度变化；D 则把连续预留误解成 PagedAttention 的尾部 block 浪费；
 10. **B**。PagedAttention 的核心是 block 化 KV Cache，并用 Block Table 实现逻辑连续、物理可分散；
-11. **A、B、C**。PagedAttention 改变的是内存管理和访问路径，不改变 attention 的数学定义；D 把“PagedAttention”这个名字误解成了 attention 公式优化；
+11. **A、B、C**。PagedAttention 改变的是内存管理和访问路径，不改变 attention 的数学定义；D 把 PagedAttention 这个名字误解成了 attention 公式优化；
 12. **B**。21 个 tokens 在 `block_size = 8` 时需要 `ceil(21 / 8) = 3` 个 block，前两个 block 填满，浪费主要在第三个 block 的尾部。A 是连续预留思路，C 过度细碎，D 则否定了 KV Cache 的必要性；
 13. **A、B、C**。Block 级管理使相同前缀的 KV Cache 更容易被标识和复用；D 忽略了多租户、安全隔离和 hash 设计等边界，现实系统不能为了复用而牺牲隔离；
 14. **B**。Continuous Batching 的关键是迭代级别滚动更新 batch。C 是重要陷阱：它改善调度流动性，但不等于自动解决 KV Cache 内存管理问题；
