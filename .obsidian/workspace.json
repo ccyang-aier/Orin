@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "notes/vLLM/vLLM架构与原理精讲系列/08_详解控制面通信机制.md",
+                "file": "notes/vLLM/vLLM架构与原理精讲系列/06_让调度跑在前面：异步调度.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "08_详解控制面通信机制"
+              "title": "06_让调度跑在前面：异步调度"
             }
           },
           {
@@ -49,8 +49,7 @@
               "title": "01_初识vLLM推理引擎"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -185,13 +184,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "notes/LLM/大模型与推理全栈精讲系列/02_大模型入门及其基本结构.md",
+                "file": "notes/vLLM/vLLM架构与原理精讲系列/06_让调度跑在前面：异步调度.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "02_大模型入门及其基本结构 的大纲"
+              "title": "06_让调度跑在前面：异步调度 的大纲"
             }
           },
           {
@@ -224,14 +223,14 @@
       "bases:新建数据库": false
     }
   },
-  "active": "3e72c8f6b7a67113",
+  "active": "45f0bdcb8b5fb1a1",
   "lastOpenFiles": [
-    "notes/LLM/大模型与推理全栈精讲系列/03_从语言理解本质到序列模型演进.md",
-    "notes/LLM/大模型与推理全栈精讲系列/02_大模型入门及其基本结构.md",
-    "notes/LLM/大模型与推理全栈精讲系列/01_理解GPU架构及其原理.md",
-    "notes/vLLM/vLLM架构与原理精讲系列/06_让调度跑在前面：异步调度.md",
     "notes/vLLM/vLLM架构与原理精讲系列/07_Executor、Worker 与 ModelRunner.md",
     "notes/vLLM/vLLM架构与原理精讲系列/08_详解控制面通信机制.md",
+    "notes/LLM/大模型与推理全栈精讲系列/02_大模型入门及其基本结构.md",
+    "notes/LLM/大模型与推理全栈精讲系列/03_从语言理解本质到序列模型演进.md",
+    "notes/LLM/大模型与推理全栈精讲系列/01_理解GPU架构及其原理.md",
+    "notes/vLLM/vLLM架构与原理精讲系列/06_让调度跑在前面：异步调度.md",
     "notes/vLLM/vLLM架构与原理精讲系列/imgs/07_worker_standard_flow.png",
     "notes/vLLM/vLLM架构与原理精讲系列/imgs/06_operation_level_pipeline.png",
     "notes/vLLM/vLLM架构与原理精讲系列/imgs/06_iteration_level_scheduling.png",
