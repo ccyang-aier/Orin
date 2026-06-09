@@ -7,7 +7,7 @@ tags:
 updated: 2026-06-09
 description: 从机器翻译与自回归生成问题出发，解释 Transformer 如何把 Attention 组织成完整可训练、可并行、可生成的序列架构，并连接位置编码、Encoder-Decoder、Block、训练推理与现代 LLM 主干。
 ---
-
+【批注，1）正文不要滥用中文引号，确实需要强调的概念、判断或短句，优先使用加粗；2）控制小段落中的句号密度，能顺畅连接的解释用逗号、分号或重写句式承接，避免每个短句都被句号切碎；3）教程正文避免用作者撰文的过程说明去替代教学内容，不写类似 `接下来会`、`本文将` 这类让读者关心写作安排的句式；需要引导时直接写稳定的学习路径、对象关系或机制递进；4）避免段落用大量并列短句+分号的方式去呈现 全文排查】
 # 05 Transformer 架构及原理
 
 > [!Quote] 本篇导读
@@ -18,13 +18,11 @@ description: 从机器翻译与自回归生成问题出发，解释 Transformer 
 > 目标：I like the autumn in Beijing
 > ```
 >
-> 模型要做的事情并不只是“看见每个词”。它要知道“北京”在“秋天”之前出现，但目标句里可能要把地点放到后面；它要在生成 “Beijing” 时回到源句中查询“北京”；它还要保证生成目标句时不能提前偷看未来答案。
+> 如果让大模型来完成这个任务，它要做的事情并不只是“看见每个词”，它要知道“北京”在“秋天”之前出现，但目标句里可能要把地点放到后面；它要在生成 “Beijing” 时回到源句中查询“北京”；它还要保证生成目标句时不能提前偷看未来答案。
 >
-> Attention 已经让序列中的位置可以彼此取回信息，但如果只有 Attention，仍然缺少顺序、深层非线性变换、稳定堆叠和生成边界。Transformer 的真正价值，是把 Attention 放进一套完整网络骨架里，让它既能并行训练，又能按自回归方式一步步生成。
+> Attention 已经让序列中的位置可以彼此取回信息，但如果只有 Attention，仍然缺少顺序、深层非线性变换、稳定堆叠和生成边界。而Transformer 的真正价值，是把 Attention 放进一套完整网络骨架里，让它既能并行训练，又能按自回归方式一步步生成。
 
-上一篇 [[04_深入理解Attention机制|04 深入理解 Attention 机制]] 已经解释了 Q/K/V、Scaled Dot-Product Attention、mask 和 Multi-Head Attention。本文不重新推导 Attention 公式，而是回答一个更架构化的问题：
-
-**怎样把 Attention 组织成一个可训练、可扩展、可用于真实序列任务的模型？**
+在上一篇我们已经解释了 Q/K/V、Scaled Dot-Product Attention、mask 和 Multi-Head Attention等，本文我们将基于Attention机制，趁热打铁，回答一个更架构化的问题：**怎样把 Attention 组织成一个可训练、可扩展、可用于真实序列任务的模型？**
 
 ## 1. 从生成问题进入 Transformer
 
@@ -65,11 +63,9 @@ Transformer 的设计，就是逐一把这些约束变成结构：
 
 图里的 Encoder 与 Decoder 都会重复堆叠 $N$ 层。原始 Transformer Base 使用 $N=6$、$d_{\text{model}}=512$、$h=8$ 个 attention heads。现代 LLM 的层数、宽度和 head 数都会大很多，但许多核心问题仍然可以从这张图里找到源头：位置如何进入模型、每层如何路由和改写信息、Decoder 为什么要 mask、Cross-Attention 为什么能把源句信息带入生成过程。
 
-接下来先处理最基础但也最容易被低估的问题：如果 Attention 本身只看内容相似度，它怎样知道 token 的顺序？
-
 ## 2. 位置编码与顺序感
 
-### 2.1 Attention 为什么天然位置盲
+### 2.1 Attention 的缺陷
 
 Self-Attention 的输入如果只有词向量，那么它天然不知道 token 的绝对位置。
 

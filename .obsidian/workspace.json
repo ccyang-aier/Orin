@@ -27,12 +27,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "notes/LLM/大模型与推理全栈精讲系列/02_大模型入门及其基本结构.md",
+                "file": "notes/LLM/大模型与推理全栈精讲系列/03_从语言理解本质到序列模型演进.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "02_大模型入门及其基本结构"
+              "title": "03_从语言理解本质到序列模型演进"
             }
           },
           {
@@ -41,12 +41,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "notes/LLM/大模型与推理全栈精讲系列/03_从语言理解本质到序列模型演进.md",
+                "file": "notes/LLM/大模型与推理全栈精讲系列/04_深入理解Attention机制.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "03_从语言理解本质到序列模型演进"
+              "title": "04_深入理解Attention机制"
             }
           },
           {
@@ -240,9 +240,10 @@
   },
   "active": "4ff1f8f04a11f647",
   "lastOpenFiles": [
-    "notes/LLM/大模型与推理全栈精讲系列/04_深入理解Attention机制.md",
     "notes/LLM/大模型与推理全栈精讲系列/03_从语言理解本质到序列模型演进.md",
     "notes/LLM/大模型与推理全栈精讲系列/02_大模型入门及其基本结构.md",
+    "notes/LLM/大模型与推理全栈精讲系列/05_Transformer架构及原理.md",
+    "notes/LLM/大模型与推理全栈精讲系列/04_深入理解Attention机制.md",
     "notes/vLLM/01_初识vLLM推理引擎.md",
     "notes/vLLM/vLLM架构与原理精讲系列/06_让调度跑在前面：异步调度.md",
     "notes/vLLM/vLLM架构与原理精讲系列/07_Executor、Worker 与 ModelRunner.md",
@@ -269,7 +270,6 @@
     "notes/LLM/大模型与推理全栈精讲系列/01_从CNN、RNN到Attention（废弃）.md",
     "notes/LLM/大模型与推理全栈精讲系列/02_大模型基础速通.md",
     "notes/LLM/大模型与推理全栈精讲系列/03_深入理解Attention机制.md",
-    "notes/LLM/大模型与推理全栈精讲系列/05_Transformer架构及原理.md",
     "notes/LLM/大模型与推理全栈精讲系列/06_深入理解分布式推理：TP.md",
     "notes/LLM/大模型与推理全栈精讲系列/07_深入理解分布式推理：DP.md",
     "notes/LLM/大模型与推理全栈精讲系列/08_深入理解分布式推理：PP.md",
