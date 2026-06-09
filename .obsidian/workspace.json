@@ -41,12 +41,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "notes/LLM/大模型与推理全栈精讲系列/07_深入理解分布式推理：DP.md",
+                "file": "notes/LLM/大模型与推理全栈精讲系列/08_深入理解分布式推理：PP.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "07_深入理解分布式推理：DP"
+              "title": "08_深入理解分布式推理：PP"
             }
           },
           {
@@ -241,8 +241,8 @@
   "active": "4ff1f8f04a11f647",
   "lastOpenFiles": [
     "notes/LLM/大模型与推理全栈精讲系列/08_深入理解分布式推理：PP.md",
-    "notes/LLM/大模型与推理全栈精讲系列/09_深入理解分布式推理：EP.md",
     "notes/LLM/大模型与推理全栈精讲系列/07_深入理解分布式推理：DP.md",
+    "notes/LLM/大模型与推理全栈精讲系列/09_深入理解分布式推理：EP.md",
     "notes/LLM/大模型与推理全栈精讲系列/04_深入理解Attention机制.md",
     "notes/LLM/大模型与推理全栈精讲系列/06_深入理解分布式推理：TP.md",
     "notes/LLM/大模型与推理全栈精讲系列/05_Transformer架构及原理.md",
