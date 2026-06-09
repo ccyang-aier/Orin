@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "notes/vLLM/vLLM架构与原理精讲系列/04_显存管理的艺术，KVCacheManager架构与原理剖析.md",
+                "file": "notes/vLLM/vLLM架构与原理精讲系列/05_调度即吞吐：vLLM Scheduler 的核心架构与底层原理.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "04_显存管理的艺术，KVCacheManager架构与原理剖析"
+              "title": "05_调度即吞吐：vLLM Scheduler 的核心架构与底层原理"
             }
           },
           {
@@ -27,12 +27,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "notes/vLLM/vLLM架构与原理精讲系列/03_vLLM引擎架构总览.md",
+                "file": "notes/vLLM/vLLM架构与原理精讲系列/04_显存管理的艺术，KVCacheManager架构与原理剖析.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "03_vLLM引擎架构总览"
+              "title": "04_显存管理的艺术，KVCacheManager架构与原理剖析"
             }
           },
           {
@@ -198,13 +198,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "notes/vLLM/vLLM架构与原理精讲系列/04_显存管理的艺术，KVCacheManager架构与原理剖析.md",
+                "file": "notes/vLLM/vLLM架构与原理精讲系列/05_调度即吞吐：vLLM Scheduler 的核心架构与底层原理.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "04_显存管理的艺术，KVCacheManager架构与原理剖析 的大纲"
+              "title": "05_调度即吞吐：vLLM Scheduler 的核心架构与底层原理 的大纲"
             }
           },
           {
@@ -239,13 +239,15 @@
   },
   "active": "45f0bdcb8b5fb1a1",
   "lastOpenFiles": [
-    "notes/vLLM/vLLM架构与原理精讲系列/03_vLLM引擎架构总览.md",
+    "notes/vLLM/vLLM架构与原理精讲系列/imgs/04_attention_modes_kv_challenges.png",
+    "notes/vLLM/vLLM架构与原理精讲系列/imgs/04_memory_waste_patterns.png",
+    "notes/vLLM/vLLM架构与原理精讲系列/06_让调度跑在前面：异步调度.md",
+    "notes/vLLM/vLLM架构与原理精讲系列/07_Executor、Worker 与 ModelRunner 的协同执行与通信机制.md",
+    "notes/vLLM/vLLM架构与原理精讲系列/05_调度即吞吐：vLLM Scheduler 的核心架构与底层原理.md",
     "notes/vLLM/vLLM架构与原理精讲系列/04_显存管理的艺术，KVCacheManager架构与原理剖析.md",
+    "notes/vLLM/vLLM架构与原理精讲系列/03_vLLM引擎架构总览.md",
     "AGENTS.md",
     "notes/vLLM/vLLM架构与原理精讲系列/08_vLLM 控制面通信机制：从 EngineCoreClient 到 Executor RPC.md",
-    "notes/vLLM/vLLM架构与原理精讲系列/07_Executor、Worker 与 ModelRunner 的协同执行与通信机制.md",
-    "notes/vLLM/vLLM架构与原理精讲系列/06_让调度跑在前面：异步调度.md",
-    "notes/vLLM/vLLM架构与原理精讲系列/05_调度即吞吐：vLLM Scheduler 的核心架构与底层原理.md",
     "notes/vLLM/vLLM架构与原理精讲系列/02_初识vLLM推理引擎.md",
     "notes/vLLM/01_初识vLLM推理引擎.md",
     "notes/vLLM/vLLM架构与原理精讲系列/imgs/Pasted image 20260329220653.png",
@@ -262,7 +264,6 @@
     "notes/vLLM/vLLM架构与原理精讲系列/imgs/01_bottleneck_shifts.png",
     "notes/LLM/大模型与推理全栈精讲系列/_03_编排分析报告.md",
     "notes/LLM/大模型与推理全栈精讲系列/imgs/llm-inference-state-objects-kv-cache-handdrawn-cn.png",
-    "notes/LLM/大模型与推理全栈精讲系列/imgs/llm-training-inference-two-flows-handdrawn-cn.png",
     "notes/LLM/大模型与推理全栈精讲系列/03_从语言理解本质到序列模型演进.md",
     "notes/LLM/大模型与推理全栈精讲系列/01_从CNN、RNN到Attention（废弃）.md",
     "notes/LLM/大模型与推理全栈精讲系列/02_大模型基础速通.md",
@@ -274,7 +275,6 @@
     "notes/LLM/大模型与推理全栈精讲系列/08_深入理解分布式推理：PP.md",
     "notes/LLM/大模型与推理全栈精讲系列/09_深入理解分布式推理：EP.md",
     "notes/LLM/大模型与推理全栈精讲系列/10_深入理解分布式推理：CP.md",
-    "notes/LLM/大模型与推理全栈精讲系列/04_Transformer架构及原理.md",
     "notes/LLM/大模型与推理全栈精讲系列/04_Transformer架构及原理.md.tmp.9232.bae8588111b3",
     "notes/LLM/大模型与推理全栈精讲系列/03_深入理解Attention机制.md.tmp.50112.c6e37dfddc40",
     "notes/LLM/大模型与推理全栈精讲系列/03_深入理解Attention机制.md.tmp.50112.77cc8d4dee2d",

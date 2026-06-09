@@ -8,20 +8,26 @@ tags:
 updated: 2026-05-28
 description: 本文基于本地 vLLM V1 源码快照，解释 Scheduler 如何把请求队列、token budget、KV Cache、状态流转与抢占机制组织成高吞吐推理系统。
 ---
-【批注，1）正文不要滥用中文引号，确实需要强调的概念、判断或短句，优先使用加粗；2）控制小段落中的句号密度，能顺畅连接的解释用逗号、分号或重写句式承接，避免每个短句都被句号切碎；3）教程正文避免用作者撰文的过程说明去替代教学内容，不写类似 `接下来会`、`本文将` 这类让读者关心写作安排的句式；需要引导时直接写稳定的学习路径、对象关系或机制递进； 全文排查】
+【批注，1）正文不要滥用中文引号，确实需要强调的概念、判断或短句，优先使用加粗；2）控制小段落中的句号密度，能顺畅连接的解释用逗号、分号或重写句式承接，避免每个短句都被句号切碎；3）教程正文避免用作者撰文的过程说明去替代教学内容，不写类似 `接下来会`、`本文将` 这类让读者关心写作安排的句式；需要引导时直接写稳定的学习路径、对象关系或机制递进；4）避免段落用大量并列短句+分号的方式去呈现 全文排查】
 # 05 调度即吞吐：vLLM Scheduler 的核心架构与底层原理
 
-前两章已经把 vLLM V1 的整体地图和 KVCacheManager 的运行时账本讲清楚了：EngineCore 维护引擎内循环，KVCacheManager 负责把动态增长的 token 序列落到 KV Block 上，Worker/GPU 负责真正执行模型。这一章继续往下走，进入另一个决定 vLLM 性能上限的核心组件：`Scheduler`。
+前面几章我们已经把 vLLM V1 的整体架构和 KVCacheManager 的运行逻辑讲清楚了：EngineCore 维护引擎内循环，KVCacheManager 负责把动态增长的 token 序列落到 KV Block 上，Worker/GPU 负责真正执行模型。这一章我们继续深入，去分析另一个决定 vLLM 性能上限的核心组件：`Scheduler`。
 
-理解 Scheduler 时，很容易掉进源码细节：打开 `scheduler.py`，从 `__init__()` 开始一路读到 `schedule()`、`update_from_output()`、`_preempt_request()`。这种方式能看到很多实现细节，却不一定能建立正确心智模型。本章不会做逐行源码分析，而是基于源码抽象出一个更稳定的问题：**在显存有限、请求动态到达、Prefill 与 Decode 混杂、输出长度未知的服务系统里，vLLM 如何决定每一步让哪些请求前进多少 token**。
+Scheduler 的源码逻辑很复杂，它的核心代码在 `scheduler.py`，从 `__init__()` 开始可以一路读到 `schedule()`、`update_from_output()`、`_preempt_request()` 等等，vLLM 对调度器的优化可谓下足了功夫，但今天我们不会做逐行的源码分析，而是基于源码先抽象出一个现实的问题：**在显存有限、请求动态到达、Prefill 与 Decode 混杂、输出长度未知的服务系统里，vLLM 是如何决定每一步让哪些请求前进多少 token的？**。
 
-本文以 `code/opensource/vllm` 的本地源码快照为依据，源码分支为 `main`，短提交哈希为 `52a31ccec`。本地快照已经处于 vLLM V1 路径，主要关注 `vllm/v1/core/sched/scheduler.py`、`vllm/v1/core/sched/async_scheduler.py`、`vllm/v1/core/kv_cache_manager.py`、`vllm/v1/engine/core.py` 和 `vllm/config/scheduler.py`。vLLM Scheduler 仍在快速演进，尤其是异步调度、spec decode、KV connector、Model Runner V2 与 Pipeline Parallel 的组合，因此复查时应优先确认当前源码和 release notes。
+【批注，加一个过渡（说明为什么这个问题很重要），】
+
+【批注，删除下段】
+本文以 `code/opensource/vllm` 的本地源码快照为依据，源码分支为 `main`，短提交哈希为 `52a31ccec`。本地快照已经处于 vLLM V1 路径，主要关注 `vllm/v1/core/sched/scheduler.py`、`vllm/v1/core/sched/async_scheduler.py`、`vllm/v1/core/kv_cache_manager.py`、`vllm/v1/engine/core.py` 和 `vllm/config/scheduler.py`。
+
+时至今日，vLLM Scheduler 仍在快速演进，比如最近几个版本更推出的稳定版异步调度、比如调度器还需要考虑适配spec decode、KV connector、Model Runner V2等，xx 【批注，优化该段落】
 
 ![Scheduler 是吞吐指挥系统](imgs/05_scheduler_state_hub.png)
 
+【批注，这段话对这张图的讲解太少，不够全面深入，更详细展开，帮助读者先建立一个全局认知】
 先抓住一个判断：Scheduler 不是“把请求排个队”的薄层组件。它实际上是 EngineCore 内部的吞吐指挥系统。它每一步都要同时回答五个问题：哪些 running 请求应该继续推进；哪些 waiting 请求可以被接纳；每个请求本轮能分到多少 token budget；KV Cache 是否还有足够 block；如果空间不够，应该让谁让出运行位置。
 
-## 1. Scheduler 为什么决定吞吐
+## 1. Scheduler为什么决定吞吐
 
 LLM 推理服务的吞吐不是只由 GPU 算力决定。GPU 确实负责执行 attention、MLP、sampling 等计算，但 GPU 每一步吃到什么样的 batch，是由 Scheduler 决定的。一个好的调度器会尽量让 GPU 保持忙碌，同时避免把显存占满到无法接纳新请求；一个差的调度器则会让 GPU 在 Prefill 与 Decode 的不均衡之间反复等待。
 
