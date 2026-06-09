@@ -4,10 +4,9 @@ tags:
   - transformer
   - attention
   - model-architecture
-updated: 2026-06-09
+updated: 2026-06-10
 description: 从机器翻译与自回归生成问题出发，解释 Transformer 如何把 Attention 组织成完整可训练、可并行、可生成的序列架构，并连接位置编码、Encoder-Decoder、Block、训练推理与现代 LLM 主干。
 ---
-【批注，1）正文不要滥用中文引号，确实需要强调的概念、判断或短句，优先使用加粗；2）控制小段落中的句号密度，能顺畅连接的解释用逗号、分号或重写句式承接，避免每个短句都被句号切碎；3）教程正文避免用作者撰文的过程说明去替代教学内容，不写类似 `接下来会`、`本文将` 这类让读者关心写作安排的句式；需要引导时直接写稳定的学习路径、对象关系或机制递进；4）避免段落用大量并列短句+分号的方式去呈现 全文排查】
 # 05 Transformer 架构及原理
 
 > [!Quote] 本篇导读
@@ -18,21 +17,21 @@ description: 从机器翻译与自回归生成问题出发，解释 Transformer 
 > 目标：I like the autumn in Beijing
 > ```
 >
-> 如果让大模型来完成这个任务，它要做的事情并不只是“看见每个词”，它要知道“北京”在“秋天”之前出现，但目标句里可能要把地点放到后面；它要在生成 “Beijing” 时回到源句中查询“北京”；它还要保证生成目标句时不能提前偷看未来答案。
+> 如果让大模型完成这个任务，任务不只是识别每个词，它要知道北京在秋天之前出现，但目标句里地点可能被放到后面；生成 Beijing 时，它要回到源句查询北京对应的信息，还要保证目标端生成时不能提前看到未来答案。
 >
-> Attention 已经让序列中的位置可以彼此取回信息，但如果只有 Attention，仍然缺少顺序、深层非线性变换、稳定堆叠和生成边界。而Transformer 的真正价值，是把 Attention 放进一套完整网络骨架里，让它既能并行训练，又能按自回归方式一步步生成。
+> Attention 已经让序列中的位置可以彼此取回信息，但如果只有 Attention，仍然缺少顺序、深层非线性变换、稳定堆叠和生成边界。Transformer 的真正价值，是把 Attention 放进一套完整网络骨架里，让它既能并行训练，又能按自回归方式一步步生成。
 
-在上一篇我们已经解释了 Q/K/V、Scaled Dot-Product Attention、mask 和 Multi-Head Attention等，本文我们将基于Attention机制，趁热打铁，回答一个更架构化的问题：**怎样把 Attention 组织成一个可训练、可扩展、可用于真实序列任务的模型？**
+上一篇已经解释 Q/K/V、Scaled Dot-Product Attention、mask 和 Multi-Head Attention，本章的问题更偏架构层：**怎样把 Attention 组织成一个可训练、可扩展、可用于真实序列任务的模型？**
 
 ## 1. 从生成问题进入 Transformer
 
 ### 1.1 Attention 之后还缺什么
 
-Attention 解决的是“当前位置应该从哪些上下文位置取回信息”这个问题。相比 RNN 的链式传递，它让任意两个位置可以在一层内直接交互，也更容易被组织成大矩阵计算。
+Attention 解决的是**当前位置应该从哪些上下文位置取回信息**这个问题。相比 RNN 的链式传递，它让任意两个位置可以在一层内直接交互，也更容易被组织成大矩阵计算。
 
-但一套完整序列模型不能只会“取信息”。如果让裸 Attention 独立承担机器翻译或语言建模任务，会立刻遇到几个约束：
+但一套完整序列模型不能只有**取信息**能力。如果让裸 Attention 独立承担机器翻译或语言建模任务，会立刻遇到几个约束：
 
-1. 语言有顺序。同样是“猫 / 吃 / 鱼”，换成“鱼 / 吃 / 猫”，词集合没有变，语义已经完全反转；
+1. 语言有顺序。同样是猫 / 吃 / 鱼，换成鱼 / 吃 / 猫，词集合没有变，语义已经完全反转；
 2. 位置之间交换信息之后，每个 token 还需要在自己的表示内部继续加工。Attention 更像信息路由，不能替代逐 token 的非线性改写；
 3. 模型要堆很多层。层数一深，梯度路径、数值尺度和信息保留都会变成训练问题；
 4. 训练和生成的信息边界不同。训练时可以一次看到目标句的所有 token，但预测第 $t$ 个 token 时不能使用未来答案；
@@ -48,7 +47,7 @@ Transformer 的设计，就是逐一把这些约束变成结构：
 | 生成时如何避免偷看未来 | Causal Mask / Masked Self-Attention |
 | 翻译时如何查询源句 | Cross-Attention |
 
-这样看，Transformer 不是“Attention 的另一个名字”，而是 Attention 周围的一套完整工程骨架。
+这样看，Transformer 不是 **Attention 的别名**，而是 Attention 周围的一套完整工程骨架。
 
 ### 1.2 原始 Encoder-Decoder 的设计答案
 
@@ -99,9 +98,9 @@ $$
 PE_{(pos,2i+1)} = \cos\left(\frac{pos}{10000^{2i/d_{\text{model}}}}\right)
 $$
 
-直观上，它为每个位置生成一组不同频率的波形信号：低频维度变化慢，适合表达长距离；高频维度变化快，适合表达局部位置差异。这样一来，词向量不再只是“猫”“吃”“鱼”的内容向量，而是内容向量叠加了“我位于第几个位置”的顺序信号。
+直观上，它为每个位置生成一组不同频率的波形信号：低频维度变化慢，适合表达长距离；高频维度变化快，适合表达局部位置差异。这样一来，词向量不再只是猫、吃、鱼的内容向量，而是内容向量叠加了当前位置的顺序信号。
 
-![正弦位置编码心智模型|900](imgs/transformer-positional-encoding-handdrawn-cn.png)
+![正弦位置编码直观模型|900](imgs/transformer-positional-encoding-handdrawn-cn.png)
 
 为什么不直接给每个位置加一个整数编号？因为标量编号与高维词向量不在同一表示空间，大位置值也可能带来尺度问题。正弦位置编码更有价值的一点，是它给模型留下了学习相对距离的机会。
 
@@ -123,13 +122,13 @@ $$
 \end{pmatrix}
 $$
 
-这意味着相隔 $k$ 的两个位置，在每个二维正弦/余弦子空间里存在固定旋转关系。它不是只记住“第几个位置”，而是在高维空间中编码多尺度的顺序变化。
+这意味着相隔 $k$ 的两个位置，在每个二维正弦/余弦子空间里存在固定旋转关系。它不是只记住绝对编号，而是在高维空间中编码多尺度的顺序变化。
 
 ### 2.3 RoPE 与现代位置策略
 
 原始 Transformer 把绝对位置向量加进输入表示。后来的模型逐渐把位置策略放到更接近 Attention score 的地方，尤其是在长上下文和自回归生成场景中。
 
-常见方案可以按“位置放在哪里”来理解：
+常见方案可以按**位置放在哪里**来理解：
 
 | 方案 | 位置进入的位置 | 核心直觉 | 常见代表 |
 | --- | --- | --- | --- |
@@ -147,13 +146,13 @@ $$
 \langle R_m q, R_n k \rangle
 $$
 
-由于旋转矩阵之间可以组合，这个点积可以改写成只依赖相对位移 $m-n$ 的形式。直觉上，RoPE 让“当前位置要查询另一个位置”这件事，从一开始就带着相对距离信息，而不是把顺序信号先混进 embedding 再等待模型自己学出来。
+由于旋转矩阵之间可以组合，这个点积可以改写成只依赖相对位移 $m-n$ 的形式。直觉上，RoPE 让当前位置查询另一个位置这件事，从一开始就带着相对距离信息，而不是把顺序信号先混进 embedding 再等待模型自己学出来。
 
 ![RoPE 相对位置机制|900](imgs/transformer-rope-relative-position-handdrawn-cn.png)
 
 图里可以看到，RoPE 的位置感不在 Value 里，也不在单独的绝对位置表里，而在 Q/K 的几何关系里。两个位置分别旋转之后，attention score 会自然感知它们的相对偏移。
 
-ALiBi 则走另一条路线：它不旋转 Q/K，而是给 attention score 加一个随距离增长的线性惩罚。越远的位置分数越容易被压低，从而给模型一种“距离越远越要谨慎使用”的归纳偏置。
+ALiBi 则走另一条路线：它不旋转 Q/K，而是给 attention score 加一个随距离增长的线性惩罚，越远的位置分数越容易被压低，从而给模型一种距离敏感的归纳偏置。
 
 这些方案的共同目标，都是补上 Attention 的位置盲；区别在于，它们把顺序信号放进输入表示、注意力分数，还是 Q/K 的几何关系里。
 
@@ -169,7 +168,7 @@ Encoder 的任务，是把源序列编码成一组上下文化表示。每个输
 我 喜欢 北京 的 秋天
 ```
 
-经过多层 Encoder 后，“北京”的表示不只是一个地点名，还会携带它被“喜欢”关联、与“秋天”构成地点和季节关系、处于整句语义中心等上下文信息。
+经过多层 Encoder 后，北京的表示不只是一个地点名，还会携带它被喜欢关联、与秋天构成地点和季节关系、处于整句语义中心等上下文信息。
 
 Encoder 中的 Self-Attention 通常是双向的。也就是说，每个真实 token 都可以看见同一句子里的其他真实 token：
 
@@ -194,7 +193,7 @@ $$
 2. FFN 对每个 token 独立做非线性改写；
 3. Residual 和 LayerNorm 保留原始路径并稳定数值尺度；
 
-这里要注意一个常见误解：Encoder 不是“只做理解，不做计算”。它同样有多层 Attention、FFN、残差和归一化；所谓“理解型”，主要指它的信息边界是双向可见，更适合分类、抽取、向量表征等需要完整输入上下文的任务。
+这里要注意一个常见偏差：Encoder 不是**只做理解而不做计算**，它同样有多层 Attention、FFN、残差和归一化；所谓**理解型**，主要指它的信息边界是双向可见，更适合分类、抽取、向量表征等需要完整输入上下文的任务。
 
 Encoder 处理完源句后，得到的不是一个单一向量，而是一组 memory。Decoder 生成目标句时，会通过 Cross-Attention 查询这组 memory。
 
@@ -249,7 +248,7 @@ $$
 
 直觉上，Decoder 当前要生成一个目标词，于是向源句编码结果发出查询。源句中哪些位置与当前生成最相关，就从那些位置取回信息。
 
-回到翻译例子，当 Decoder 准备生成 “Beijing” 时，当前状态会形成 Query，Encoder memory 中“北京”的 Key/Value 会提供强相关信号，“秋天”也可能提供语义辅助。Cross-Attention 不是复制源句 token，而是在目标生成过程中持续查询源句信息。
+回到翻译例子，当 Decoder 准备生成 Beijing 时，当前状态会形成 Query，Encoder memory 中北京的 Key/Value 会提供强相关信号，秋天也可能提供语义辅助。Cross-Attention 不是复制源句 token，而是在目标生成过程中持续查询源句信息。
 
 ### 4.3 Encoder-Decoder 的完整数据流
 
@@ -264,36 +263,27 @@ $$
 
 这就是 Encoder-Decoder Transformer 的主线：**源句双向理解，目标句自回归生成，二者通过 Cross-Attention 连接。**
 
-## 5. Transformer Block：路由、改写与稳定
+## 5. Transformer Block：一次表示更新如何完成
 
-【批注，缺少过渡】
-【批注，5.1、5.2、5.3合并】
+前面已经把 Encoder-Decoder 的数据流连起来：源句被编码成 memory，目标端在 causal mask 约束下生成，并通过 Cross-Attention 查询源句。Block 视角回答的是更细的一层问题：每一层如何把输入表示更新成更有用的表示，并且在堆叠很多层后仍然稳定可训练。
 
-### 5.1 Attention 与 FFN 的分工
+无论处在 Encoder 还是 Decoder，一个 Transformer block 都围绕同一套循环展开：
 
-一层 Transformer block 可以看成两种变换交替：
+1. Attention 负责跨 token 的信息路由；
+2. FFN 负责逐 token 的非线性改写；
+3. Residual Connection 与 LayerNorm / RMSNorm 负责保留主路径并稳定数值尺度；
 
-- 跨 token 的信息路由：Attention；
-- 单 token 的非线性改写：FFN；
-
-Attention 完成的是加权求和：它决定从哪些 token 取信息，再按权重把 Value 混进来。但这个过程本质上仍是加权混合，单个 token 内部的表示还需要更强的非线性变换。
-
-原始 Transformer 使用 Position-wise FFN：
+Attention 完成的是加权求和：它决定从哪些 token 取信息，再按权重把 Value 混进来。这个过程本质上仍是跨位置的信息混合，单个 token 内部的表示还需要更强的非线性加工。原始 Transformer 使用 Position-wise FFN：
 
 $$
 \operatorname{FFN}(x) = \max(0, xW_1 + b_1)W_2 + b_2
 $$
 
-它对每个 token 独立应用同一套两层 MLP。也就是说：
-
-1. Attention 在 token 之间交换信息；
-2. FFN 在每个 token 内部进行非线性变换；
+它对每个 token 独立应用同一套两层 MLP，Attention 在 token 之间交换信息，FFN 则在每个 token 内部进行非线性变换。
 
 ![Transformer Block 内部结构|900](imgs/transformer-block-residual-ffn-handdrawn-cn.png)
 
-很多人初学 Transformer 时只盯着 Attention，但在实际参数量中，FFN 往往占据很大比例。现代 LLM 中，FFN 通常进一步演化为 SwiGLU、GeGLU 或 MoE FFN，用来提升容量与训练效率。
-
-### 5.2 残差和归一化为什么重要
+FFN 不是 Attention 后面的轻量附属层。在实际参数量中，FFN 往往占据很大比例；现代 LLM 中，FFN 还会进一步演化为 SwiGLU、GeGLU 或 MoE FFN，用来提升容量与训练效率。
 
 如果 Transformer 只有 Attention 和 FFN，层数一深就会遇到训练稳定性问题。残差连接把子层输入直接加到子层输出上：
 
@@ -301,15 +291,9 @@ $$
 y = x + F(x)
 $$
 
-这有两层意义。
+这条残差路径有两层价值：一是给信息和梯度提供更短路径，即使某个子层暂时学得不好，模型也能通过近似恒等映射保留原始表示；二是让每个子层更像在原表示上做增量修正，而不是每层都必须从头重写全部表示。
 
-第一，它给信息和梯度提供更短路径。即使某个子层暂时学得不好，模型也能通过近似恒等映射保留原始表示。
-
-第二，它让每个子层更像“在原表示上做增量修正”，而不是每层都必须从头重写全部表示。这种增量式更新对深层网络非常重要。
-
-LayerNorm 则负责控制数值尺度。Attention、FFN、残差相加都会改变激活分布，如果没有归一化，层与层之间的尺度可能越来越难优化。LayerNorm 让每个位置的表示在特征维度上被标准化，从而降低训练难度。
-
-### 5.3 Post-LN、Pre-LN 与现代变体
+LayerNorm 负责控制数值尺度。Attention、FFN、残差相加都会改变激活分布，如果没有归一化，层与层之间的尺度可能越来越难优化；LayerNorm 让每个位置的表示在特征维度上被标准化，从而降低训练难度。
 
 原始 Transformer 使用的结构常被称为 Post-LN：
 
@@ -325,37 +309,19 @@ $$
 
 Pre-LN 通常更利于训练非常深的 Transformer，因为残差主路径上的梯度更稳定。原始论文的 Post-LN 是理解历史架构的起点；现代 LLM 文档和代码里常见的 Pre-LN、RMSNorm、SwiGLU、MoE 等，是这套 block 结构在规模化训练之后的演化。
 
-把这一节压缩成一句话：
+**Attention 负责决定信息从哪里来，FFN 负责决定每个 token 如何被改写，Residual 与 LayerNorm / RMSNorm 负责让深层堆叠保持可训练。**
 
-**Attention 负责“从哪里取信息”，FFN 负责“如何改写自己”，Residual 和 LayerNorm 负责“深层堆叠时还能稳定学习”。**
+## 6. Transformer 的训练、推理与计算代价
 
-## 6. Transformer的训练、推理与计算代价
-
-【批注，重构内容编排，内容太碎了！！就像6.2、6.3、6.4这种，就几十个字，值当单独一个小节吗？？？】
-
-### 6.1 训练为什么可以并行
-
-Transformer 训练时通常已知整段输入和目标序列。以翻译为例，目标序列会右移一位作为 Decoder 输入；causal mask 会屏蔽未来位置，但所有位置仍然可以在一次矩阵计算中并行处理。
+Transformer 的运行方式要同时区分训练和推理。训练阶段通常已知整段输入和目标序列，以翻译为例，目标序列会右移一位作为 Decoder 输入；causal mask 会屏蔽未来位置，但所有位置仍然可以在一次矩阵计算中并行处理。
 
 ![Transformer 训练与推理数据流|900](imgs/transformer-training-inference-flow-handdrawn-cn.png)
 
 这就是 Teacher Forcing 下的并行训练：模型在第 $t$ 个位置使用真实前缀作为输入，预测真实的下一个 token。它不需要等自己先生成 $y_1$，再生成 $y_2$，因为训练样本已经提供了完整目标序列。
 
-### 6.2 推理为什么仍要逐 token
+推理阶段的目标序列未知，模型只能自回归推进。它先接收 prompt 或已生成前缀，再预测下一个 token 的分布。采样或选择 token 后，新 token 会被追加到上下文中继续生成。训练可以并行预测所有位置，是因为正确前缀已知；而推理必须串行推进，是因为下一步输入依赖上一步生成结果。
 
-推理时目标序列未知，模型只能一步一步生成：
-
-1. 输入 prompt 或已生成前缀；
-2. 模型预测下一个 token 的分布；
-3. 采样或选择一个 token；
-4. 把新 token 追加到上下文；
-5. 重复直到结束；
-
-这就是自回归生成。训练可以并行预测所有位置，是因为正确前缀已知；推理必须串行推进，是因为下一步输入依赖上一步生成结果。
-
-KV cache 可以避免每一步重复计算所有历史 token 的 Key/Value。它不改变自回归依赖，但显著降低每步的重复计算。进入真实推理系统后，KV cache 会进一步牵涉显存容量、显存带宽、batch 调度和并行切分，这也是后续分布式推理章节会反复讨论的主题。
-
-### 6.3 单层 Transformer 的成本地图
+KV cache 可以避免每一步重复计算所有历史 token 的 Key/Value。它不改变自回归依赖，但显著降低每步的重复计算；进入真实推理系统后，KV cache 会进一步牵涉显存容量、显存带宽、batch 调度和并行切分，这也是后续分布式推理章节会反复讨论的主题。
 
 设序列长度为 $n$，模型维度为 $d$，单层 Transformer 的主要成本可以粗略理解为：
 
@@ -366,13 +332,11 @@ KV cache 可以避免每一步重复计算所有历史 token 的 Key/Value。它
 | FFN | $O(ndd_{\text{ff}})$ | 通常 $d_{\text{ff}}$ 是 $d$ 的数倍 |
 | 输出投影 | $O(nd^2)$ | 多头结果投回模型维度 |
 
-当 $n$ 较短而 $d$ 很大时，FFN 和线性投影可能占据大量计算；当上下文变长时，$n^2$ 的 Attention 成本会迅速凸显。理解 Transformer 的代价，不能只记“Attention 是 $O(n^2)$”，还要看当前阶段是训练、prefill 还是 decode。
+当 $n$ 较短而 $d$ 很大时，FFN 和线性投影可能占据大量计算；当上下文变长时，$n^2$ 的 Attention 成本会迅速凸显。理解 Transformer 的代价，不能只记住 **Attention 是 $O(n^2)$**，还要看当前阶段是训练、prefill 还是 decode。
 
 这张表更接近训练或 prefill 阶段的全序列计算。进入 decode 阶段后，如果使用 KV cache，历史 token 的 K/V 会被缓存；单步主要计算当前 token 的 Q/K/V、输出投影和 FFN，把当前 K/V 写入 cache，并对长度为 $t$ 的历史 K/V 做 $O(td)$ 级别的注意力读取。
 
-### 6.4 工程上要分清三个瓶颈
-
-Transformer 的工程瓶颈通常不是一个词能概括的。
+Transformer 的工程瓶颈通常不是一个词能概括的，需要同时分清计算量、显存容量、显存带宽与 IO：
 
 | 瓶颈 | 常见位置 | 典型优化 |
 | --- | --- | --- |
@@ -382,11 +346,9 @@ Transformer 的工程瓶颈通常不是一个词能概括的。
 
 因此，理解 Transformer 架构不能只停留在公式层面。公式告诉你数学等价关系，工程实现还要关心数据布局、缓存复用、并行通信和硬件带宽。
 
-## 7. 从原始架构到现代 LLM 主干
+## 7. 现代 LLM 主干：信息边界与生成接口
 
-### 7.1 信息边界决定主干类型
-
-原始 Transformer 是 Encoder-Decoder，但后来形成了三类常见主干：Encoder-Only、Decoder-Only、Encoder-Decoder。它们不是“谁更高级”的关系，而是信息可见性、训练目标和任务接口不同。
+原始 Transformer 是 Encoder-Decoder，但后来形成了三类常见主干：Encoder-Only、Decoder-Only、Encoder-Decoder。它们不是高低级关系，而是信息可见性、训练目标和任务接口不同。
 
 ![Transformer 主干的信息边界|900](imgs/transformer-backbone-information-boundaries-handdrawn-cn.png)
 
@@ -398,9 +360,7 @@ Transformer 的工程瓶颈通常不是一个词能概括的。
 | Decoder-Only | 只看过去和当前 | 适合自回归生成、对话、代码生成 | GPT、LLaMA |
 | Encoder-Decoder | Encoder 双向，Decoder 自回归 | 适合翻译、摘要、条件生成 | 原始 Transformer、T5 |
 
-Encoder-Only 像是“整段输入先读完，再给出理解结果”；Decoder-Only 像是“从左到右持续生成”；Encoder-Decoder 则把两者拆成“先读源句，再按目标端约束生成”。
-
-### 7.2 Decoder-Only 为什么成为主流
+Encoder-Only 对应整段输入先读完再给出理解结果，Decoder-Only 对应从左到右持续生成，Encoder-Decoder 则把两者拆成先读源句、再按目标端约束生成。
 
 现代通用 LLM 普遍采用 Decoder-Only 主干，一个重要原因是它的训练目标和生成接口高度统一：
 
@@ -408,42 +368,32 @@ $$
 p(x_1,\ldots,x_n)=\prod_{t=1}^{n}p(x_t \mid x_{<t})
 $$
 
-这个形式直接对应 next-token prediction。训练时给定真实前缀预测下一个 token；推理时用已生成前缀预测下一个 token。模型、数据、接口和推理缓存都围绕同一件事展开。
+这个形式直接对应 next-token prediction。训练时给定真实前缀预测下一个 token，推理时用已生成前缀预测下一个 token，模型、数据、接口和推理缓存都围绕同一件事展开。
 
 Decoder-Only 的优势包括：
 
 - 预训练目标简单统一，适合海量文本规模化；
-- 对话、代码、工具调用等任务都可以表达成“给定上下文继续生成”；
+- 对话、代码、工具调用等任务都可以表达成给定上下文继续生成；
 - KV cache 与自回归生成天然匹配，推理工程路径清晰；
 - 去掉独立 Encoder 和传统 Cross-Attention 后，主干更统一；
 
-代价也很明确：理解任务也必须通过生成式接口表达；双向完整可见性不如 Encoder-Only 自然；长上下文 decode 阶段会受到 KV cache 容量和读取带宽约束。
+代价也很明确：理解任务也必须通过生成式接口表达，双向完整可见性不如 Encoder-Only 自然，长上下文 decode 阶段会受到 KV cache 容量和读取带宽约束。
 
 所以 Decoder-Only 不是在理论上压倒所有架构，而是在大规模预训练、统一生成接口和推理系统工程之间形成了最强的综合路径。
 
-### 7.4 常见误区与最终心智模型
+## 8. 本章小结：Transformer 的可训练骨架
 
-**误区一：“Transformer 就等于 Attention。”**
+Transformer 的关键不只是引入 Attention，而是把跨 token 信息路由、位置策略、逐 token 非线性变换、信息边界和深层训练稳定性组织成同一套网络骨架。
 
-Attention 是核心信息路由机制，但 Transformer 还包括位置编码、FFN、残差、归一化、mask、训练目标和输出层。没有这些结构，Attention 无法稳定构成完整模型。
+几个结论需要合在一起理解：
 
-**误区二：“位置编码只是告诉模型第几个词。”**
+1. Attention 是核心信息路由机制，但完整 Transformer 还包括位置编码、FFN、残差、归一化、mask、训练目标和输出层；
+2. 位置策略提供可学习的顺序关系，RoPE、ALiBi 等方案进一步关注相对位置、长度外推和长上下文稳定性；
+3. Encoder 与 Decoder 的差异首先来自信息边界，Encoder 通常双向看完整输入，Decoder 的 self-attention 必须保持 causal；
+4. 训练并行依赖 Teacher Forcing 和已知目标前缀，推理时未来 token 未知，只能自回归生成；
+5. FFN 往往承载大量参数和非线性容量，许多现代架构创新都发生在 FFN 或 FFN 的专家化版本上；
 
-位置编码更重要的是提供可学习的顺序关系。RoPE、ALiBi 等方案关注的是相对位置、长度外推和长上下文稳定性，而不只是绝对编号。
-
-**误区三：“Encoder 和 Decoder 只是层数不同。”**
-
-它们的信息边界不同。Encoder 通常双向看完整输入，Decoder 的 self-attention 必须 causal；在 Encoder-Decoder 架构中，Decoder 还要通过 Cross-Attention 查询源序列。
-
-**误区四：“训练并行，所以推理也能并行生成所有 token。”**
-
-训练并行依赖 Teacher Forcing 和已知目标前缀。推理时未来 token 未知，只能自回归生成；优化只能减少每步成本，不能消除 token 之间的因果依赖。
-
-**误区五：“FFN 只是 Attention 后的小附属层。”**
-
-FFN 往往承载大量参数和非线性容量。许多现代架构创新都发生在 FFN 或 FFN 的专家化版本上。
-
-最终可以把 Transformer 压缩成一个循环堆叠的表示更新过程：
+从表示更新角度看，Transformer 可以被压缩成一个循环堆叠的过程：
 
 1. 输入 token 先变成向量，并加入位置或顺序信息；
 2. Attention 让每个位置从其他位置路由信息；
@@ -451,13 +401,13 @@ FFN 往往承载大量参数和非线性容量。许多现代架构创新都发�
 4. FFN 对每个位置独立做非线性改写；
 5. 多层重复后，输出层把表示映射到任务需要的空间；
 
-如果 Attention 是“谁和谁对话”，那么 Transformer block 就是“对话之后如何消化、稳定、再进入下一轮对话”。现代大模型只是把这套骨架放大、改造和工程化：更好的位置编码、更适合推理的 attention 变体、更强的 FFN、更稳定的归一化、更精细的并行与缓存管理。
+从工程演化角度看，现代大模型是在这套骨架上继续放大、改造和工程化：更好的位置编码、更适合推理的 attention 变体、更强的 FFN、更稳定的归一化，以及更精细的并行与缓存管理。
 
 > **一句话定义：** Transformer 是以 Attention 为跨 token 信息路由机制、以 Position-wise FFN 为逐 token 非线性变换、以位置策略、mask、残差连接和归一化共同支撑深层训练与序列生成的通用神经网络骨架。
 
-本文到这里完成了对 Transformer 架构的系统梳理。接下来的篇章会把视角从“单个模型如何工作”转移到“真实推理系统如何运行”：KV cache、显存管理、批处理和并行策略如何把理论架构变成可部署服务，以及当模型规模和上下文窗口继续增长时，系统层设计如何演进。
+Transformer 架构层面的理解会自然导向推理系统层面：KV cache、显存管理、批处理和并行策略如何把理论架构变成可部署服务，以及当模型规模和上下文窗口继续增长时，系统层设计如何演进。
 
-## 8. 参考资料
+## 9. 参考资料
 
 1. Vaswani, A., et al. (2017). *Attention Is All You Need*. https://arxiv.org/abs/1706.03762；
 2. Harvard NLP. *The Annotated Transformer*. https://nlp.seas.harvard.edu/annotated-transformer/；
@@ -469,9 +419,9 @@ FFN 往往承载大量参数和非线性容量。许多现代架构创新都发�
 8. PyTorch Documentation. *torch.nn.Transformer*. https://docs.pytorch.org/docs/stable/generated/torch.nn.Transformer.html；
 9. Kwon, W., et al. (2023). *Efficient Memory Management for Large Language Model Serving with PagedAttention*. https://arxiv.org/abs/2309.06180；
 
-## 9. 学习测评
+## 10. 学习测评
 
-### 9.1 题目
+### 10.1 题目
 
 1. Transformer 相比只使用 Attention，多解决了哪些架构问题？
    A. 只解决 tokenizer 问题；
@@ -540,7 +490,7 @@ FFN 往往承载大量参数和非线性容量。许多现代架构创新都发�
     D. 是否使用词表；
 
 12. 为什么 Transformer 训练时可以并行处理目标序列，而推理时通常仍要逐 token 生成？
-    A. 训练时目标前缀已知，可用 Teacher Forcing 和 causal mask 并行计算；推理时下一步输入依赖上一步生成结果；
+   A. 训练时目标前缀已知，可用 Teacher Forcing 和 causal mask 并行计算，而推理时下一步输入依赖上一步生成结果；
     B. 推理时不能使用矩阵乘法；
     C. 训练时没有 mask；
     D. 推理时没有 embedding；
@@ -581,7 +531,7 @@ FFN 往往承载大量参数和非线性容量。许多现代架构创新都发�
     C. 位置编码占据全部显存；
     D. Cross-Attention 会让 FFN 参数归零；
 
-### 9.2 答案与题解
+### 10.2 答案与题解
 
 1. B。Transformer 不是裸 Attention，而是把 Attention 与位置策略、FFN、残差、归一化、mask 和输出层组合成完整可训练架构。
 
