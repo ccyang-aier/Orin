@@ -65,7 +65,7 @@ Transformer 的设计，就是逐一把这些约束变成结构：
 
 ## 2. 位置编码与顺序感
 
-### 2.1 Attention 的缺陷
+### 2.1 位置盲现象
 
 Self-Attention 的输入如果只有词向量，那么它天然不知道 token 的绝对位置。
 
@@ -266,6 +266,9 @@ $$
 
 ## 5. Transformer Block：路由、改写与稳定
 
+【批注，缺少过渡】
+【批注，5.1、5.2、5.3合并】
+
 ### 5.1 Attention 与 FFN 的分工
 
 一层 Transformer block 可以看成两种变换交替：
@@ -326,7 +329,7 @@ Pre-LN 通常更利于训练非常深的 Transformer，因为残差主路径上�
 
 **Attention 负责“从哪里取信息”，FFN 负责“如何改写自己”，Residual 和 LayerNorm 负责“深层堆叠时还能稳定学习”。**
 
-## 6. 训练、推理与计算代价
+## 6. Transformer的训练、推理与计算代价
 
 ### 6.1 训练为什么可以并行
 
