@@ -83,7 +83,7 @@ Scheduler 内部最重要的对象可以分成六类。
 
 这种分层非常关键。Scheduler 可以只关心 token 与 block 的决策，ModelRunner 可以只关心如何把决策变成 GPU 输入，KVCacheManager 可以只关心 block 分配、缓存和释放。组件边界清晰，vLLM 才能把 prefix caching、chunked prefill、spec decode、KV connector、PP/DP 等特性逐步叠进去。
 
-【批注，这个图里 record running plan 是不是也是意思会去build SchedulerOutput？如果是，是不是可以加一个5到8的箭头？】
+【批注，重新生成类似下面这个图，这个图里 record running plan 是不是也是意思会去build SchedulerOutput？如果是，是不是可以加一个5到8的箭头？】
 ![一次 schedule 循环](imgs/05_schedule_loop.png)
 
 一次调度循环的主线可以概括为：
@@ -114,6 +114,8 @@ Scheduler 的核心循环不是“先 prefill 后 decode”，而是“谁还有
 | C   | waiting new prefill     |         0 |       300 |    300 |
 
 Scheduler 不会先给 A 贴上 decode 标签、给 B/C 贴上 prefill 标签再写两个算法，而是统一计算“当前总 token 与已计算 token 之间还差多少”。在预算充足时，A 可以拿 1 个 token，B 拿 776 个 token，剩余 247 个 token 不够完整覆盖 C 的 300 token prompt；如果 chunked prefill 开启，C 可以先拿 247 个 token，否则 C 可能要等下一轮。
+
+【批注，重新生成类似下面这个图，但把三个请求的状态等数据也放在图里统一呈现，然后不要用右边这个表格呈现约束，毫无价值，可以改为一些其它呈现方式，比如加一个小云朵对话框或者什么去加一个解释说明也可以】
 
 ![Token budget 的分配模型](imgs/05_token_budget.png)
 
