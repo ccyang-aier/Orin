@@ -8,13 +8,15 @@ tags:
 updated: 2026-05-28
 description: 本文基于本地 vLLM 源码快照建立 V1 引擎的整体架构地图，解释组件职责、请求执行流、rank 坐标体系以及 TP、PP、DP、EP 等分布式推理部署视图。
 ---
-
+【批注，1）正文不要滥用中文引号，确实需要强调的概念、判断或短句，优先使用加粗；2）控制小段落中的句号密度，能顺畅连接的解释用逗号、分号或重写句式承接，避免每个短句都被句号切碎；3）教程正文避免用作者撰文的过程说明去替代教学内容，不写类似 `接下来会`、`本文将` 这类让读者关心写作安排的句式；需要引导时直接写稳定的学习路径、对象关系或机制递进； 全文排查】
 # 03 vLLM 引擎架构总览
 
+【这两段参考上面批注优化】
 前两章已经把问题从“模型能不能生成文本”推进到了“推理系统如何在动态请求、显存约束和服务化场景下稳定运行”。这一章继续往下走，但仍然不急着深入 PagedAttention、Scheduler、KV Cache Manager、ModelRunner 或某个算子实现。
 
 本章的目标是先建立 vLLM 这台机器的完整地图：请求从哪里进来，怎样变成引擎内部状态，EngineCore 在每一步做什么，Executor 和 Worker 如何把调度结果变成 GPU 上的 forward，rank 又如何把进程、GPU、模型分片和通信组组织起来。本文不是完整分布式部署手册，而是用分布式视角补全引擎架构地图。
 
+【批注，删除这种段落，无价值】
 本文以 `code/opensource/vllm` 的本地源码快照为依据，源码分支为 `main`，短提交哈希为 `52a31ccec`。由于 vLLM 已进入 V1 架构，本文默认以 V1 路径解释，例如 `vllm/v1/engine`、`vllm/v1/core`、`vllm/v1/executor`、`vllm/v1/worker` 和 `vllm/distributed/parallel_state.py`。vLLM V1 内部仍在快速演进，尤其是 DP/EP、异步调度和服务化拓扑，后续复查时应先确认源码快照。
 
 ![vLLM V1 引擎架构总览](imgs/03_engine_overview.png)

@@ -63,8 +63,7 @@
               "title": "02_初识vLLM推理引擎"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -199,13 +198,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "AGENTS.md",
+                "file": "notes/vLLM/vLLM架构与原理精讲系列/03_vLLM引擎架构总览.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "AGENTS 的大纲"
+              "title": "03_vLLM引擎架构总览 的大纲"
             }
           },
           {
@@ -238,14 +237,15 @@
       "bases:新建数据库": false
     }
   },
-  "active": "3e72c8f6b7a67113",
+  "active": "45f0bdcb8b5fb1a1",
   "lastOpenFiles": [
+    "notes/vLLM/01_初识vLLM推理引擎.md",
+    "notes/vLLM/vLLM架构与原理精讲系列/02_初识vLLM推理引擎.md",
+    "AGENTS.md",
     "notes/vLLM/vLLM架构与原理精讲系列/imgs/Pasted image 20260329220653.png",
     "notes/vLLM/vLLM架构与原理精讲系列/01_推理系统导论.md",
-    "notes/vLLM/vLLM架构与原理精讲系列/02_初识vLLM推理引擎.md",
     "notes/vLLM/vLLM架构与原理精讲系列/03_vLLM引擎架构总览.md",
     "notes/LLM/大模型与推理全栈精讲系列/02_大模型入门及其基本结构.md",
-    "notes/vLLM/01_初识vLLM推理引擎.md",
     "notes/vLLM/vLLM架构与原理精讲系列/imgs/01_throughput_vs_concurrency.png",
     "notes/vLLM/未命名.md",
     "notes/LLM/大模型与推理全栈精讲系列/imgs/llm-four-layer-mental-model-handdrawn-cn.png",
@@ -259,7 +259,6 @@
     "notes/LLM/大模型与推理全栈精讲系列/imgs/llm-inference-state-objects-kv-cache-handdrawn-cn.png",
     "notes/LLM/大模型与推理全栈精讲系列/imgs/llm-training-inference-two-flows-handdrawn-cn.png",
     "notes/LLM/大模型与推理全栈精讲系列/03_从语言理解本质到序列模型演进.md",
-    "notes/LLM/大模型与推理全栈精讲系列/imgs/llm-seq2seq-fixed-vector-bottleneck-handdrawn-cn.png",
     "notes/LLM/大模型与推理全栈精讲系列/01_从CNN、RNN到Attention（废弃）.md",
     "notes/LLM/大模型与推理全栈精讲系列/02_大模型基础速通.md",
     "notes/LLM/大模型与推理全栈精讲系列/03_深入理解Attention机制.md",
@@ -281,7 +280,6 @@
     "notes/LLM/大模型与推理全栈精讲系列/02_大模型基础速通.md.tmp.26860.924097260bd5",
     "notes/LLM/大模型与推理全栈精讲系列/02_大模型基础速通.md.tmp.26860.28b5265ae56d",
     "notes/LLM/大模型与推理全栈精讲系列/02_大模型基础速通.md.tmp.26860.1b954d5f70e3",
-    "AGENTS.md",
     "notes/papers/arxiv-ai-daily/2026-06-04 arxiv ai papers.md",
     "CLAUDE.md",
     "notes/papers/arxiv-ai-daily/2026-06-03 arxiv ai papers.md",
