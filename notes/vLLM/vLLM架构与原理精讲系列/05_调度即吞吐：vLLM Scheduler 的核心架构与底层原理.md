@@ -5,29 +5,24 @@ tags:
   - inference-engine
   - scheduler
   - continuous-batching
-updated: 2026-05-28
-description: 本文基于本地 vLLM V1 源码快照，解释 Scheduler 如何把请求队列、token budget、KV Cache、状态流转与抢占机制组织成高吞吐推理系统。
+updated: 2026-06-10
+description: 基于本地 vLLM V1 源码快照，解释 Scheduler 如何把请求队列、token budget、KV Cache、状态流转与抢占机制组织成高吞吐推理系统。
 ---
-【批注，1）正文不要滥用中文引号，确实需要强调的概念、判断或短句，优先使用加粗；2）控制小段落中的句号密度，能顺畅连接的解释用逗号、分号或重写句式承接，避免每个短句都被句号切碎；3）教程正文避免用作者撰文的过程说明去替代教学内容，不写类似 `接下来会`、`本文将` 这类让读者关心写作安排的句式；需要引导时直接写稳定的学习路径、对象关系或机制递进；4）避免段落用大量并列短句+分号的方式去呈现 全文排查】
 # 05 调度即吞吐：vLLM Scheduler 的核心架构与底层原理
 
-前面几章我们已经把 vLLM V1 的整体架构和 KVCacheManager 的运行逻辑讲清楚了：EngineCore 维护引擎内循环，KVCacheManager 负责把动态增长的 token 序列落到 KV Block 上，Worker/GPU 负责真正执行模型。这一章我们继续深入，去分析另一个决定 vLLM 性能上限的核心组件：`Scheduler`。
+EngineCore 维护引擎内循环，KVCacheManager 把动态增长的 token 序列落到 KV Block 上，Worker/GPU 负责真正执行模型，Scheduler 则站在这三者之间，决定每个 engine step 里哪些请求获得前进机会。
 
-Scheduler 的源码逻辑很复杂，它的核心代码在 `scheduler.py`，从 `__init__()` 开始可以一路读到 `schedule()`、`update_from_output()`、`_preempt_request()` 等等，vLLM 对调度器的优化可谓下足了功夫，但今天我们不会做逐行的源码分析，而是基于源码先抽象出一个现实的问题：**在显存有限、请求动态到达、Prefill 与 Decode 混杂、输出长度未知的服务系统里，vLLM 是如何决定每一步让哪些请求前进多少 token的？**。
+这个位置很容易被低估。LLM serving 的请求并不是排好队以后整齐进入 GPU：长 prompt 会突然吞掉大量 prefill 预算，decode 请求每轮只需要一两个 token 却对 inter-token latency 很敏感，KV Cache 又会随着上下文增长持续占用显存。**在显存有限、请求动态到达、Prefill 与 Decode 混杂、输出长度未知的服务系统里，vLLM 如何决定每一步让哪些请求前进多少 token**，这个问题直接决定吞吐、延迟、抢占频率和显存利用率。
 
-【批注，加一个过渡（说明为什么这个问题很重要），】
-
-【批注，删除下段】
-本文以 `code/opensource/vllm` 的本地源码快照为依据，源码分支为 `main`，短提交哈希为 `52a31ccec`。本地快照已经处于 vLLM V1 路径，主要关注 `vllm/v1/core/sched/scheduler.py`、`vllm/v1/core/sched/async_scheduler.py`、`vllm/v1/core/kv_cache_manager.py`、`vllm/v1/engine/core.py` 和 `vllm/config/scheduler.py`。
-
-时至今日，vLLM Scheduler 仍在快速演进，比如最近几个版本更推出的稳定版异步调度、比如调度器还需要考虑适配spec decode、KV connector、Model Runner V2等，xx 【批注，优化该段落】
+vLLM V1 的 Scheduler 正是在这个问题上持续演进：统一 token 预算模型让 prefill、decode、prefix cache、spec decode 与 KV connector 能够进入同一套调度循环，异步调度和 Model Runner V2 又继续把 CPU 调度、GPU 执行和输出回传推向更高重叠度。理解 Scheduler，不是为了记住某个函数的代码顺序，而是建立一个稳定的系统判断：**吞吐不是 GPU 单独跑出来的，而是调度器不断把动态请求压成 GPU 可执行 batch 的结果**。
 
 ![Scheduler 是吞吐指挥系统](imgs/05_scheduler_state_hub.png)
 
-【批注，这段话对这张图的讲解太少，不够全面深入，更详细展开，帮助读者先建立一个全局认知】
-先抓住一个判断：Scheduler 不是“把请求排个队”的薄层组件。它实际上是 EngineCore 内部的吞吐指挥系统。它每一步都要同时回答五个问题：哪些 running 请求应该继续推进；哪些 waiting 请求可以被接纳；每个请求本轮能分到多少 token budget；KV Cache 是否还有足够 block；如果空间不够，应该让谁让出运行位置。
+图里的 Scheduler 看起来像一个普通中间层，但它同时连接三类压力。左侧 EngineCore 把新请求、abort、输出更新等事件送进来，Scheduler 需要把它们转化为稳定的请求状态；下方 KVCacheManager 给出 KV block 的可分配边界，Scheduler 不能只看 token 数，还必须确认这些 token 算完后有地方存；右侧 Executor/Worker 只接受结构化的 `SchedulerOutput`，也就是本轮真正能进入 GPU forward 的执行计划。
 
-## 1. Scheduler为什么决定吞吐
+因此 Scheduler 不是把请求排个队的薄层组件，而是 EngineCore 内部的吞吐指挥系统。它每一步都要同时回答五个问题：哪些 running 请求应该继续推进，哪些 waiting 请求可以被接纳，每个请求本轮能分到多少 token budget，KV Cache 是否还有足够 block，如果空间不够，谁应该让出运行位置。这五个问题如果任何一个回答得太激进，系统会因为显存压力频繁抢占；回答得太保守，GPU 又会因为 batch 形状不饱满而浪费吞吐。
+
+## 1. Scheduler 为什么决定吞吐
 
 LLM 推理服务的吞吐不是只由 GPU 算力决定。GPU 确实负责执行 attention、MLP、sampling 等计算，但 GPU 每一步吃到什么样的 batch，是由 Scheduler 决定的。一个好的调度器会尽量让 GPU 保持忙碌，同时避免把显存占满到无法接纳新请求；一个差的调度器则会让 GPU 在 Prefill 与 Decode 的不均衡之间反复等待。
 
@@ -37,9 +32,9 @@ LLM 推理服务的吞吐不是只由 GPU 算力决定。GPU 确实负责执行 
 2. Prompt 长度不同，Prefill 成本差异可能非常大；
 3. 输出长度未知，Decode 阶段每一步只追加少量 token；
 4. KV Cache 随 token 增长持续占用显存；
-5. Prefix caching、speculative decoding、多模态 encoder、KV transfer 等优化会改变“已经算过多少 token”的判断。
+5. Prefix caching、speculative decoding、多模态 encoder、KV transfer 等优化会改变已计算 token 的判断；
 
-这就是 vLLM V1 Scheduler 的核心背景。它不再把 Prefill 和 Decode 当作两个割裂阶段，而是把所有请求统一看成“还有多少 token 需要追上”。源码里的关键心智模型是：
+这就是 vLLM V1 Scheduler 的核心背景。它不再把 Prefill 和 Decode 当作两个割裂阶段，而是把所有请求统一看成**还有多少 token 需要追上**。源码里的关键心智模型是：
 
 ```text
 每个请求都有：
@@ -50,7 +45,7 @@ LLM 推理服务的吞吐不是只由 GPU 算力决定。GPU 确实负责执行 
   {request_id: num_tokens}
 ```
 
-也就是说，Scheduler 每一步产出的不是“这是一组 prefill 请求”或“这是一组 decode 请求”，而是一个更一般的指令：请求 A 本轮推进 1 个 token，请求 B 本轮推进 512 个 token，请求 C 因为 encoder budget 或 KV block 不足暂时不动。这种统一 token 预算模型让 chunked prefill、prefix caching、spec decode 和未来优化都能落在同一个抽象上。
+也就是说，Scheduler 每一步产出的不是一组固定类型的 prefill 请求或 decode 请求，而是一个更一般的指令：请求 A 本轮推进 1 个 token，请求 B 本轮推进 512 个 token，请求 C 因为 encoder budget 或 KV block 不足暂时不动。这种统一 token 预算模型让 chunked prefill、prefix caching、spec decode 和未来优化都能落在同一个抽象上。
 
 ![Scheduler 的内部状态地图](imgs/05_scheduler_internal_map.png)
 
@@ -60,9 +55,9 @@ Scheduler 的吞吐价值来自三个层次。
 
 第二层是 **state arbitration**。它维护 `waiting`、`running`、`skipped_waiting`、`finished_req_ids` 等状态集合，并在请求被接纳、运行、跳过、抢占、恢复和结束时更新这些集合。
 
-第三层是 **memory admission**。它不直接管理 GPU KV tensor，但它会调用 KVCacheManager 询问“这些 token 能不能分到 block”。如果 block 不够，Scheduler 必须决定是暂缓 waiting 请求，还是抢占 running 请求。
+第三层是 **memory admission**。它不直接管理 GPU KV tensor，但它会调用 KVCacheManager 询问这些 token 能不能分到 block。如果 block 不够，Scheduler 必须决定是暂缓 waiting 请求，还是抢占 running 请求。
 
-所以，“调度即吞吐”不是口号，而是工程事实：Scheduler 决定了 GPU 每一步吃到的工作形状，也决定了 KV Cache 是否被高效使用。
+所以，**调度即吞吐**不是口号，而是工程事实：Scheduler 决定了 GPU 每一步吃到的工作形状，也决定了 KV Cache 是否被高效使用。
 
 ## 2. 架构与状态
 
@@ -79,11 +74,10 @@ Scheduler 内部最重要的对象可以分成六类。
 | `EncoderCacheManager` | 多模态或 encoder-decoder 输入相关缓存管理 | 另一个会影响 token 调度的资源预算 |
 | `SchedulerOutput` | 传给 Worker/ModelRunner 的本轮执行计划 | 每轮 forward 的结构化任务单 |
 
-这几个对象共同构成了 Scheduler 的运行边界。Scheduler 不直接执行模型，也不直接写 GPU tensor；它维护的是“本轮应该做什么”和“请求状态现在是什么”。Worker 看到的是 `SchedulerOutput`，其中包含新请求数据、缓存请求增量、每个请求的 token 数、block ids、encoder 输入、finished 请求、preempted 请求等信息。
+这几个对象共同构成了 Scheduler 的运行边界。Scheduler 不直接执行模型，也不直接写 GPU tensor；它维护的是**本轮应该做什么**以及**请求状态现在是什么**。Worker 看到的是 `SchedulerOutput`，其中包含新请求数据、缓存请求增量、每个请求的 token 数、block ids、encoder 输入、finished 请求、preempted 请求等信息。
 
 这种分层非常关键。Scheduler 可以只关心 token 与 block 的决策，ModelRunner 可以只关心如何把决策变成 GPU 输入，KVCacheManager 可以只关心 block 分配、缓存和释放。组件边界清晰，vLLM 才能把 prefix caching、chunked prefill、spec decode、KV connector、PP/DP 等特性逐步叠进去。
 
-【批注，重新生成类似下面这个图，这个图里 record running plan 是不是也是意思会去build SchedulerOutput？如果是，是不是可以加一个5到8的箭头？】
 ![一次 schedule 循环](imgs/05_schedule_loop.png)
 
 一次调度循环的主线可以概括为：
@@ -94,16 +88,20 @@ Scheduler 内部最重要的对象可以分成六类。
 4. 调用 KVCacheManager 分配新增 block；
 5. 如果 block 不够，触发 running 请求抢占；
 6. 如果本轮没有抢占，再扫描 `waiting` 队列接纳新请求；
-7. 构造 `SchedulerOutput`；
-8. 在 `_update_after_schedule()` 中推进 `num_computed_tokens` 等内部状态。
+7. 接纳成功后把 waiting 请求加入本轮计划；
+8. 构造 `SchedulerOutput`，并在调度后推进 `num_computed_tokens` 等内部状态；
 
-这里有一个细节很能体现 vLLM 的工程取舍：Scheduler **先调度 running，再调度 waiting**。原因并不只是“老请求优先”。更深层的原因是 running 请求已经占有 KV block 和 worker 侧缓存状态，继续推进它们通常可以用更小增量换来稳定 decode；如果过度接纳新请求，KV Cache 很容易被长 prompt 或并发 prefill 撑满，反而造成更多抢占和重算。
+这里有一个细节很能体现 vLLM 的工程取舍：Scheduler **先调度 running，再调度 waiting**。原因并不只是**已有请求优先**，更深层的原因是 running 请求已经占有 KV block 和 worker 侧缓存状态，继续推进它们通常可以用更小增量换来稳定 decode；如果过度接纳新请求，KV Cache 很容易被长 prompt 或并发 prefill 撑满，反而造成更多抢占和重算。
+
+图中的 `record running plan` 不是最终输出，它只是把已经成功分配 KV block 的 running 请求记录到本轮计划里，包括请求 id、新增 block、计划推进的 token 数和可能的 spec decode token。只要这些 running 计划存在，后续构造 `SchedulerOutput` 时就必须把它们带上；waiting 请求只有在没有发生抢占、并且 token/KV/序列数预算仍有余额时才会被继续扫描。这个顺序解释了图里从步骤 5 到步骤 8 的箭头：running 计划会进入最终执行计划，waiting 接纳只是可选的后续增量。
 
 ## 3. 调度循环
 
-【批注，这里你轻描淡写的说了一个结论（即下文这段话），但是我建议这里细化展开下，我记得vllm早期的调度器是先 prefill 后 decode的，这里检索下充分的背景和资料后详细展开解释说明为什么vllm优化了这个设计，原设计有什么问题？优化后解决了什么等。即我们很多的叙述和讲解，不能只讲结论，很多地方或设计要能讲明白这个设计为什么要这么设计等，要知其然，且知其所以然。】
+理解 V1 Scheduler，最容易卡住的地方是 Prefill 与 Decode 的关系。早期很多推理系统的心智模型都更接近两段式：请求先经历 prompt prefill，生成出第一个 token 以后再进入逐 token decode。这个模型直观，也符合单请求推理的生命周期，但放到在线服务里会暴露两个问题。
 
-Scheduler 的核心循环不是“先 prefill 后 decode”，而是“谁还有 token 没算完，谁就申请一部分本轮预算”。这可以用一个小例子理解。
+第一个问题是 head-of-line blocking。长 prompt 的 prefill 往往是 compute-bound，一次性吃掉大量 token budget 和 KV block，如果调度器把它当成不可拆分的大任务，后面已经进入 decode 的交互式请求就可能被迫等待，inter-token latency 会明显变差。第二个问题是资源视角不统一。Decode 请求每轮通常只需要 1 个 token，长 prefill 可能需要几百到几千个 token，prefix cache 又可能让新请求已经拥有一段可复用前缀，spec decode 还会引入 draft/lookahead token；如果调度器始终先按阶段分类，再分别写规则，后续特性会不断打补丁。
+
+vLLM V1 的优化方向，是把严格的阶段边界弱化成统一的 token debt：谁还有 token 没算完，谁就申请一部分本轮预算。Decode 通常因为已经在 running 集合里、且每轮增量很小而优先获得稳定推进；长 prefill 则通过 chunked prefill 被拆成多轮进入 batch。这个变化不是简单地把 prefill 和 decode 混在一起，而是把调度问题改写成三个可比较的预算问题：本轮还有多少 token budget，本轮还允许多少 active sequence，KV Cache 还能承载多少 block。
 
 假设本轮 `max_num_scheduled_tokens = 1024`，系统里有三个请求：
 
@@ -113,26 +111,13 @@ Scheduler 的核心循环不是“先 prefill 后 decode”，而是“谁还有
 | B   | running chunked prefill |      1024 |      1800 |    776 |
 | C   | waiting new prefill     |         0 |       300 |    300 |
 
-Scheduler 不会先给 A 贴上 decode 标签、给 B/C 贴上 prefill 标签再写两个算法，而是统一计算“当前总 token 与已计算 token 之间还差多少”。在预算充足时，A 可以拿 1 个 token，B 拿 776 个 token，剩余 247 个 token 不够完整覆盖 C 的 300 token prompt；如果 chunked prefill 开启，C 可以先拿 247 个 token，否则 C 可能要等下一轮。
-
-【批注，重新生成类似下面这个图，但把三个请求的状态等数据也放在图里统一呈现，然后不要用右边这个表格呈现约束，毫无价值，可以改为一些其它呈现方式，比如加一个小云朵对话框或者什么去加一个解释说明也可以】
+Scheduler 不会先给 A 贴上 decode 标签、给 B/C 贴上 prefill 标签再写两个算法，而是统一计算当前总 token 与已计算 token 之间还差多少。在预算充足时，A 可以拿 1 个 token，B 拿 776 个 token，剩余 247 个 token 不够完整覆盖 C 的 300 token prompt；如果 chunked prefill 开启，C 可以先拿 247 个 token，否则 C 可能要等下一轮。
 
 ![Token budget 的分配模型](imgs/05_token_budget.png)
 
-本章理解 Scheduler，最重要的是把几个预算区分开。
+图里的三个请求说明了统一预算模型的好处。A 是 decode，一步只需要 1 个 token；B 是已经在 running 中的 chunked prefill，本轮还差 776 个 token；C 是 waiting 里的新 prefill，完整需求是 300 个 token，但剩余预算只够先推进 247 个 token。Scheduler 的输出不是阶段标签，而是 `{A: 1, B: 776, C: 247}` 这样的本轮推进计划，约束云朵里的 token budget、max seqs、KV blocks 会共同决定这个计划是否成立。
 
-| 预算/约束                          | 含义                        | 对调度的影响                      |
-| ------------------------------ | ------------------------- | --------------------------- |
-| `max_num_scheduled_tokens`     | Scheduler 本轮最多发出的 token 数 | 控制单轮 forward 的 token 规模     |
-| `max_num_batched_tokens`       | 模型执行侧 batch token 上限      | 通常作为 scheduled token 上限的默认值 |
-| `max_num_seqs`                 | 同一轮最多活跃序列数                | 限制 running 请求数量             |
-| encoder compute budget         | 多模态/encoder 输入的本轮计算预算     | 可能让请求只调度文本部分或暂缓             |
-| KV block capacity              | KV Cache 剩余可分配 block      | 决定请求能否被接纳或继续运行              |
-| `long_prefill_token_threshold` | 长 prompt 单轮切块阈值           | 防止长 prefill 独占过多预算          |
-
-这些预算彼此不是替代关系。`max_num_scheduled_tokens` 解决“这一轮算多少 token”；`max_num_seqs` 解决“这一轮有多少条序列”；KV block capacity 解决“算完以后状态放在哪里”。真正的 Scheduler 决策发生在三者交汇处。
-
-【批注，我记得申请KVCacheManager的KVBlocks那个方法是有一个详细的注释的，参考那个注释这里我觉得是不是有必要新增说明下一个请求的KVBlcoks分布结构，即包括哪些？命中内存的（显存），命中外部的、xx、xx等等 再搭配一个插图清晰呈现下，如果不理解这个，可能对调度器申请blocks这块就会有理解障碍，找个合适的位置插入这个知识点】
+这些预算彼此不是替代关系。`max_num_scheduled_tokens` 解决这一轮算多少 token，`max_num_seqs` 解决这一轮有多少条序列，encoder compute budget 约束多模态或 encoder-decoder 输入，KV block capacity 决定算完后的状态放在哪里，`long_prefill_token_threshold` 则防止长 prompt 在单轮里独占过多预算。真正的 Scheduler 决策发生在这些约束的交汇处。
 
 ### 3.1 Running 优先
 
@@ -153,9 +138,9 @@ num_new_tokens =
 2. 不能超过 `max_model_len - 1 - num_computed_tokens`；
 3. 如果设置了长 prefill 阈值，单轮不能超过阈值；
 4. 如果有 encoder 输入，还要受 encoder compute/cache 预算影响；
-5. 如果是某些 Mamba/hybrid 模型，还可能需要 block-aligned split。
+5. 如果是某些 Mamba/hybrid 模型，还可能需要 block-aligned split；
 
-最后才会进入 KV block 分配。注意这个顺序：Scheduler 不是一开始就问“显存够不够”，而是先把本轮想推进的 token 数算出来，再问 KVCacheManager 这些 token 是否有位置可放。
+最后才会进入 KV block 分配。注意这个顺序：Scheduler 不是一开始就问显存够不够，而是先把本轮想推进的 token 数算出来，再问 KVCacheManager 这些 token 是否有位置可放。
 
 ### 3.2 Waiting 接纳
 
@@ -167,9 +152,21 @@ num_new_tokens =
 
 1. running 数量没有超过 `max_num_seqs`；
 2. token budget 仍有余额；
-3. KVCacheManager 能分配出需要的 block。
+3. KVCacheManager 能分配出需要的 block；
 
 如果 waiting 请求因为结构化输出 grammar、远程 KV 加载、多模态 encoder budget 或 LoRA 限制暂时不能调度，它可能被放入 `skipped_waiting`，等待后续步骤重新尝试。这个设计避免了某些暂不可调度的请求把整个 waiting 扫描堵死。需要特别区分的是 KV block 不足：当前源码中 waiting 请求在 `allocate_slots()` 返回 `None` 时通常会停止本轮 waiting 扫描，而不是被放入 `skipped_waiting`，等待后续 step 释放资源后再尝试。
+
+### 3.3 KV Block 分布
+
+`allocate_slots()` 容易被误读成一个简单的显存申请函数。它真正处理的是**一个请求的 token 序列在不同 KV 来源之间如何拼接**，包括已经算过的本地 KV、刚命中的 prefix cache、外部 KV connector 提供的 KV、本轮需要计算的新 token，以及 spec decode 需要预留的 lookahead slots。
+
+![KV Block 的分布结构](imgs/05_kv_blocks_layout.png)
+
+图里的 `comp` 表示请求已经拥有的 computed tokens，它们可能已经对应本地 KV blocks；`new_comp` 是本轮新命中的本地 prefix cache blocks，这部分 KV 已经由 vLLM 管理，只需要把引用和 block table 对齐；`ext_comp` 是外部 KV connector 命中的 tokens，KV 不在 vLLM 本地 cache 里，但 Scheduler 需要把它计入已计算前缀，并为必要的本地 slots 做准备；`new` 是本轮真正要执行模型计算的 tokens；`lookahead` 则是 speculative decoding 预留的 draft slots。
+
+这组分布解释了为什么 KV admission 不能只看本轮新算几个 token。对 chunked prefill 来说，本轮也许只算第一块 chunk，但完整输入最终会占用更多 blocks，`full_sequence_must_fit` 正是为了避免只看第一块就过度接纳请求；对 sliding window 或 chunked-local attention 来说，过旧的 blocks 可能在注意力窗口外被释放，KVCacheManager 会先清理不再需要的旧 blocks，再判断剩余容量；对 KV connector 来说，请求可能已经命中外部 KV，但本地仍然要维护后续计算、缓存和 block table 的一致性。
+
+因此 Scheduler 与 KVCacheManager 的交互不是一句显存够不够，而是一次 admission 计算：已有 KV 能复用多少，外部 KV 需要接入多少，本轮新 token 和 speculative lookahead 要占多少 slots，完整序列是否应该提前验证。理解这张分布图之后，后面的 chunked prefill、prefix cache、spec decode 和 preemption 才能串成同一套机制。
 
 ## 4. 策略如何改变同一套循环
 
@@ -187,11 +184,17 @@ vLLM V1 Scheduler 的默认策略是 `fcfs`，也支持 `priority`。表面看�
 
 ### 4.1 Chunked Prefill
 
-Chunked prefill 是理解 vLLM Scheduler 的关键机制之一。没有 chunked prefill 时，一个很长 prompt 可能需要一次性占用大量 token budget；如果预算不够，整个请求就要等。开启 chunked prefill 后，长 prompt 可以分多轮推进，短请求有机会插入执行，从而改善整体响应。这个方向也与 Sarathi-Serve 等 LLM serving 研究中的 chunked prefill 思路相呼应：把长 prefill 切成更可调度的块，让系统更容易混合 prefill 与 decode 工作。
+Chunked prefill 解决的是长 prompt 对调度循环的阻塞问题。没有 chunked prefill 时，一个 8K prompt 往往要等到本轮 token budget 足够覆盖完整 prefill 才能进入 batch；即使它被接纳，也可能让后面的 decode 请求在同一轮里拿不到预算。对于在线 serving，这会把长 prompt 的 TTFT 压力传导到其他请求的 ITL 上，表现为某些用户的 token 流突然停顿。
 
-但 chunked prefill 也会带来 admission 风险：如果只检查第一块 chunk 能否放入 KV Cache，就可能过度接纳请求，后续 chunk 到来时发现完整序列无法容纳，导致更频繁抢占。当前源码中的 `scheduler_reserve_full_isl` 就是为这个问题服务的：接纳新请求时，可以要求按完整 input sequence length 预检查 KV Cache 是否放得下，而不是只看本轮 chunk。
+开启 chunked prefill 后，长 prompt 不再是一个不可拆分的大任务，而是变成多个可被 Scheduler 分轮推进的 token chunk。Decode 请求通常先拿走很小的 token 增量，剩余预算再分给部分 prefill；如果短 prompt 或 prefix cache 命中请求刚好能放进剩余预算，也可以插入同一轮执行。这种设计与 Sarathi/Sarathi-Serve 的核心直觉一致：把 compute-bound 的 prefill 切碎，和 memory-bound 的 decode 混合在同一个 batch 里，让 GPU 更少在两种负载之间空转。
 
-这里的工程判断是：chunked prefill 提升调度弹性，但不能让接纳策略短视。Scheduler 必须同时看到“本轮能算多少”和“整个请求最终会占多少”。
+![Chunked Prefill 的调度机制](imgs/05_chunked_prefill_mechanism.png)
+
+图里的长 prompt 被拆成多个 chunk 后，不同 scheduler step 可以交替安排 decode、短请求和剩余 prefill。这个机制改善的是调度弹性，不是让 prefill 成本消失；长 prompt 的总计算量仍然存在，只是被摊到多个 engine step 中。收益通常体现在两个方向：decode 请求更容易保持稳定 ITL，GPU batch 里也更容易同时包含计算密集和访存密集工作，吞吐与延迟的折中空间变大。
+
+但 chunked prefill 也会带来 admission 风险。如果只检查第一块 chunk 能否放入 KV Cache，调度器可能过度接纳请求，后续 chunk 到来时才发现完整序列无法容纳，系统就会更频繁地抢占和重算。`scheduler_reserve_full_isl` 正是为这个问题服务的：接纳新请求时，可以要求按完整 input sequence length 预检查 KV Cache 是否放得下，而不是只看本轮 chunk。
+
+这里的工程判断是：chunked prefill 提升调度弹性，但不能让接纳策略短视。Scheduler 必须同时看到**本轮能算多少**和**整个请求最终会占多少**，否则短期看起来 batch 更满，长期却可能因为 KV thrashing 把吞吐还给重算成本。
 
 ### 4.2 Prefix Cache
 
@@ -199,17 +202,21 @@ Prefix caching 改变的是 waiting 请求的起跑线。对新请求，Schedule
 
 这对调度有两个影响。
 
-第一，命中 prefix cache 的请求消耗更少 token budget，因此更容易进入 batch。第二，prefix block 需要被 touch 或增加引用，避免在本请求使用前被其他请求驱逐。也就是说，prefix caching 不是“少算几个 token”那么简单，它会改变 block 引用计数、free queue、cache map 和请求 block table。
+第一，命中 prefix cache 的请求消耗更少 token budget，因此更容易进入 batch。第二，prefix block 需要被 touch 或增加引用，避免在本请求使用前被其他请求驱逐。也就是说，prefix caching 不只是少算几个 token，它会改变 block 引用计数、free queue、cache map 和请求 block table。
 
-这也是为什么 Scheduler 与 KVCacheManager 必须紧密协作。Scheduler 看见的是 token 预算，KVCacheManager 看见的是 block 账本；两者共同决定一个请求到底是“便宜地进入 batch”，还是“因为 block 不足暂缓”。
+这也是为什么 Scheduler 与 KVCacheManager 必须紧密协作。Scheduler 看见的是 token 预算，KVCacheManager 看见的是 block 账本；两者共同决定一个请求到底是低成本进入 batch，还是因为 block 不足暂缓。
 
 ### 4.3 Spec Decode
 
-Speculative decoding 让 Scheduler 的 token 模型变得更一般。普通 decode 每轮通常只推进一个输出 token；spec decode 可能带来 draft tokens，Scheduler 需要预留 lookahead tokens，并在后续输出中根据接受/拒绝情况修正状态。
+Speculative decoding 改变的是 Scheduler 对未来 token 的处理方式。普通 decode 每轮通常只推进一个已验证输出 token，KV block 的增长比较直接；spec decode 会先由 draft model 或 proposer 给出若干候选 token，目标模型再验证哪些 token 可以接受。对 Scheduler 来说，这些 draft token 不能当成普通已确认输出，却也不能完全忽略，因为模型执行前就要为它们预留 token budget 和 KV slots。
 
-这解释了为什么源码里有 `num_tokens_with_spec`、`scheduled_spec_decode_tokens`、`num_lookahead_tokens` 等字段。Scheduler 不需要把 spec decode 变成另一套完全独立的调度器，而是把“可能会被接受的未来 token”也纳入 token 与 block 的预算模型。
+![Spec Decode 下的 KV 分配](imgs/05_spec_decode_kv_allocation.png)
 
-这类设计很漂亮，但也提高了正确性要求。一旦 draft token、output placeholder、KV block 缓存边界和实际采样输出不同步，就可能出现多算、少算、错误复用或流式输出错位。vLLM 近几个版本围绕 async scheduling + spec decode 的大量修复，正是这类复杂组合的工程代价。
+图里可以看到两层状态。绿色部分是已经验证的 output token，它们的 KV 可以稳定留在 cache 中，后续步骤可以继续复用；紫色部分是 draft/lookahead，它们代表 speculative capacity，还不是最终内容。Scheduler 本轮会把 `num_tokens_with_spec` 纳入待推进 token 数，把 `num_lookahead_tokens` 传给 KVCacheManager 预留 slots，并在 `SchedulerOutput` 中记录本轮实际安排的 spec tokens。
+
+模型输出返回后，accepted draft 可以变成 verified output，对应 KV blocks 继续保留；rejected draft 则要丢弃或被真实采样结果替换，Scheduler 需要修正 `num_computed_tokens`、spec buffers、output placeholders 与请求 token 序列。也就是说，spec decode 并没有让 Scheduler 变成另一套调度器，它只是把**可能会被接受的未来 token**纳入同一套 token 与 block 预算模型。
+
+这类设计提高了吞吐潜力，也提高了正确性要求。draft token、output placeholder、KV block 边界和实际采样输出一旦不同步，就可能出现多算、少算、错误复用或流式输出错位。vLLM 围绕 async scheduling、spec decode、PP、structured output 和 KV connector 的大量修复，正是这类复杂组合的工程代价。
 
 这些策略最终都会落到请求状态变化上：某个请求被接纳为 running，某个请求暂时留在 waiting，某个请求因为 KV 压力被 preempted。理解策略之后，下一步就应该看 waiting、running、preempted 和 finished 之间如何流转。
 
@@ -236,25 +243,23 @@ Scheduler 最适合用状态机来理解。一个普通请求通常从 `WAITING`
 4. KVCacheManager 返回 `None`，表示当前 KV blocks 分配条件不满足，常见原因是 free blocks 不足；
 5. Scheduler 从 running 集合中选择一个请求抢占，释放它的 KV block；
 6. 再次尝试给当前请求分配 slots；
-7. 如果被抢占的正是当前请求，说明已经没有可让出的请求，本轮无法继续调度它。
+7. 如果被抢占的正是当前请求，说明已经没有可让出的请求，本轮无法继续调度它；
 
 ![抢占触发决策树](imgs/05_preemption_decision.png)
 
-在 `fcfs` 下，Scheduler 默认从 running 尾部弹出请求作为牺牲者。这个行为和 running 列表顺序有关，直觉上更接近“让较新的或排在后面的运行请求先让出空间”。在 `priority` 下，Scheduler 会选择 `(priority, arrival_time)` 最大的 running 请求，也就是优先级最差、同优先级下更晚到达的请求。
+在 `fcfs` 下，Scheduler 默认从 running 尾部弹出请求作为牺牲者。这个行为和 running 列表顺序有关，直觉上更接近让较新的或排在后面的运行请求先让出空间。在 `priority` 下，Scheduler 会选择 `(priority, arrival_time)` 最大的 running 请求，也就是优先级最差、同优先级下更晚到达的请求。
 
 被抢占时，Scheduler 会调用 KVCacheManager 释放请求的 blocks，同时释放 encoder cache，并把请求状态设为 `PREEMPTED`。如果请求上有 spec tokens，也会清空，因为这些 speculative 状态不应该跨抢占直接复用。
 
-### 5.2 抢占为什么采用重算
+### 5.2 重算式抢占与可观测信号
 
 vLLM V1 已经移除了旧的 GPU-CPU KV cache swapping 路径。旧模型里，抢占可以理解成把一部分 KV 从 GPU 换出到 CPU；V1 的主路径更倾向于释放 block，后续通过 prefix cache 或重算恢复。这是一个重要变化。
 
-从系统角度看，swapping 的问题是引入了额外数据搬运、复杂状态和更难预测的延迟。重算式抢占的优势是机制更简单：释放 KV block，回到 waiting，后续重新调度。它把复杂性转移到“如何尽量让重算可控”，例如 prefix cache、chunked prefill、合理 admission、优先级策略和更好的 KV block 管理。
+从系统角度看，swapping 的问题是引入了额外数据搬运、复杂状态和更难预测的延迟。重算式抢占的优势是机制更简单：释放 KV block，回到 waiting，后续重新调度。它把复杂性转移到**如何尽量让重算可控**，例如 prefix cache、chunked prefill、合理 admission、优先级策略和更好的 KV block 管理。
 
-这不是说重算没有代价。被抢占请求如果无法复用 prefix cache，就会损失已经计算过的 prefill 或 decode 状态。抢占越频繁，系统越可能在“推进新 token”和“重算旧 token”之间浪费算力。因此，抢占应该被理解成压力释放阀，而不是常规优化目标。
+这不是说重算没有代价。被抢占请求如果无法复用 prefix cache，就会损失已经计算过的 prefill 或 decode 状态；抢占越频繁，系统越可能在推进新 token 和重算旧 token 之间浪费算力。因此，抢占应该被理解成压力释放阀，而不是常规优化目标。
 
-### 5.3 抢占的可观测影响
-
-从用户体验看，抢占可能拉长某些请求的 inter-token latency 或 time-to-first-token。从指标看，vLLM metrics 会记录 preemption 次数；请求级 prefill time、decode time、inference time 等 interval 会把期间发生的 preemption 延迟包含进去。也就是说，metrics 不是把 preemption 简单归因为某个独立阶段，而是让读者能在请求生命周期的时间分解中看到抢占带来的等待成本。
+从用户体验看，抢占可能拉长某些请求的 inter-token latency 或 time-to-first-token；从指标看，vLLM metrics 会记录 preemption 次数，请求级 prefill time、decode time、inference time 等 interval 也会把期间发生的 preemption 延迟包含进去。metrics 不是把 preemption 简单归因为某个独立阶段，而是让读者能在请求生命周期的时间分解中看到抢占带来的等待成本。
 
 工程上判断抢占是否过多，可以关注：
 
@@ -266,60 +271,44 @@ vLLM V1 已经移除了旧的 GPU-CPU KV cache swapping 路径。旧模型里，
 
 抢占本身不是坏事；抢占频繁才是容量、负载形态或调度参数不匹配的信号。
 
-## 6. 异步调度的边界
+## 6. 更进一步：异步调度
 
-本章没有把 async scheduling 展开成主线，是因为它已经足以成为下一章。同步调度主路径回答的是“每个 engine step 如何决定本轮 batch”；异步调度进一步回答的是“CPU 调度和输入准备能否与 GPU 执行重叠，从而减少 GPU 空泡”。
+同步 Scheduler 已经能把 running、waiting、KV budget、token budget 和抢占组织成稳定循环，但它仍然隐含一个限制：CPU 侧调度、输入准备、输出解析和状态更新通常围绕 GPU step 的边界推进。GPU 执行 step N 时，如果 CPU 还在等待输出回来才能准备 step N+1，中间就可能出现 GPU 空泡；负载越复杂，structured output、spec decode、KV connector、PP 等状态越多，这种等待越容易成为新的瓶颈。
 
-从当前源码看，`async_scheduling=True` 时，`SchedulerConfig.get_scheduler_cls()` 会选择 `AsyncScheduler`。它继承普通 Scheduler，但在 `_update_after_schedule()` 和输出更新路径上加入 output placeholders：当请求已经完成 prefill、进入生成阶段时，Scheduler 可以先把未来会产生的输出位置占住，允许调度器为下一步提前准备工作；模型输出回来后，再用真实 token 消费或抵消这些 placeholder，并修正 `num_output_placeholders`。
+异步调度回答的就是这个更进一步的问题：CPU 调度和输入准备能否与 GPU 执行重叠，从而减少 GPU 空泡。同步调度主路径回答每个 engine step 如何决定本轮 batch，异步调度则继续追问下一轮 batch 能不能更早准备好。
+
+异步调度的关键机制是 output placeholder。当请求已经完成 prefill、进入生成阶段时，Scheduler 可以先把未来会产生的输出位置占住，让下一步调度和输入准备提前发生；模型输出返回后，再用真实 sampled token 消费或抵消这些 placeholder，并修正请求状态。这个机制让 CPU 能在 GPU 工作期间继续向前准备，但也要求调度器精确知道哪些占位仍然有效、哪些输出已经过期、哪些 KV slots 对应真实 token。
 
 ![异步调度的过渡模型](imgs/05_async_bridge.png)
 
 异步调度的核心收益是 overlap：GPU 执行 step N 时，CPU 侧可以准备 step N+1 的调度、输入元数据或部分 worker 状态。vLLM 的 Model Runner V2 设计文档也明确把 async-first 当作方向：减少 CPU-GPU 同步点，避免共享 CPU buffer 被 GPU 异步读取时发生 race condition，并把输入准备、状态更新、采样等路径改造成更适合异步流水的结构。
 
-但 async scheduling 不是简单地“把 `schedule()` 放到后台线程”。它会牵涉：
+但 async scheduling 不是简单地把 `schedule()` 放到后台线程。它会牵涉：
 
 1. output placeholder 与真实 sampled token 的一致性；
 2. spec decode draft tokens 的占位、接受与拒绝；
 3. structured output grammar 是否能在 token 尚未全部回到 CPU 时推进；
 4. Pipeline Parallel 的多 batch in-flight；
 5. KV connector 异步加载和请求 abort/preemption 的竞态；
-6. worker 侧 persistent batch 与 GPU/CPU buffer 的生命周期。
+6. worker 侧 persistent batch 与 GPU/CPU buffer 的生命周期；
 
 如果请求在异步输出尚未完全回到 CPU 时被 force-preempt，或者 prefix cache 被重置，已经在路上的 async output 还可能变成过期结果，Scheduler 和 worker 侧都必须知道哪些 placeholder 仍然有效、哪些输出需要丢弃。
 
-这也是为什么 vLLM 近几个版本围绕 async scheduling 出现了大量性能优化和 bug fix：它不是一个孤立开关，而是贯穿 Scheduler、ModelRunner、Executor、KV connector、structured output、spec decode 和 PP 的系统级优化。下一章更适合单独讲它的历史线：从 V0 的 async output processing/multi-step scheduling，到 V1 的 AsyncScheduler，再到 MRV2 的 async-first 设计。
+这也是为什么 vLLM 近几个版本围绕 async scheduling 出现了大量性能优化和 bug fix：它不是一个孤立开关，而是贯穿 Scheduler、ModelRunner、Executor、KV connector、structured output、spec decode 和 PP 的系统级优化。异步调度值得单独成章，因为它不只是改变本轮 batch 如何构造，而是改变 CPU、GPU 和请求状态之间的时间关系。
 
-## 7. 源码阅读地图
+## 7. 本章小结
 
-读 Scheduler 源码时，建议按机制读，而不是按文件顺序逐行读。
+Scheduler 的核心不是队列排序，而是把动态请求流压缩成 GPU 可执行 batch。它用统一 token 预算模型处理 prefill、decode、chunked prefill、prefix cache 和 spec decode，用 KVCacheManager 的 block 账本约束 admission，用 waiting/running/preempted/finished 状态维护请求生命周期。
 
-第一组路径是调度入口：
+调度循环的第一层判断是 running 优先。已经进入 running 的请求通常拥有 KV block、worker 侧缓存和部分完成状态，继续推进它们能保护 decode 稳定性，也能减少过度接纳新请求导致的 KV 压力。waiting 接纳发生在没有抢占且资源仍有余额时，它更像 admission control：prefix cache、外部 KV、encoder budget、LoRA、结构化输出和 KV block capacity 都可能改变一个请求能否进入本轮计划。
 
-1. `vllm/v1/engine/core.py`：看 `EngineCore.step()` 如何调用 `schedule()`、`execute_model()` 和 `update_from_output()`；
-2. `vllm/config/scheduler.py`：看 `SchedulerConfig` 暴露了哪些调度参数，以及 async 时如何选择 `AsyncScheduler`；
-3. `vllm/v1/core/sched/interface.py`：看 Scheduler 对 EngineCore 暴露的抽象接口。
+第二层判断是策略改变约束，而不是另起一套调度器。Chunked prefill 把长 prompt 拆成可调度块，prefix cache 改变 waiting 请求的起跑线，spec decode 把未来可能接受的 draft tokens 纳入预算，priority policy 改变谁先拿预算以及谁在压力下让位。这些机制最终都落到同一个问题：本轮哪些 token 前进，前进后 KV 状态是否仍然一致。
 
-第二组路径是核心机制：
-
-1. `vllm/v1/core/sched/scheduler.py`：重点读 `schedule()`、`_preempt_request()`、`_update_after_schedule()`、`update_from_output()`；
-2. `vllm/v1/core/sched/request_queue.py`：理解 `fcfs` 与 `priority` 队列的真实排序语义；
-3. `vllm/v1/core/sched/output.py`：理解 `SchedulerOutput` 如何把调度决策传给 worker。
-
-第三组路径是资源约束：
-
-1. `vllm/v1/core/kv_cache_manager.py`：重点读 `get_computed_blocks()` 与 `allocate_slots()`；
-2. `vllm/v1/core/kv_cache_coordinator.py` 与 block pool 相关文件：继续追踪 block 分配、引用和 cache 行为；
-3. `docs/design/prefix_caching.md`：用设计文档补足 prefix cache 与 block allocation 的语义。
-
-第四组路径是异步调度入口：
-
-1. `vllm/v1/core/sched/async_scheduler.py`：看 output placeholders 如何修改普通 Scheduler 的状态推进；
-2. `vllm/v1/worker/gpu_model_runner.py` 与 `vllm/v1/worker/gpu_input_batch.py`：看 worker 侧如何消费 placeholder、persistent batch 和 scheduler output；
-3. `docs/design/model_runner_v2.md`：理解 async-first 为什么会倒逼 ModelRunner 重新设计。
+第三层判断是抢占与异步都不是免费优化。抢占释放 KV block，让系统在压力下继续前进，但频繁抢占会把算力浪费在重算上；异步调度减少 GPU 空泡，却把 output placeholder、spec token、KV connector、structured output 和 PP 的一致性问题推到系统层。Scheduler 的难点就在这里：它要在吞吐、延迟、公平性、显存压力和正确性之间不断做局部最优决策。
 
 ![调度策略的工程罗盘](imgs/05_tradeoff_compass.png)
 
-本章最后用一个心智模型收束：Scheduler 是 vLLM 中把“请求流”压成“GPU 可执行 batch”的地方。它不是单纯公平队列，也不是单纯显存分配器，而是在吞吐、延迟、公平性和显存压力之间不断做局部最优决策的运行时控制器。
+本章最后用一个心智模型收束：Scheduler 是 vLLM 中把**请求流**压成**GPU 可执行 batch**的地方。它不是单纯公平队列，也不是单纯显存分配器，而是在吞吐、延迟、公平性和显存压力之间不断做局部最优决策的运行时控制器。
 
 如果只记住一句话，可以这样理解：
 
