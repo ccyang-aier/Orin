@@ -11,6 +11,8 @@ updated: 2026-05-31
 description: 本文基于本地 vLLM V1 源码快照，解释 SchedulerOutput 如何经由 Executor、Worker 与 ModelRunner 变成模型执行，并重点梳理控制面、数据面、rank 与 output_rank 的通信机制。
 ---
 【批注，1）正文不要滥用中文引号，确实需要强调的概念、判断或短句，优先使用加粗；2）控制小段落中的句号密度，能顺畅连接的解释用逗号、分号或重写句式承接，避免每个短句都被句号切碎；3）教程正文避免用作者撰文的过程说明去替代教学内容，不写类似 `接下来会`、`本文将` 这类让读者关心写作安排的句式；需要引导时直接写稳定的学习路径、对象关系或机制递进；4）避免段落用大量并列短句+分号的方式去呈现 全文排查】
+
+【批注，全文排查，部分不够详细的内容更细化下，从基础开始铺垫，力图让每个知识清晰、全面、深入，易于理解】
 # 07 Executor、Worker 与 ModelRunner
 
 回顾一下之前讲解的内容：`EngineCore` 是推理内循环，`Scheduler` 决定每一步哪些请求推进多少 token，`KVCacheManager` 管理 KV block 的 admission 与释放，async scheduling 试图让 CPU 调度和 GPU 执行重叠起来以加速推理过程。
