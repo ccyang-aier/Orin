@@ -140,7 +140,7 @@ scheduler.update_from_output(scheduler_output, model_output)
 
 但它也带来一个代价：一旦某条路径会让请求状态提前推进、回滚、抢占或异步返回，Scheduler 和 worker 账本就必须继续保持一致。第 06 篇讲的 async scheduling placeholder，本质上就是这种账本一致性问题的放大版。
 
-## 4. Executor 的控制面通信
+## 4. 控制面通信: Executor
 
 `Executor` 是本文通信机制的第一层核心。它提供 `collective_rpc()`，并在默认 `execute_model()` 里把 `SchedulerOutput` 作为参数发给所有 worker。抽象类里还专门提醒：这个 API 推荐用于控制消息，真正的数据面通信应另行建立。
 
@@ -166,6 +166,8 @@ scheduler.update_from_output(scheduler_output, model_output)
 ### 4.2 MultiprocExecutor
 
 `MultiprocExecutor` 是理解 vLLM V1 默认多 GPU 执行的重点。它会为本地 worker 创建子进程，每个 worker 子进程运行 `WorkerProc.worker_main()`，并在初始化后进入 `worker_busy_loop()`。
+
+【批注，output rank解释说明下，提前引入的概念，读者容易看不懂】
 
 控制面通信主线如下：
 
@@ -195,11 +197,13 @@ Ray 后端分两类通信。普通 utility RPC 通过 Ray actor 的 `execute_met
 
 因此，Ray 后端不是“把 multiproc 改成远程调用”这么简单。Ray compiled DAG 把模型执行的数据面也纳入图执行，尤其在 PP 场景里，它需要表达 `SchedulerOutput -> PP stage 0 -> IntermediateTensors -> PP stage 1 -> ModelRunnerOutput` 这种链路。
 
-## 5. Worker 与 ModelRunner 的数据面通信
+## 5. 数据面通信：Worker -> ModelRunner
 
 控制面把“做什么”送到 worker，数据面负责“执行时各 rank 怎样协作”。这部分是 vLLM 通信实现最复杂的地方，也是最容易被误解的地方。
 
 ### 5.1 Worker 是设备进程外壳
+
+【批注，新增一个插图呈现下workd的标准执行流】
 
 `WorkerBase` 的注释说得很直接：它既抽象不同硬件实现，也抽象控制面通信。GPU 场景下，`Worker` 负责：
 
@@ -239,9 +243,13 @@ V2 `GPUModelRunner.execute_model()` 的主线可以压缩成：
 
 现在再读控制面 / 数据面图会更稳：左侧是 `SchedulerOutput` 这类控制消息怎样进入 worker，右侧是进入模型执行后 TP、PP、DP 各自承担的张量或同步协作。
 
+【批注，这个图重新生成下，不够专业生动，不够详细和清晰】
+
 ![控制面与数据面通信的分层](imgs/07_data_plane_groups.png)
 
-### 5.3 sample_tokens 为什么要单独看
+### 5.3 sample_tokens 为什么要单独看【批注，改名，不要莫名其妙的问题作为标题】
+
+【批注，这个小节有必要展示吗？放在这里我完全没有看懂，前后也没有很清晰的基础铺垫等，若有必要展示，给出更清晰全面铺垫和讲解，否则删除】
 
 很多读者会把 forward 和 sampling 当成一个不可分的模型调用。vLLM 执行侧会刻意把它们拆开，因为采样位置常常有额外条件。
 
@@ -252,6 +260,8 @@ V2 `GPUModelRunner.execute_model()` 的主线可以压缩成：
 所以，PP 下“谁返回结果”和“谁更新本地状态”是两个问题。最终 `ModelRunnerOutput` 只需要从 output rank 回到 EngineCore，但各个 stage 的本地 request state 也必须跟上 sampled token，否则下一轮 forward 的输入历史就会错位。
 
 ## 6. output_rank 与 rank 协同
+
+【批注，第六节讲的更详细些，从基础开始讲，否则这一节有点没看懂，另外标题改下名字】
 
 多 worker 场景里，`ModelRunnerOutput` 通常只从一个 rank 返回。multiproc 后端的 `_get_output_rank()` 给出的规则很直观：返回最后一个 PP stage 中的第一个 TP worker。源码注释用 `TP=8, PP=4` 举例，world size 是 32，最后 PP stage 的起点是 `32 - 8 = 24`，所以 output rank 是 24。
 
@@ -281,6 +291,8 @@ output_rank =
 这就是 vLLM 执行侧抽象的价值：Scheduler 专心做全局状态机，worker group 专心做分布式执行。代价是通信层次多、边界多、异常路径多，一旦读源码时把控制面和数据面混在一起，就会觉得所有东西都像 RPC，结果越读越乱。
 
 ## 7. 源码阅读地图
+
+【批注，删除源码文件地图部分，标题改为本章小结，新增本章小结，内容精炼，循序渐进有深度】
 
 如果要从源码复查本文内容，可以按下面顺序读，而不是一上来跳进 `gpu_model_runner.py` 的几千行实现。
 
