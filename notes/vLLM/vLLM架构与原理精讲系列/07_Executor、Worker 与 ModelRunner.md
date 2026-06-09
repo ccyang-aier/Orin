@@ -11,11 +11,11 @@ updated: 2026-05-31
 description: 本文基于本地 vLLM V1 源码快照，解释 SchedulerOutput 如何经由 Executor、Worker 与 ModelRunner 变成模型执行，并重点梳理控制面、数据面、rank 与 output_rank 的通信机制。
 ---
 【批注，1）正文不要滥用中文引号，确实需要强调的概念、判断或短句，优先使用加粗；2）控制小段落中的句号密度，能顺畅连接的解释用逗号、分号或重写句式承接，避免每个短句都被句号切碎；3）教程正文避免用作者撰文的过程说明去替代教学内容，不写类似 `接下来会`、`本文将` 这类让读者关心写作安排的句式；需要引导时直接写稳定的学习路径、对象关系或机制递进；4）避免段落用大量并列短句+分号的方式去呈现 全文排查】
-# 07 Executor、Worker 与 ModelRunner 的协同执行与通信机制
+# 07 Executor、Worker 与 ModelRunner
 
-前几章已经把 vLLM V1 的关键状态层讲到这里：`EngineCore` 是推理内循环，`Scheduler` 决定每一步哪些请求推进多少 token，`KVCacheManager` 管理 KV block 的 admission 与释放，async scheduling 试图让 CPU 调度和 GPU 执行重叠起来。
+回顾一下之前讲解的内容：`EngineCore` 是推理内循环，`Scheduler` 决定每一步哪些请求推进多少 token，`KVCacheManager` 管理 KV block 的 admission 与释放，async scheduling 试图让 CPU 调度和 GPU 执行重叠起来以加速推理过程。
 
-但还有一个很容易被一句话带过的问题：**Scheduler 产出的 `SchedulerOutput` 到底怎样变成 GPU 上的一次 forward**。
+可以看到，我们之前分析的组件或逻辑大多落在vLLM的架构上层，这里有一个较为关键的问题还没有展开，即：**Scheduler 产出的 `SchedulerOutput` 到底怎样变成 GPU 上的一次 forward**。
 
 如果只看 `EngineCore.step()`，这一步似乎很简单：
 
@@ -25,17 +25,19 @@ model_executor.execute_model(scheduler_output)
 scheduler.update_from_output(scheduler_output, model_output)
 ```
 
-这三行背后其实跨过了 vLLM 执行侧最重要的一组边界：`Executor` 屏蔽执行后端，`Worker` 管理设备进程，`ModelRunner` 把调度结果翻译成张量输入并调用模型。更麻烦的是，通信不是一条线，而是两条线叠在一起：控制面把方法调用、请求元数据和 `SchedulerOutput` 发到 worker；数据面则在 TP、PP、DP、KV connector、Ray compiled DAG 等路径里搬运激活张量、采样结果和同步状态。
+这三行背后其实跨过了 vLLM 执行侧最重要的一组边界：`Executor` 屏蔽执行后端，`Worker` 管理设备进程，`ModelRunner` 把调度结果翻译成张量输入并调用模型。更麻烦的是，这里面涉及到的通信不是一条线，而是两条线叠在一起：控制面把方法调用、请求元数据和 `SchedulerOutput` 发到 worker；数据面则在 TP、PP、DP、KV connector、Ray compiled DAG 等路径里搬运激活张量、采样结果和同步状态。
 
+【批注，删除前几句话，优化这段，不要写成源码解读文档】
 本文以 `code/opensource/vllm` 的本地源码快照为依据，源码分支为 `main`，短提交哈希为 `52a31ccec`。本文仍然不做逐行源码讲解，而是建立一个稳定的执行心智模型：**EngineCore/Scheduler 负责决定做什么，Executor 负责把这件事发给谁，Worker 负责在哪个设备进程里做，ModelRunner 负责怎样把它变成一次可执行的模型调用**。
 
-下面这张图先给出本文的阅读地图：先看 `SchedulerOutput` 和 `ModelRunnerOutput` 的上下往返，再看中间三层各自负责哪一段边界。
+![](imgs/07_execution_boundary_map.png)
 
-![Executor、Worker 与 ModelRunner 的职责边界](imgs/07_execution_boundary_map.png)
+
+【批注，这段话对这张图的讲解太少，不够全面深入，更详细展开，帮助读者先建立一个全局认知】
 
 先读这张图：`SchedulerOutput` 从 `EngineCore/Scheduler` 往下走，`ModelRunnerOutput` 从执行侧往上回。中间的 `Executor` 和 `Worker` 不是“多余包装”，而是把同一套调度语义适配到不同后端、不同进程、不同 GPU rank、不同并行策略上的执行编排层。
 
-## 1. 为什么需要执行侧三层
+## 1. 为什么需要执行侧三层【批注，标题改下】
 
 最朴素的推理代码可以写成 `model(input_ids)`。vLLM 做不到这么薄，因为在线推理系统面对的输入不是一个静态 batch，而是一组持续变化的请求状态。每一步调度出来的 batch 可能同时包含：
 
@@ -60,6 +62,7 @@ scheduler.update_from_output(scheduler_output, model_output)
 
 一个常见误解是把 `Executor` 当成“真正跑模型”的组件。更准确地说，`Executor` 负责组织执行，真正调用模型的是 worker 内部的 `ModelRunner`。另一个常见误解是把 `Worker` 和 `ModelRunner` 混在一起。`Worker` 更像设备进程的外壳，负责初始化设备、加载模型、建立通信组、处理 sleep/wake/profile/LoRA 等控制调用；`ModelRunner` 才是每一步把 batch 状态、block table、attention metadata、采样逻辑组织起来的对象。
 
+【批注，重构这段，同全局批注】
 这也是本文与第 03 篇的区别。第 03 篇先建立 vLLM 的全局地图；本文把镜头推进到 `SchedulerOutput` 离开 Scheduler 之后：它经过哪些通信边界，在哪些地方被复制、缓存、广播、聚合，又在哪里变成 GPU 上的张量计算。
 
 ## 2. 一次 step 的往返路径
