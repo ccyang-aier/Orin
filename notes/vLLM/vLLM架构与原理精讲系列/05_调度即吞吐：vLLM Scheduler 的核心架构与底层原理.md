@@ -83,6 +83,7 @@ Scheduler 内部最重要的对象可以分成六类。
 
 这种分层非常关键。Scheduler 可以只关心 token 与 block 的决策，ModelRunner 可以只关心如何把决策变成 GPU 输入，KVCacheManager 可以只关心 block 分配、缓存和释放。组件边界清晰，vLLM 才能把 prefix caching、chunked prefill、spec decode、KV connector、PP/DP 等特性逐步叠进去。
 
+【批注，这个图里 record running plan 是不是也是意思会去build SchedulerOutput？如果是，是不是可以加一个5到8的箭头？】
 ![一次 schedule 循环](imgs/05_schedule_loop.png)
 
 一次调度循环的主线可以概括为：
@@ -100,15 +101,17 @@ Scheduler 内部最重要的对象可以分成六类。
 
 ## 3. 调度循环
 
+【批注，这里你轻描淡写的说了一个结论（即下文这段话），但是我建议这里细化展开下，我记得vllm早期的调度器是先 prefill 后 decode的，这里检索下充分的背景和资料后详细展开解释说明为什么vllm优化了这个设计，原设计有什么问题？优化后解决了什么等。即我们很多的叙述和讲解，不能只讲结论，很多地方或设计要能讲明白这个设计为什么要这么设计等，要知其然，且知其所以然。】
+
 Scheduler 的核心循环不是“先 prefill 后 decode”，而是“谁还有 token 没算完，谁就申请一部分本轮预算”。这可以用一个小例子理解。
 
 假设本轮 `max_num_scheduled_tokens = 1024`，系统里有三个请求：
 
-| 请求 | 状态 | 已计算 token | 当前总 token | 本轮理想推进 |
-| --- | --- | ---: | ---: | ---: |
-| A | running decode | 501 | 502 | 1 |
-| B | running chunked prefill | 1024 | 1800 | 776 |
-| C | waiting new prefill | 0 | 300 | 300 |
+| 请求  | 状态                      | 已计算 token | 当前总 token | 本轮理想推进 |
+| --- | ----------------------- | --------: | --------: | -----: |
+| A   | running decode          |       501 |       502 |      1 |
+| B   | running chunked prefill |      1024 |      1800 |    776 |
+| C   | waiting new prefill     |         0 |       300 |    300 |
 
 Scheduler 不会先给 A 贴上 decode 标签、给 B/C 贴上 prefill 标签再写两个算法，而是统一计算“当前总 token 与已计算 token 之间还差多少”。在预算充足时，A 可以拿 1 个 token，B 拿 776 个 token，剩余 247 个 token 不够完整覆盖 C 的 300 token prompt；如果 chunked prefill 开启，C 可以先拿 247 个 token，否则 C 可能要等下一轮。
 
@@ -116,16 +119,18 @@ Scheduler 不会先给 A 贴上 decode 标签、给 B/C 贴上 prefill 标签再
 
 本章理解 Scheduler，最重要的是把几个预算区分开。
 
-| 预算/约束 | 含义 | 对调度的影响 |
-| --- | --- | --- |
-| `max_num_scheduled_tokens` | Scheduler 本轮最多发出的 token 数 | 控制单轮 forward 的 token 规模 |
-| `max_num_batched_tokens` | 模型执行侧 batch token 上限 | 通常作为 scheduled token 上限的默认值 |
-| `max_num_seqs` | 同一轮最多活跃序列数 | 限制 running 请求数量 |
-| encoder compute budget | 多模态/encoder 输入的本轮计算预算 | 可能让请求只调度文本部分或暂缓 |
-| KV block capacity | KV Cache 剩余可分配 block | 决定请求能否被接纳或继续运行 |
-| `long_prefill_token_threshold` | 长 prompt 单轮切块阈值 | 防止长 prefill 独占过多预算 |
+| 预算/约束                          | 含义                        | 对调度的影响                      |
+| ------------------------------ | ------------------------- | --------------------------- |
+| `max_num_scheduled_tokens`     | Scheduler 本轮最多发出的 token 数 | 控制单轮 forward 的 token 规模     |
+| `max_num_batched_tokens`       | 模型执行侧 batch token 上限      | 通常作为 scheduled token 上限的默认值 |
+| `max_num_seqs`                 | 同一轮最多活跃序列数                | 限制 running 请求数量             |
+| encoder compute budget         | 多模态/encoder 输入的本轮计算预算     | 可能让请求只调度文本部分或暂缓             |
+| KV block capacity              | KV Cache 剩余可分配 block      | 决定请求能否被接纳或继续运行              |
+| `long_prefill_token_threshold` | 长 prompt 单轮切块阈值           | 防止长 prefill 独占过多预算          |
 
 这些预算彼此不是替代关系。`max_num_scheduled_tokens` 解决“这一轮算多少 token”；`max_num_seqs` 解决“这一轮有多少条序列”；KV block capacity 解决“算完以后状态放在哪里”。真正的 Scheduler 决策发生在三者交汇处。
+
+【批注，我记得申请KVCacheManager的KVBlocks那个方法是有一个详细的注释的，参考那个注释这里我觉得是不是有必要新增说明下一个请求的KVBlcoks分布结构，即包括哪些？命中内存的（显存），命中外部的、xx、xx等等 再搭配一个插图清晰呈现下，如果不理解这个，可能对调度器申请blocks这块就会有理解障碍，找个合适的位置插入这个知识点】
 
 ### 3.1 Running 优先
 
