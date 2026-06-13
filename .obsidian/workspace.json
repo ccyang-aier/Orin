@@ -197,6 +197,10 @@
   },
   "active": "355c39dd8741f2da",
   "lastOpenFiles": [
+    "notes/AI高效使用/怎么开发一个自己的plugin或skill？.md",
+    "notes/AI高效使用/imgs/skill-plugin-boundary-handdrawn.png",
+    "notes/AI高效使用/imgs/skill-plugin-build-flow-handdrawn.png",
+    "notes/AI高效使用/imgs",
     "notes/AI高效使用/未命名",
     "notes/AI高效使用/未命名/未命名",
     "notes/AI高效使用/AI规划化",
@@ -236,13 +240,9 @@
     "notes/vLLM/vLLM架构与原理精讲系列/imgs/07_execution_boundary_map.png",
     "notes/vLLM/vLLM架构与原理精讲系列/imgs/05_spec_decode_kv_allocation.png",
     "notes/vLLM/vLLM架构与原理精讲系列/imgs/05_chunked_prefill_mechanism.png",
-    "notes/vLLM/vLLM架构与原理精讲系列/imgs/05_kv_blocks_layout.png",
-    "notes/vLLM/vLLM架构与原理精讲系列/imgs/04_attention_modes_kv_challenges.png",
     "notes/LLM/大模型与推理全栈精讲系列/04_Transformer架构及原理.md.tmp.9232.bae8588111b3",
     "notes/LLM/大模型与推理全栈精讲系列/03_深入理解Attention机制.md.tmp.50112.c6e37dfddc40",
     "notes/LLM/大模型与推理全栈精讲系列/03_深入理解Attention机制.md.tmp.50112.77cc8d4dee2d",
-    "notes/LLM/大模型与推理全栈精讲系列/03_深入理解Attention机制.md.tmp.49628.1ff819d82e91",
-    "notes/LLM/大模型与推理全栈精讲系列/03_深入理解Attention机制.md.tmp.31140.550e15042027",
     "未命名.canvas"
   ]
 }
