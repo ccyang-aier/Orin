@@ -13,7 +13,7 @@ Turn tutorials into durable learning artifacts, not one-off answers. Resolve the
 - Brief confirmation is a hard execution gate: after only the minimal orientation needed to identify the target artifact, series position, and obvious repository constraints, output the teaching brief and stop; do not continue the same turn into evidence gathering, detailed figure design, `imagegen`, drafting, rewriting, expansion, target-document edits, learning-assessment work, or quality-gate execution;
 - Every tutorial document handled with this skill must complete direction-setting and produce a teaching brief before drafting, rewriting, expanding, or generating teaching assets; the user must explicitly confirm or revise the brief before any downstream work continues;
 - The teaching brief must include at least audience, boundaries, depth, visual style, exclusions, content outline, figure plan, assessment decision, and quality gate plan;
-- Do not force a learning assessment into every document; decide whether it adds real learning value from the document type, reader, depth, and user request. Omit it for narrow operational guides, reference notes, short explanatory notes, or knowledge-base articles where quiz questions would feel like filler;
+- Do not force a learning assessment into every document; decide whether it adds real learning value from the document type, reader, depth, and user request. Knowledge-rich or technical tutorials generally benefit from assessment. Omit assessment only for narrow operational guides, reference notes, or short explanatory notes where quiz questions would feel like filler;
 - Final document support-section headings must follow the target document language. In Chinese documents, use `参考资料` and, only when assessment is included, `学习测评`; do not use `References` or `Learning Assessment` as Chinese-document headings;
 - Every tutorial document handled with this skill must use `imagegen` for final teaching figures, and must complete figure planning, generation, review, local saving, and document references before finalization;
 - Teaching-figure creation and correction must rely only on the `imagegen` skill; do not use scripts, drawing tools, image editors, SVG/HTML/canvas reconstruction, raster/vector cleanup, or any other post-generation processing to repair imperfect generated figures;
@@ -73,7 +73,7 @@ Turn tutorials into durable learning artifacts, not one-off answers. Resolve the
 
 ## 3. Assessment Decision
 
-Learning assessment is optional, not mandatory for every document. Include it when questions will materially help the reader test conceptual understanding, transfer judgment, common misconceptions, or mechanism reasoning. Omit it when the document is a narrow operational guide, reference note, short knowledge-base article, or practical explainer where assessment would feel like filler.
+Learning assessment is optional, not mandatory for every document. Include it when questions will materially help the reader test conceptual understanding, transfer judgment, common misconceptions, or mechanism reasoning. Knowledge-rich or technical tutorials should usually include assessment unless the confirmed brief gives a clear reason to omit it. Omit it when the document is a narrow operational guide, reference note, or practical explainer where assessment would feel like filler.
 
 When included, place it after the localized reference chapter and title it in the target document language. In Chinese documents, use `学习测评`; in English documents, use `Learning Assessment`.
 
