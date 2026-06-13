@@ -6,19 +6,6 @@ tags:
   - skill
   - frontend
 updated: 2026-05-21
-source:
-  - "C:\\Users\\17335\\.agents\\skills\\brandkit\\SKILL.md"
-  - "C:\\Users\\17335\\.agents\\skills\\design-taste-frontend\\SKILL.md"
-  - "C:\\Users\\17335\\.agents\\skills\\gpt-taste\\SKILL.md"
-  - "C:\\Users\\17335\\.agents\\skills\\high-end-visual-design\\SKILL.md"
-  - "C:\\Users\\17335\\.agents\\skills\\image-to-code\\SKILL.md"
-  - "C:\\Users\\17335\\.agents\\skills\\imagegen-frontend-mobile\\SKILL.md"
-  - "C:\\Users\\17335\\.agents\\skills\\imagegen-frontend-web\\SKILL.md"
-  - "C:\\Users\\17335\\.agents\\skills\\impeccable\\SKILL.md"
-  - "C:\\Users\\17335\\.agents\\skills\\industrial-brutalist-ui\\SKILL.md"
-  - "C:\\Users\\17335\\.agents\\skills\\minimalist-ui\\SKILL.md"
-  - "C:\\Users\\17335\\.agents\\skills\\redesign-existing-projects\\SKILL.md"
-  - "C:\\Users\\17335\\.agents\\skills\\stitch-design-taste\\SKILL.md"
 status: draft
 ---
 

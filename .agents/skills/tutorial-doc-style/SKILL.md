@@ -12,19 +12,21 @@ Turn tutorials into durable learning artifacts, not one-off answers. Resolve the
 - When the user explicitly invokes this skill, or the task clearly involves high-quality tutorial writing, revision, expansion, structural rewriting, or image-rich tutorial design, follow this workflow;
 - Brief confirmation is a hard execution gate: after only the minimal orientation needed to identify the target artifact, series position, and obvious repository constraints, output the teaching brief and stop; do not continue the same turn into evidence gathering, detailed figure design, `imagegen`, drafting, rewriting, expansion, target-document edits, learning-assessment work, or quality-gate execution;
 - Every tutorial document handled with this skill must complete direction-setting and produce a teaching brief before drafting, rewriting, expanding, or generating teaching assets; the user must explicitly confirm or revise the brief before any downstream work continues;
-- The teaching brief must include at least audience, boundaries, depth, visual style, exclusions, content outline, figure plan, and assessment focus;
+- The teaching brief must include at least audience, boundaries, depth, visual style, exclusions, content outline, figure plan, assessment decision, and quality gate plan;
+- Do not force a learning assessment into every document; decide whether it adds real learning value from the document type, reader, depth, and user request. Omit it for narrow operational guides, reference notes, short explanatory notes, or knowledge-base articles where quiz questions would feel like filler;
+- Final document support-section headings must follow the target document language. In Chinese documents, use `参考资料` and, only when assessment is included, `学习测评`; do not use `References` or `Learning Assessment` as Chinese-document headings;
 - Every tutorial document handled with this skill must use `imagegen` for final teaching figures, and must complete figure planning, generation, review, local saving, and document references before finalization;
 - Teaching-figure creation and correction must rely only on the `imagegen` skill; do not use scripts, drawing tools, image editors, SVG/HTML/canvas reconstruction, raster/vector cleanup, or any other post-generation processing to repair imperfect generated figures;
 - `imagegen` teaching figures are first-class tutorial assets; mechanisms, flows, structures, comparisons, state changes, and decision paths that can be explained or supported visually should receive high-quality figure planning wherever possible;
 - Every tutorial document handled with this skill must run the Multi-Agent Quality Gate; if tool policy requires user authorization, request it during the teaching brief stage; if tools are unavailable or authorization is denied, report the blocker explicitly and do not silently skip it;
-- Do not send a final completion response while required image assets, path checks, multi-agent review, learning assessment, or Markdown validation gates remain unmet;
+- Do not send a final completion response while required image assets, path checks, multi-agent review, selected learning assessment work, or Markdown validation gates remain unmet;
 
 ## 2. Workflow
 
 1. Set direction and confirm the brief:
    - Before the brief, do only minimal orientation: read the user request, repository instructions, target path, target document header or short excerpt, and series filenames or index if needed; do not perform broad research, source tracing, detailed outline expansion, final figure prompting, image generation, or document edits;
    - Ask 2-4 high-value questions when answers are necessary to avoid a risky assumption; if the user already provided enough direction, state reasonable assumptions inside the brief instead of blocking;
-   - Produce a teaching brief: target reader, exclusions, content boundary, depth standard, central question, distinctive teaching promise, content outline, visually explainable knowledge points, figure density and figure plan, assessment focus, and quality gate execution plan;
+   - Produce a teaching brief: target reader, exclusions, content boundary, depth standard, central question, distinctive teaching promise, content outline, visually explainable knowledge points, figure density and figure plan, assessment decision with rationale, and quality gate execution plan;
    - End the response by asking the user to confirm or revise the brief, then stop work for that turn;
    - The user must explicitly confirm the brief before tutorial writing, rewriting, expansion, evidence gathering beyond orientation, detailed figure design, `imagegen`, learning-assessment work, quality-gate execution, or target-document edits continue;
    - Treat ambiguous replies as not yet confirmed; clarify or update the brief and wait again;
@@ -50,7 +52,7 @@ Turn tutorials into durable learning artifacts, not one-off answers. Resolve the
    - Select the necessary teaching layers from intuition, mechanism, implementation details, cost model, constraints, failure modes, and decision rules, then reorder them for the current topic;
    - Treat central mechanisms as full teaching objects and do not compress them into shallow asides;
    - Avoid formulaic tutorial series structure. Chapter order, examples, figure strategy, and decision framework must serve the current concept;
-   - Keep top-level teaching chapters to 6-7 or fewer, excluding references and `Learning Assessment`;
+   - Keep top-level teaching chapters to 6-7 or fewer, excluding the localized reference chapter and optional localized assessment chapter;
    - Keep headings short, formal, and durable.
 
 5. Generate and review teaching figures:
@@ -69,9 +71,11 @@ Turn tutorials into durable learning artifacts, not one-off answers. Resolve the
    - Use the target document language for reader-facing prose, captions, and generated-figure helper labels; preserve stable professional English terms such as framework concepts, operators, APIs, model names, paper terms, and standard technical phrases;
    - Avoid process narration, chat traces, excessive quotation marks, repetitive caption templates, meaningless blank lines, and decorative horizontal rules.
 
-## 3. Learning Assessment
+## 3. Assessment Decision
 
-Substantial tutorials must add a fixed final chapter named `Learning Assessment` after references.
+Learning assessment is optional, not mandatory for every document. Include it when questions will materially help the reader test conceptual understanding, transfer judgment, common misconceptions, or mechanism reasoning. Omit it when the document is a narrow operational guide, reference note, short knowledge-base article, or practical explainer where assessment would feel like filler.
+
+When included, place it after the localized reference chapter and title it in the target document language. In Chinese documents, use `学习测评`; in English documents, use `Learning Assessment`.
 
 - Include at least 10 customized questions;
 - Mostly use single-choice and multiple-choice questions;
@@ -93,7 +97,7 @@ Every tutorial document handled with this skill must run the quality gate after 
    - Content accuracy reviewer: factual accuracy, source support, terminology, conceptual order;
    - Reader experience reviewer: reader warmth, setup, concept introduction order, continuity, transitions, depth, figure-prose relationship, and memory hooks;
    - Visual quality reviewer: figure purpose, technical correctness, style consistency, spacing, labels, and anti-patterns;
-   - Assessment author: draft the `Learning Assessment` chapter using only knowledge-understanding, transfer-judgment, misconception, and mechanism-reasoning questions.
+   - Assessment author, only when the confirmed brief selects a learning assessment: draft the localized assessment chapter using only knowledge-understanding, transfer-judgment, misconception, and mechanism-reasoning questions.
 
 3. Ask reviewers to return:
    - Score out of 100;
@@ -102,12 +106,12 @@ Every tutorial document handled with this skill must run the quality gate after 
    - Required revisions;
    - Pass/fail.
 
-4. After integrating assessment questions, spawn an assessment reviewer to check correctness, coverage, ambiguity, difficulty balance, and learning value. The assessment reviewer must reject meta questions about article scope, author decisions, or why excluded topics are not covered.
+4. When assessment is included, after integrating assessment questions, spawn an assessment reviewer to check correctness, coverage, ambiguity, difficulty balance, and learning value. The assessment reviewer must reject meta questions about article scope, author decisions, or why excluded topics are not covered.
 
 5. Passing standard:
    - Content accuracy + reader experience + visual reviewer must exceed 285/300;
    - No reader-blocking issue may remain, regardless of score;
-   - Assessment reviewer must report no correctness, ambiguity, or learning-value blocker;
+   - If assessment is included, the assessment reviewer must report no correctness, ambiguity, or learning-value blocker;
    - If any reviewer fails, revise the artifact and rerun the failed review role before finalization.
 
 ## 5. Validation
@@ -119,7 +123,7 @@ Before completion, explicitly check:
 - `git diff --check -- <target-file>` passes;
 - If this skill was modified, run the skill validator;
 - Multi-Agent Quality Gate has passed, or a tool/authorization blocker has been explicitly reported;
-- `Learning Assessment` is complete and has passed assessment review.
+- If a learning assessment was selected, it is complete, localized, and has passed assessment review; if omitted, the teaching brief records why omission is appropriate.
 
 ## 6. Feedback Capture
 
@@ -130,7 +134,7 @@ When the user criticizes or requests changes:
 3. If the feedback is reusable, update `references/tutorial-style-playbook.md` or `references/visual-style-baselines.md`; before updating, explain the purpose and content to the user and request authorization;
 4. Keep this `SKILL.md` concise and place evolving detail rules in references.
 
-## References
+## Related Files
 
 - `references/tutorial-style-playbook.md`: teaching structure, reader experience, source standards, assessment standards, and durable user preferences;
 - `references/quality-gate.md`: reviewer packet, prompts, universal blockers, output schema, and assessment gate rules;

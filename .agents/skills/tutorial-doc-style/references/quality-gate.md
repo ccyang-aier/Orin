@@ -6,7 +6,7 @@ Use this file when running the Multi-Agent Quality Gate from `SKILL.md`. The gat
 
 Before spawning any reviewer, provide:
 
-- Confirmed teaching brief, including target reader, boundaries, exclusions, depth, content outline, figure plan, and assessment focus;
+- Confirmed teaching brief, including target reader, boundaries, exclusions, depth, content outline, figure plan, assessment decision, and assessment focus when included;
 - Default reader when the brief is silent: an undergraduate with basic cognitive and derivation ability who is encountering the field for the first time;
 - Full target document, not only excerpts;
 - Image list with paths, captions, intended teaching purpose, and nearby prose;
@@ -28,8 +28,8 @@ Universal blockers:
 - A figure introduces objects, formulas, labels, or claims that the nearby prose has not prepared or explained;
 - A key conclusion appears as a checklist or compressed claim without reasoning, example, or memorable anchor;
 - Sections feel like a collection of knowledge points rather than a continuous teaching path;
-- Assessment questions ask about article boundaries, author decisions, excluded topics, or process choices instead of knowledge the reader should understand;
-- Assessment questions are absurd, jokey, trivial, ambiguous, or unrelated to the stated learning goals.
+- When assessment is included, assessment questions ask about article boundaries, author decisions, excluded topics, or process choices instead of knowledge the reader should understand;
+- When assessment is included, assessment questions are absurd, jokey, trivial, ambiguous, or unrelated to the stated learning goals.
 
 ## 3. Role Prompts
 
@@ -54,13 +54,13 @@ Review every figure using the image list, captions, purposes, and nearby prose. 
 Assessment author:
 
 ```text
-Draft the Learning Assessment only after reading the full tutorial and teaching brief. Questions must test knowledge understanding, transfer judgment, common misconceptions, or mechanism reasoning. Do not ask about why the article excludes a topic, how the author designed the tutorial, or any other meta writing decision. Mostly use single-choice and multiple-choice questions with plausible distractors.
+Draft the learning assessment only when the confirmed teaching brief selects one. Title it in the target document language: use 学习测评 for Chinese documents and Learning Assessment for English documents. Read the full tutorial and teaching brief before drafting. Questions must test knowledge understanding, transfer judgment, common misconceptions, or mechanism reasoning. Do not ask about why the article excludes a topic, how the author designed the tutorial, or any other meta writing decision. Mostly use single-choice and multiple-choice questions with plausible distractors.
 ```
 
 Assessment reviewer:
 
 ```text
-Review the final Learning Assessment for correctness, coverage, ambiguity, difficulty balance, and learning value. Reject any question that is a meta question about article scope or author decisions, any question unrelated to reader knowledge, any trivial or jokey distractor, and any answer explanation that does not teach the distinction being tested.
+Review the final learning assessment only when the confirmed teaching brief includes one. Check correctness, coverage, ambiguity, difficulty balance, and learning value. Reject any question that is a meta question about article scope or author decisions, any question unrelated to reader knowledge, any trivial or jokey distractor, and any answer explanation that does not teach the distinction being tested.
 ```
 
 ## 4. Output Schema

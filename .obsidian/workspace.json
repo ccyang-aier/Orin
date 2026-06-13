@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "notes/LLM/大模型与推理全栈精讲系列/09_深入理解分布式推理：EP.md",
+                "file": "notes/AI高效使用/vibecoding/taste-skill的详细使用教程.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "09_深入理解分布式推理：EP"
+              "title": "taste-skill的详细使用教程"
             }
           }
         ]
@@ -156,13 +156,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "notes/LLM/大模型与推理全栈精讲系列/09_深入理解分布式推理：EP.md",
+                "file": "notes/AI高效使用/vibecoding/taste-skill的详细使用教程.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "09_深入理解分布式推理：EP 的大纲"
+              "title": "taste-skill的详细使用教程 的大纲"
             }
           },
           {
@@ -195,14 +195,24 @@
       "bases:新建数据库": false
     }
   },
-  "active": "0a8a41c853d5b42b",
+  "active": "355c39dd8741f2da",
   "lastOpenFiles": [
+    "notes/AI高效使用/未命名",
+    "notes/AI高效使用/未命名/未命名",
+    "notes/AI高效使用/AI规划化",
+    "notes/从0开始学摄影/6 光线与影调/6.5 人工光入门.md",
+    "notes/AI高效使用/提示词篇/图片生成",
+    "notes/AI高效使用/提示词篇/编码开发",
+    "notes/从0开始学摄影/6 光线与影调/6.3 影调.md",
+    "notes/从0开始学摄影/6 光线与影调/6.1 观察光.md",
+    "notes/从0开始学摄影/6 光线与影调/6 光线与影调.md",
+    "notes/从0开始学摄影/0 课程总纲.md",
+    "notes/每日洞察/2026-06-10 Agent 工程的 Node.js 时刻.md",
+    "notes/LLM/大模型与推理全栈精讲系列/09_深入理解分布式推理：EP.md",
     "notes/LLM/大模型与推理全栈精讲系列/07_深入理解分布式推理：DP.md",
     "notes/LLM/大模型与推理全栈精讲系列/08_深入理解分布式推理：PP.md",
     "notes/LLM/大模型与推理全栈精讲系列/10_深入理解分布式推理：CP.md",
-    "notes/LLM/大模型与推理全栈精讲系列/09_深入理解分布式推理：EP.md",
     "notes/LLM/大模型与推理全栈精讲系列/03_从语言理解本质到序列模型演进.md",
-    "notes/每日洞察/2026-06-10 Agent 工程的 Node.js 时刻.md",
     "notes/每日洞察",
     "notes/LLM/大模型与推理全栈精讲系列/04_深入理解Attention机制.md",
     "notes/LLM/大模型与推理全栈精讲系列/06_深入理解分布式推理：TP.md",
@@ -228,21 +238,11 @@
     "notes/vLLM/vLLM架构与原理精讲系列/imgs/05_chunked_prefill_mechanism.png",
     "notes/vLLM/vLLM架构与原理精讲系列/imgs/05_kv_blocks_layout.png",
     "notes/vLLM/vLLM架构与原理精讲系列/imgs/04_attention_modes_kv_challenges.png",
-    "AGENTS.md",
-    "notes/vLLM/未命名.md",
-    "notes/LLM/大模型与推理全栈精讲系列/_03_编排分析报告.md",
-    "notes/LLM/大模型与推理全栈精讲系列/01_从CNN、RNN到Attention（废弃）.md",
-    "notes/LLM/大模型与推理全栈精讲系列/02_大模型基础速通.md",
-    "notes/LLM/大模型与推理全栈精讲系列/03_深入理解Attention机制.md",
     "notes/LLM/大模型与推理全栈精讲系列/04_Transformer架构及原理.md.tmp.9232.bae8588111b3",
     "notes/LLM/大模型与推理全栈精讲系列/03_深入理解Attention机制.md.tmp.50112.c6e37dfddc40",
     "notes/LLM/大模型与推理全栈精讲系列/03_深入理解Attention机制.md.tmp.50112.77cc8d4dee2d",
     "notes/LLM/大模型与推理全栈精讲系列/03_深入理解Attention机制.md.tmp.49628.1ff819d82e91",
     "notes/LLM/大模型与推理全栈精讲系列/03_深入理解Attention机制.md.tmp.31140.550e15042027",
-    "notes/LLM/大模型与推理全栈精讲系列/03_深入理解Attention机制.md.tmp.31140.287b99551622",
-    "notes/LLM/大模型与推理全栈精讲系列/02_大模型基础速通.md.tmp.26860.305a378e8c44",
-    "notes/LLM/大模型与推理全栈精讲系列/02_大模型基础速通.md.tmp.26860.924097260bd5",
-    "notes/LLM/大模型与推理全栈精讲系列/02_大模型基础速通.md.tmp.26860.28b5265ae56d",
     "未命名.canvas"
   ]
 }

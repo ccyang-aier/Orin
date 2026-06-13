@@ -32,7 +32,7 @@ Before writing, rewriting, expanding, researching beyond minimal orientation, de
 - The article's distinctive teaching promise inside the broader learning path;
 - Visually explainable knowledge points, visual style, figure density, and figure plan;
 - Content outline;
-- Learning assessment focus;
+- Learning assessment decision and focus when assessment is useful;
 - Multi-Agent Quality Gate execution plan and required authorization.
 
 Common structure moves follow. They are optional teaching moves, not a default chapter sequence; each tutorial should be reorganized from the confirmed brief.
@@ -69,15 +69,19 @@ Common structure moves follow. They are optional teaching moves, not a default c
 10. Summary:
    - Rebuild the whole concept in one or two paragraphs;
    - Prefer a reusable mental model over a slogan.
-11. References:
+11. Reference section:
+   - Title the section in the target document language. Use `参考资料` in Chinese documents and `References` only in English documents;
    - Use one ordered list by default unless the user asks for categories.
-12. Learning Assessment:
-   - Substantial tutorials must add a fixed chapter named `Learning Assessment` after references;
+12. Learning assessment:
+   - Decide whether assessment adds real learning value; do not add it to every document by default;
+   - Include it for substantial conceptual tutorials, mechanism-heavy topics, or reader training materials where self-checking improves retention;
+   - Omit it for narrow operational guides, reference notes, short knowledge-base articles, and practical explainers where questions would feel like filler;
+   - When included, title the section in the target document language. Use `学习测评` in Chinese documents and `Learning Assessment` only in English documents;
    - Include at least 10 customized questions, mostly single-choice or multiple-choice;
    - List all questions first, then answers and explanations;
    - Cover core concepts, transfer scenarios, common pitfalls, difficult mechanisms, and implementation details.
 
-Keep top-level teaching chapters to 6-7 or fewer, excluding references and `Learning Assessment`. Too many major chapters fragment the tutorial and weaken the article map.
+Keep top-level teaching chapters to 6-7 or fewer, excluding the localized reference section and optional localized assessment section. Too many major chapters fragment the tutorial and weaken the article map.
 
 Keep headings short, formal, and durable. A heading is a navigation anchor, not a compressed paragraph; avoid sentence-style headings, chatty headings, and headings that depend on the current figure order. Move explanations into the body.
 
@@ -174,10 +178,12 @@ Avoid:
 - Unsourced and unqualified uncertain claims;
 - Writing about the conversation or the agent's process.
 
-## 7. Learning Assessment Standards
+## 7. Assessment Standards
 
-Learning assessment is part of tutorial quality, not filler.
+Learning assessment is part of tutorial quality when it serves the reader, not filler. Decide inclusion before drafting and record the rationale in the teaching brief.
 
+- Include assessment when the document teaches a substantial conceptual model, mechanism, or transfer skill;
+- Omit assessment when the document is a practical guide, reference note, short explainer, or knowledge-base article where questions would not improve the reader's outcome;
 - Questions should test real understanding, not memory alone;
 - Wrong options should come from plausible misconceptions, adjacent strategies, or subtle traps;
 - Do not use absurd, unrelated, or jokey distractors;
