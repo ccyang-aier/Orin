@@ -181,7 +181,7 @@ button{font:inherit}
   --impact-y:680px;
   position:relative;
   min-height:100vh;
-  padding:160px 32px 0;
+  padding:160px 32px 170px;
   display:flex;
   flex-direction:column;
   align-items:center;
@@ -193,8 +193,8 @@ button{font:inherit}
   content:"";
   position:absolute;
   inset:auto 0 0;
-  height:320px;
-  background:linear-gradient(to bottom,rgba(250,250,250,0),#fff 76%,#fff 100%);
+  height:440px;
+  background:linear-gradient(to bottom,rgba(250,250,250,0),#fff 68%,#fff 100%);
   pointer-events:none;
   z-index:1;
 }
@@ -1157,25 +1157,50 @@ body.hero-entered .word{
   display:block;
   color:#fff;
   cursor:pointer;
+  isolation:isolate;
   background:
     radial-gradient(circle at 50% 36%,rgba(59,130,246,.32),transparent 25%),
     radial-gradient(circle at 18% 82%,rgba(249,115,22,.16),transparent 22%),
     linear-gradient(180deg,#101827,#050711 72%);
 }
+.preview-video{
+  position:absolute;
+  inset:0;
+  z-index:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  background:#020617;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .28s ease;
+}
+.video-preview.has-video-frame .preview-video{opacity:1}
 .video-preview::before{
   content:"";
   position:absolute;
   inset:0;
+  z-index:1;
   background:
+    linear-gradient(180deg,rgba(3,7,18,.22),rgba(3,7,18,.05) 40%,rgba(3,7,18,.48)),
     linear-gradient(rgba(255,255,255,.055) 1px,transparent 1px),
     linear-gradient(90deg,rgba(255,255,255,.055) 1px,transparent 1px);
-  background-size:56px 56px;
+  background-size:auto,56px 56px,56px 56px;
   mask-image:radial-gradient(circle at center,#000 0 55%,transparent 82%);
+}
+.video-preview.has-video-frame::before{
+  background:
+    linear-gradient(180deg,rgba(3,7,18,.18),rgba(3,7,18,.04) 42%,rgba(3,7,18,.40)),
+    linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);
+  background-size:auto,56px 56px,56px 56px;
+  mask-image:none;
 }
 .video-preview::after{
   content:"";
   position:absolute;
   inset:-1px;
+  z-index:6;
   border-radius:inherit;
   padding:1px;
   background:conic-gradient(from var(--beam-angle,0deg),transparent 0 66%,rgba(249,115,22,.88) 74%,rgba(250,204,21,.72) 79%,transparent 88% 100%);
@@ -1193,7 +1218,7 @@ body.hero-entered .word{
 @keyframes border-beam{to{--beam-angle:360deg}}
 .video-chrome{
   position:absolute;
-  z-index:2;
+  z-index:4;
   inset:0 auto auto 0;
   height:64px;
   width:100%;
@@ -1221,6 +1246,7 @@ body.hero-entered .word{
 .video-stage{
   position:absolute;
   inset:64px 0 0;
+  z-index:3;
   display:grid;
   place-items:center;
 }
@@ -1241,6 +1267,10 @@ body.hero-entered .word{
   animation:spin 22s linear infinite;
 }
 .video-orbit::after{inset:32%;animation-duration:14s;animation-direction:reverse}
+.video-preview.has-video-frame .video-orbit{
+  opacity:0;
+  transform:scale(.96);
+}
 .play-core{
   position:relative;
   z-index:3;
@@ -1293,6 +1323,12 @@ body.hero-entered .word{
   color:#cbd5e1;
   background:rgba(255,255,255,.045);
   font-size:12px;
+}
+.video-preview.has-video-frame .video-title,
+.video-preview.has-video-frame .video-meta{
+  opacity:0;
+  transform:translateY(8px);
+  pointer-events:none;
 }
 .video-modal{
   position:fixed;
@@ -1579,6 +1615,7 @@ body.hero-entered .word{
   min-height:360px;
   border-style:solid;
   border-color:#e5e7eb;
+  overflow:hidden;
   background:
     linear-gradient(135deg,rgba(255,255,255,.92),rgba(248,250,252,.86)),
     radial-gradient(circle at 75% 20%,rgba(37,99,235,.10),transparent 28%),
@@ -1592,6 +1629,7 @@ body.hero-entered .word{
   position:absolute;
   left:22px;
   top:18px;
+  z-index:3;
   padding:7px 10px;
   border:1px solid #e5e7eb;
   border-radius:999px;
@@ -1600,21 +1638,55 @@ body.hero-entered .word{
   font-family:var(--mono);
   font-size:10px;
   letter-spacing:.06em;
+  transition:opacity .24s ease,transform .24s ease;
 }
 .screenshot-slot::after{
   content:"";
   position:absolute;
   inset:20px;
+  z-index:1;
   border-radius:20px;
   border:1px dashed rgba(148,163,184,.45);
   pointer-events:none;
 }
-.screenshot-slot div{
+.screenshot-image{
+  position:absolute;
+  inset:20px;
+  z-index:2;
+  width:calc(100% - 40px);
+  height:calc(100% - 40px);
+  border:1px solid rgba(226,232,240,.86);
+  border-radius:20px;
+  background:#fff;
+  object-fit:contain;
+  box-shadow:0 16px 52px rgba(15,23,42,.08);
+  opacity:0;
+  transform:scale(.992);
+  transition:opacity .28s ease,transform .28s ease;
+}
+.screenshot-empty{
+  position:relative;
+  z-index:2;
   max-width:360px;
   border:1px solid rgba(229,231,235,.86);
   background:rgba(255,255,255,.72);
   backdrop-filter:blur(14px);
   -webkit-backdrop-filter:blur(14px);
+  transition:opacity .24s ease,transform .24s ease;
+}
+.screenshot-slot.has-image .screenshot-image{
+  opacity:1;
+  transform:scale(1);
+}
+.screenshot-slot.has-image::before,
+.screenshot-slot.has-image .screenshot-empty{
+  opacity:0;
+  transform:translateY(8px);
+  pointer-events:none;
+}
+.screenshot-slot.has-image::after{
+  border-style:solid;
+  border-color:rgba(226,232,240,.72);
 }
 .interactive-area{
   min-height:390px;
@@ -2210,7 +2282,12 @@ body.hero-entered .word{
 
     <div class="hero-card-wrap" id="topology-demo">
       <div class="hero-card-inner">
-        <button class="video-preview" id="openDemoVideo" type="button" aria-label="播放 FOAI 所见即所得演示视频">
+        <div class="video-preview" id="openDemoVideo" role="button" tabindex="0" aria-label="播放 FOAI 所见即所得演示视频">
+          <video class="preview-video" id="demoVideoPreview" muted playsinline preload="auto" aria-hidden="true">
+            <source src="assets/media/foai-wysiwyg-demo.mkv" type="video/x-matroska">
+            <source src="assets/media/foai-wysiwyg-demo.mp4" type="video/mp4">
+            <source src="assets/media/foai-wysiwyg-demo.webm" type="video/webm">
+          </video>
           <span class="video-chrome">
             <i></i><i></i><i></i>
             <b>FOAI WYSIWYG DEMO</b>
@@ -2231,7 +2308,7 @@ body.hero-entered .word{
             <span>Node</span>
             <span>Accelerator</span>
           </span>
-        </button>
+        </div>
       </div>
     </div>
   </section>
@@ -2257,11 +2334,12 @@ body.hero-entered .word{
           <div class="spine-copy">
             <span>Panorama</span>
             <h3>全景拓扑：模型到卡端自动映射。</h3>
-            <p>服务入口、实例承载、节点归属与加速卡状态在同一张关系视图里同步更新。页面呈现的不再是分散指标，而是模型服务真实运行链路。</p>
-            <p class="story-note"><b>用户故事</b>大模型业务上线后，客户可以直接从模型层看到请求数、Token、TTFT、TPOT 和加速特性状态，再沿链路下钻到实例、节点与卡端，不必跨多个系统拼接资源关系。</p>
+            <p class="story-note"><b>用户场景</b>大模型业务上线后，客户需要快速确认模型、实例、节点和加速卡是否匹配；传统平台里这些信息分散在不同页面，资源关系只能人工拼接。</p>
+            <p>所见即所得把服务入口、实例承载、节点归属与加速卡状态收敛到同一张关系视图。请求数、Token、TTFT、TPOT 与加速特性状态可以沿链路逐级下钻，页面呈现的是模型服务真实运行链路。</p>
           </div>
           <div class="spine-visual media-placeholder screenshot-slot" data-asset="assets/screenshots/wysiwyg-panorama.png" aria-label="全景拓扑产品界面截图占位">
-            <div>
+            <img class="screenshot-image" src="assets/screenshots/wysiwyg-panorama.png" alt="FOAI 全景拓扑产品界面截图" loading="lazy">
+            <div class="screenshot-empty">
               <strong>产品界面截图</strong>
               <span>请放置全景拓扑视图截图：assets/screenshots/wysiwyg-panorama.png</span>
             </div>
@@ -2273,11 +2351,12 @@ body.hero-entered .word{
           <div class="spine-copy">
             <span>Fault propagation</span>
             <h3>故障传播：卡端异常直达服务影响。</h3>
-            <p>加速卡温度、显存、驱动或健康度异常会向上关联实例与模型层，影响范围、风险等级和源头资源保持同屏可读。</p>
-            <p class="story-note"><b>用户故事</b>生产环境出现驱动异常、显存溢出或温度过高时，故障状态会从卡端自动传播到实例和模型层，客户能快速判断影响哪个实例、是否导致服务降级。</p>
+            <p class="story-note"><b>用户场景</b>生产环境出现驱动异常、显存溢出或温度过高时，服务质量已经受损，但问题源头常常藏在硬件或子系统监控里，定位耗时且容易遗漏。</p>
+            <p>所见即所得把卡端异常向上关联到实例和模型层，父级自动呈现最高严重级别。影响实例、风险等级、异常来源与服务状态保持同屏可读，客户能快速判断是否导致服务降级。</p>
           </div>
           <div class="spine-visual media-placeholder screenshot-slot" data-asset="assets/screenshots/wysiwyg-fault.png" aria-label="故障传播产品界面截图占位">
-            <div>
+            <img class="screenshot-image" src="assets/screenshots/wysiwyg-fault.png" alt="FOAI 故障传播产品界面截图" loading="lazy">
+            <div class="screenshot-empty">
               <strong>产品界面截图</strong>
               <span>请放置故障传播视图截图：assets/screenshots/wysiwyg-fault.png</span>
             </div>
@@ -2289,8 +2368,8 @@ body.hero-entered .word{
           <div class="spine-copy">
             <span>Performance trace</span>
             <h3>性能追踪：延迟波动可以沿链路解释。</h3>
-            <p>TTFT、TPOT、Token 吞吐、利用率、显存水位、温度和功耗按同一时间窗口对齐。性能变化能定位到实例、节点或加速卡层。</p>
-            <p class="story-note"><b>用户故事</b>当首字延迟或生成延迟出现波动时，客户可以沿拓扑从模型指标下钻到实例、节点和卡端，对比单卡瓶颈、多实例负载不均或 PD 分离场景下的调度异常。</p>
+            <p class="story-note"><b>用户场景</b>当首字延迟、生成延迟或 Token 吞吐出现波动时，客户需要判断问题来自模型侧、实例调度、节点资源，还是加速卡瓶颈。</p>
+            <p>所见即所得把 TTFT、TPOT、Tokens 吞吐、利用率、显存水位、温度和功耗放到同一时间窗口。性能变化可以沿拓扑定位到实例、节点或加速卡层，用于对比单卡瓶颈、多实例负载不均或 PD 分离调度异常。</p>
           </div>
           <div class="spine-visual interactive-area" aria-label="性能追踪交互面积图">
             <div class="chart-shell">
@@ -2345,8 +2424,8 @@ body.hero-entered .word{
           <div class="spine-copy">
             <span>Acceleration value</span>
             <h3>收益量化：加速能力转化为业务数字。</h3>
-            <p>KVCache 卸载、推测解码等加速能力沉淀为吞吐、时延、Token 与成本收益，让加速效果能被持续验证。</p>
-            <p class="story-note"><b>用户故事</b>客户不只看到“加速开关已开启”，还可以看到 HBM、DRAM、NVMe 的卸载分布、缓存命中、节省 Token，以及草稿模型接受率，把算法能力转化为可汇报的收益结果。</p>
+            <p class="story-note"><b>用户场景</b>客户知道 KVCache 卸载、推测解码已经开启，却很难判断这些能力是否真正作用在当前业务上，收益是否稳定、是否可量化。</p>
+            <p>所见即所得展示 HBM、DRAM、NVMe 的卸载分布、KVCache 命中率、节省计算总 Token 数、草稿模型接受率与接收总 Token 数，把加速能力转化为可验证、可复盘、可汇报的收益结果。</p>
           </div>
           <div class="spine-visual value-axis" aria-label="KVCache 与推测解码指标轴">
             <div class="axis-card">
@@ -2448,6 +2527,7 @@ const hero=document.querySelector('.hero');
 const heroCard=document.getElementById('topology-demo');
 const videoModal=document.getElementById('videoModal');
 const demoVideo=document.getElementById('demoVideo');
+const demoVideoPreview=document.getElementById('demoVideoPreview');
 const closeDemoVideo=document.getElementById('closeDemoVideo');
 const videoTriggers=[document.getElementById('openDemoVideo'),document.getElementById('openDemoVideoTop')].filter(Boolean);
 const beams=[...document.querySelectorAll('.collision-layer .beam')];
@@ -2546,6 +2626,30 @@ function closeVideoModal(){
   document.documentElement.classList.remove('modal-open');
   document.body.classList.remove('modal-open');
 }
+function preparePreviewVideo(){
+  const previewShell=document.getElementById('openDemoVideo');
+  if(!demoVideoPreview||!previewShell)return;
+  const markFrameReady=()=>{
+    if(demoVideoPreview.readyState>=2)previewShell.classList.add('has-video-frame');
+  };
+  demoVideoPreview.muted=true;
+  demoVideoPreview.addEventListener('loadeddata',markFrameReady,{once:true});
+  demoVideoPreview.addEventListener('canplay',markFrameReady,{once:true});
+  demoVideoPreview.addEventListener('error',()=>previewShell.classList.remove('has-video-frame'));
+  if(demoVideoPreview.readyState>=2)markFrameReady();
+  try{demoVideoPreview.load()}catch(error){}
+}
+function hydrateScreenshotSlots(){
+  document.querySelectorAll('.screenshot-slot').forEach(slot=>{
+    const image=slot.querySelector('.screenshot-image');
+    if(!image)return;
+    const markLoaded=()=>slot.classList.add('has-image');
+    const markMissing=()=>slot.classList.remove('has-image');
+    image.addEventListener('load',markLoaded,{once:true});
+    image.addEventListener('error',markMissing);
+    if(image.complete&&image.naturalWidth>0)markLoaded();
+  });
+}
 function triggerBurst(index,x,y){
   const burst=bursts[index];
   if(!burst||!hero)return;
@@ -2606,13 +2710,23 @@ addEventListener('scroll',updateNav,{passive:true});
 addEventListener('resize',updateImpactPosition);
 addEventListener('load',updateImpactPosition);
 requestAnimationFrame(animateCollisions);
+preparePreviewVideo();
+hydrateScreenshotSlots();
 
 if(toggle){
   toggle.addEventListener('click',()=>panel.classList.toggle('open'));
   panel.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>panel.classList.remove('open')));
 }
 
-videoTriggers.forEach(trigger=>trigger.addEventListener('click',openVideoModal));
+videoTriggers.forEach(trigger=>{
+  trigger.addEventListener('click',openVideoModal);
+  trigger.addEventListener('keydown',(event)=>{
+    if(event.key==='Enter'||event.key===' '){
+      event.preventDefault();
+      openVideoModal();
+    }
+  });
+});
 closeDemoVideo?.addEventListener('click',closeVideoModal);
 videoModal?.addEventListener('click',(event)=>{
   if(event.target===videoModal)closeVideoModal();
