@@ -6,7 +6,7 @@
       {
         "id": "7075413340e74665",
         "type": "tabs",
-        "dimension": 60.58743169398907,
+        "dimension": 53.893442622950815,
         "children": [
           {
             "id": "f6eaef97e435b421",
@@ -14,12 +14,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "notes/other/所见即所得/未命名 1.md",
+                "file": "notes/other/所见即所得/完整分页内容.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "未命名 1"
+              "title": "完整分页内容"
             }
           }
         ]
@@ -27,7 +27,7 @@
       {
         "id": "e8b9ce81289af0e9",
         "type": "tabs",
-        "dimension": 39.41256830601093,
+        "dimension": 46.10655737704918,
         "children": [
           {
             "id": "d1567c1153080121",
@@ -35,12 +35,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "notes/other/所见即所得/PPT内容提取.md",
+                "file": "notes/other/所见即所得/未命名.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "PPT内容提取"
+              "title": "未命名"
             }
           }
         ]
@@ -220,6 +220,12 @@
   },
   "active": "f6eaef97e435b421",
   "lastOpenFiles": [
+    "notes/other/foai-wysiwyg-template-v3.html",
+    "notes/other/所见即所得/未命名.md",
+    "notes/other/所见即所得/未命名 1.md",
+    "notes/other/所见即所得/完整分页内容.md",
+    "notes/other/所见即所得/PPT内容提取.md",
+    "notes/other/所见即所得/未命名",
     "xdecks-offline.zip",
     "notes/other/所见即所得/imgs/Pasted image 20260629134610.png",
     "notes/other/所见即所得/imgs/Pasted image 20260629134602.png",
@@ -228,9 +234,6 @@
     "notes/other/所见即所得/imgs/Pasted image 20260629134542.png",
     "notes/other/所见即所得/imgs/Pasted image 20260629134533.png",
     "notes/other/所见即所得/imgs/Pasted image 20260629134517.png",
-    "notes/other/所见即所得/未命名.md",
-    "notes/other/所见即所得/未命名 1.md",
-    "notes/other/所见即所得/PPT内容提取.md",
     "notes/other/所见即所得/imgs/Pasted image 20260629022213.png",
     "notes/other/所见即所得/imgs/Pasted image 20260629022206.png",
     "notes/other/所见即所得/imgs/Pasted image 20260629022158.png",
@@ -247,8 +250,6 @@
     "notes/AI高效使用/未命名/未命名",
     "notes/AI高效使用/AI规划化",
     "notes/从0开始学摄影/6 光线与影调/6.5 人工光入门.md",
-    "notes/AI高效使用/提示词篇/图片生成",
-    "notes/AI高效使用/提示词篇/编码开发",
     "notes/从0开始学摄影/6 光线与影调/6.3 影调.md",
     "notes/从0开始学摄影/6 光线与影调/6.1 观察光.md",
     "notes/从0开始学摄影/6 光线与影调/6 光线与影调.md",
@@ -265,7 +266,6 @@
     "notes/LLM/大模型与推理全栈精讲系列/02_大模型入门及其基本结构.md",
     "notes/vLLM/01_初识vLLM推理引擎.md",
     "notes/vLLM/vLLM架构与原理精讲系列/06_让调度跑在前面：异步调度.md",
-    "notes/vLLM/vLLM架构与原理精讲系列/07_Executor、Worker 与 ModelRunner.md",
     "未命名.canvas"
   ]
 }
