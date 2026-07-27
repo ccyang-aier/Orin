@@ -1,0 +1,1292 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>从团队融入到价值体现 — 解凯风</title>
+<link rel="preconnect" href="https://miaoda.feishu.cn">
+<link rel="stylesheet" href="https://miaoda.feishu.cn/fonts/css2?family=Inter:wght@300;400;500;600;700;800&display=swap">
+<style>
+/* ===== RESET & BASE ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --navy: #0c1a2e;
+  --navy-light: #162544;
+  --blue-600: #2563eb;
+  --blue-500: #3b82f6;
+  --blue-400: #60a5fa;
+  --blue-100: #dbeafe;
+  --blue-50: #eff6ff;
+  --amber-500: #f59e0b;
+  --amber-400: #fbbf24;
+  --amber-100: #fef3c7;
+  --emerald-500: #10b981;
+  --emerald-100: #d1fae5;
+  --purple-500: #8b5cf6;
+  --purple-100: #ede9fe;
+  --rose-500: #f43f5e;
+  --rose-100: #ffe4e6;
+  --slate-900: #0f172a;
+  --slate-800: #1e293b;
+  --slate-700: #334155;
+  --slate-500: #64748b;
+  --slate-400: #94a3b8;
+  --slate-300: #cbd5e1;
+  --slate-200: #e2e8f0;
+  --slate-100: #f1f5f9;
+  --slate-50: #f8fafc;
+  --white: #ffffff;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+  --shadow-sm: 0 1px 3px rgba(15,23,42,.06), 0 1px 2px rgba(15,23,42,.04);
+  --shadow-md: 0 4px 16px rgba(15,23,42,.08), 0 2px 4px rgba(15,23,42,.04);
+  --shadow-lg: 0 12px 40px rgba(15,23,42,.1), 0 4px 12px rgba(15,23,42,.06);
+  --shadow-xl: 0 24px 60px rgba(15,23,42,.12);
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+  --transition: .35s cubic-bezier(.4,0,.2,1);
+}
+
+html { scroll-behavior: smooth; font-size: 16px; }
+
+body {
+  font-family: var(--font-sans);
+  color: var(--slate-800);
+  background: var(--slate-50);
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* ===== SCROLL ANIMATIONS ===== */
+.reveal {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity .7s cubic-bezier(.4,0,.2,1), transform .7s cubic-bezier(.4,0,.2,1);
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.reveal-delay-1 { transition-delay: .12s; }
+.reveal-delay-2 { transition-delay: .24s; }
+.reveal-delay-3 { transition-delay: .36s; }
+.reveal-delay-4 { transition-delay: .48s; }
+
+/* ===== NAVIGATION ===== */
+nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  padding: 16px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: background var(--transition), box-shadow var(--transition);
+}
+nav.scrolled {
+  background: rgba(255,255,255,.88);
+  backdrop-filter: blur(20px) saturate(1.6);
+  -webkit-backdrop-filter: blur(20px) saturate(1.6);
+  box-shadow: 0 1px 0 rgba(15,23,42,.06);
+}
+.nav-logo {
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--white);
+  letter-spacing: -.02em;
+  transition: color var(--transition);
+}
+nav.scrolled .nav-logo { color: var(--slate-900); }
+.nav-links {
+  display: flex;
+  gap: 4px;
+  list-style: none;
+}
+.nav-links a {
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255,255,255,.7);
+  padding: 6px 14px;
+  border-radius: 100px;
+  transition: all var(--transition);
+}
+.nav-links a:hover { color: var(--white); background: rgba(255,255,255,.12); }
+nav.scrolled .nav-links a { color: var(--slate-500); }
+nav.scrolled .nav-links a:hover { color: var(--slate-900); background: var(--slate-100); }
+
+@media (max-width: 768px) {
+  .nav-links { display: none; }
+  nav { padding: 12px 20px; }
+}
+
+/* ===== HERO ===== */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  background: url('assets/images/hero_bg.jpg') center/cover no-repeat;
+}
+.hero-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(12,26,46,.72) 0%, rgba(37,99,235,.35) 100%);
+}
+.hero-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  padding: 0 24px;
+  max-width: 720px;
+}
+.hero-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255,255,255,.12);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,.18);
+  padding: 8px 20px;
+  border-radius: 100px;
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255,255,255,.9);
+  margin-bottom: 32px;
+}
+.hero-tag .dot {
+  width: 6px; height: 6px;
+  background: var(--amber-400);
+  border-radius: 50%;
+}
+.hero h1 {
+  font-size: clamp(36px, 6vw, 64px);
+  font-weight: 800;
+  color: var(--white);
+  letter-spacing: -.03em;
+  line-height: 1.15;
+  margin-bottom: 20px;
+}
+.hero-sub {
+  font-size: clamp(16px, 2.2vw, 20px);
+  color: rgba(255,255,255,.7);
+  font-weight: 400;
+  line-height: 1.6;
+  margin-bottom: 48px;
+}
+.hero-scroll {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255,255,255,.5);
+  font-size: 13px;
+  font-weight: 500;
+  animation: bounce 2s infinite;
+}
+.hero-scroll svg { width: 16px; height: 16px; }
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(6px); }
+}
+
+/* ===== SECTIONS ===== */
+section {
+  padding: 100px 24px;
+}
+.container {
+  max-width: 1080px;
+  margin: 0 auto;
+}
+.section-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  padding: 6px 16px;
+  border-radius: 100px;
+  margin-bottom: 16px;
+}
+.section-label.blue { background: var(--blue-100); color: var(--blue-600); }
+.section-label.amber { background: var(--amber-100); color: #b45309; }
+.section-label.emerald { background: var(--emerald-100); color: #047857; }
+.section-label.purple { background: var(--purple-100); color: var(--purple-500); }
+.section-label.rose { background: var(--rose-100); color: var(--rose-500); }
+
+.section-title {
+  font-size: clamp(28px, 4vw, 42px);
+  font-weight: 800;
+  color: var(--slate-900);
+  letter-spacing: -.025em;
+  line-height: 1.2;
+  margin-bottom: 12px;
+}
+.section-desc {
+  font-size: 17px;
+  color: var(--slate-500);
+  line-height: 1.7;
+  max-width: 640px;
+}
+
+/* ===== ABOUT (Slide 2) ===== */
+.about {
+  background: var(--white);
+}
+.about-grid {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 48px;
+  align-items: center;
+  margin-top: 48px;
+}
+.about-photo {
+  width: 180px;
+  height: 240px;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+}
+.about-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.about-info h3 {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--slate-900);
+  margin-bottom: 8px;
+}
+.about-info .dept {
+  font-size: 15px;
+  color: var(--slate-500);
+  margin-bottom: 20px;
+}
+.about-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.about-tags span {
+  font-size: 13px;
+  font-weight: 500;
+  padding: 6px 14px;
+  border-radius: 100px;
+  background: var(--slate-100);
+  color: var(--slate-700);
+}
+
+/* About info details */
+.about-info .position {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--blue-600);
+  margin-bottom: 4px;
+}
+.about-info .education {
+  font-size: 14px;
+  color: var(--slate-500);
+  margin-bottom: 16px;
+}
+.about-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-top: 20px;
+}
+.about-detail-item {
+  background: var(--slate-50);
+  border-radius: var(--radius-sm);
+  padding: 12px 16px;
+  border: 1px solid var(--slate-200);
+}
+.about-detail-item .detail-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: var(--slate-400);
+  margin-bottom: 4px;
+}
+.about-detail-item .detail-value {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--slate-800);
+}
+
+/* About highlights */
+.about-highlights {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-top: 40px;
+}
+.highlight-card {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  border: 1px solid var(--slate-200);
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+.highlight-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+}
+.highlight-card.hc-blue::before { background: linear-gradient(90deg, var(--blue-500), var(--blue-400)); }
+.highlight-card.hc-amber::before { background: linear-gradient(90deg, var(--amber-500), var(--amber-400)); }
+.highlight-card.hc-emerald::before { background: linear-gradient(90deg, var(--emerald-500), #34d399); }
+.highlight-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+.highlight-card .hc-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 14px;
+  font-size: 20px;
+}
+.highlight-card.hc-blue .hc-icon { background: var(--blue-100); }
+.highlight-card.hc-amber .hc-icon { background: var(--amber-100); }
+.highlight-card.hc-emerald .hc-icon { background: var(--emerald-100); }
+.highlight-card h4 {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--slate-900);
+  margin-bottom: 8px;
+}
+.highlight-card p {
+  font-size: 13px;
+  color: var(--slate-500);
+  line-height: 1.7;
+}
+.highlight-card .hc-stat {
+  display: inline-block;
+  margin-top: 10px;
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -.02em;
+}
+.highlight-card.hc-blue .hc-stat { color: var(--blue-600); }
+.highlight-card.hc-amber .hc-stat { color: var(--amber-500); }
+.highlight-card.hc-emerald .hc-stat { color: var(--emerald-500); }
+.highlight-card .hc-stat-label {
+  font-size: 12px;
+  color: var(--slate-400);
+  font-weight: 500;
+  margin-top: 2px;
+}
+
+@media (max-width: 768px) {
+  .about-detail-grid { grid-template-columns: 1fr 1fr; }
+  .about-highlights { grid-template-columns: 1fr; }
+}
+@media (max-width: 640px) {
+  .about-grid { grid-template-columns: 1fr; justify-items: center; text-align: center; }
+  .about-tags { justify-content: center; }
+  .about-detail-grid { grid-template-columns: 1fr; }
+}
+
+/* ===== TIMELINE ===== */
+.timeline {
+  position: relative;
+  margin-top: 56px;
+}
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 24px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(to bottom, var(--blue-400), var(--blue-100));
+  border-radius: 1px;
+}
+.timeline-item {
+  position: relative;
+  padding-left: 64px;
+  padding-bottom: 48px;
+}
+.timeline-item:last-child { padding-bottom: 0; }
+.timeline-dot {
+  position: absolute;
+  left: 15px;
+  top: 4px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--white);
+  border: 3px solid var(--blue-500);
+  z-index: 1;
+}
+.timeline-dot.active {
+  background: var(--blue-500);
+  box-shadow: 0 0 0 4px var(--blue-100);
+}
+.timeline-card {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  padding: 32px;
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--slate-200);
+  transition: box-shadow var(--transition), transform var(--transition);
+}
+.timeline-card:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-2px);
+}
+.timeline-card h3 {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--slate-900);
+  margin-bottom: 8px;
+  letter-spacing: -.01em;
+}
+.timeline-card .meta {
+  font-size: 13px;
+  color: var(--slate-400);
+  font-weight: 500;
+  margin-bottom: 16px;
+}
+.timeline-card p {
+  font-size: 15px;
+  color: var(--slate-700);
+  line-height: 1.75;
+  margin-bottom: 12px;
+}
+.timeline-card p:last-child { margin-bottom: 0; }
+
+.card-images {
+  display: grid;
+  gap: 16px;
+  margin-top: 20px;
+}
+.card-images.two-col { grid-template-columns: 1fr 1fr; }
+.card-images.single { grid-template-columns: 1fr; }
+.card-images img {
+  width: 100%;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--slate-200);
+  transition: transform var(--transition);
+}
+.card-images img:hover { transform: scale(1.015); }
+
+@media (max-width: 640px) {
+  .card-images.two-col { grid-template-columns: 1fr; }
+  .timeline::before { left: 16px; }
+  .timeline-item { padding-left: 48px; }
+  .timeline-dot { left: 7px; }
+}
+
+/* ===== HIGHLIGHT CARDS (for challenges & results) ===== */
+.highlight-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  margin-top: 16px;
+}
+.highlight-item {
+  padding: 16px;
+  border-radius: var(--radius-md);
+  background: var(--slate-50);
+  border: 1px solid var(--slate-200);
+}
+.highlight-item .label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: var(--slate-400);
+  margin-bottom: 6px;
+}
+.highlight-item .value {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--slate-800);
+}
+.highlight-item.blue-accent { background: var(--blue-50); border-color: var(--blue-100); }
+.highlight-item.blue-accent .value { color: var(--blue-600); }
+
+/* ===== CHALLENGE BOX ===== */
+.challenge-box {
+  background: linear-gradient(135deg, var(--slate-900), var(--navy-light));
+  border-radius: var(--radius-md);
+  padding: 24px;
+  margin-top: 16px;
+  color: var(--white);
+}
+.challenge-box .label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--amber-400);
+  margin-bottom: 10px;
+}
+.challenge-box ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.challenge-box li {
+  font-size: 14px;
+  color: rgba(255,255,255,.85);
+  padding-left: 18px;
+  position: relative;
+}
+.challenge-box li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 8px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--amber-400);
+}
+
+/* ===== QUOTE ===== */
+.quote-card {
+  background: linear-gradient(135deg, var(--blue-50), var(--purple-100));
+  border-radius: var(--radius-lg);
+  padding: 28px 32px;
+  margin-top: 20px;
+  position: relative;
+  border: 1px solid rgba(37,99,235,.1);
+}
+.quote-card::before {
+  content: '\201C';
+  position: absolute;
+  top: 8px;
+  left: 20px;
+  font-size: 56px;
+  color: var(--blue-400);
+  opacity: .3;
+  font-family: Georgia, serif;
+  line-height: 1;
+}
+.quote-card p {
+  font-size: 15px;
+  color: var(--slate-700);
+  line-height: 1.8;
+  font-style: italic;
+  padding-left: 8px;
+}
+
+/* ===== FLOW ARROW ===== */
+.flow-chain {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 16px;
+  padding: 20px;
+  background: var(--slate-50);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--slate-200);
+}
+.flow-chain .node {
+  padding: 8px 16px;
+  background: var(--white);
+  border: 1px solid var(--slate-200);
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--slate-800);
+  white-space: nowrap;
+}
+.flow-chain .arrow {
+  color: var(--blue-400);
+  font-size: 18px;
+  font-weight: 700;
+}
+
+/* ===== PHILOSOPHY SECTION (Slide 6) ===== */
+.philosophy-card {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--slate-200);
+  transition: box-shadow var(--transition), transform var(--transition);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+}
+.philosophy-card:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-3px);
+}
+.philosophy-card .card-info {
+  padding: 36px 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.philosophy-card .card-info h3 {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--slate-900);
+  margin-bottom: 6px;
+  letter-spacing: -.01em;
+}
+.philosophy-card .card-info .card-subtitle {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--slate-400);
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+.philosophy-card .card-info .card-accent-line {
+  width: 40px;
+  height: 3px;
+  border-radius: 2px;
+  margin-top: 16px;
+}
+.philosophy-card .card-info .card-accent-line.blue { background: linear-gradient(90deg, var(--blue-500), var(--blue-400)); }
+.philosophy-card .card-info .card-accent-line.emerald { background: linear-gradient(90deg, var(--emerald-500), #34d399); }
+.philosophy-card .card-img-wrap {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--slate-100);
+  min-height: 280px;
+}
+.philosophy-card .card-img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+/* Single-card centered layout for Philosophy section */
+.philosophy-grid {
+  display: flex;
+  justify-content: center;
+  margin-top: 48px;
+}
+.philosophy-card {
+  max-width: 840px;
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .philosophy-card { grid-template-columns: 1fr; max-width: 100%; }
+  .philosophy-card .card-info { padding: 24px; }
+  .philosophy-card .card-img-wrap { min-height: 220px; }
+}
+
+/* ===== COGNITIVE STORY (Slide 7) ===== */
+.story-section { background: var(--white); }
+.story-flow {
+  margin-top: 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+.story-step {
+  background: var(--slate-50);
+  border-radius: var(--radius-lg);
+  padding: 28px 32px;
+  border: 1px solid var(--slate-200);
+  position: relative;
+}
+.story-step .step-num {
+  position: absolute;
+  top: -12px;
+  left: 28px;
+  background: var(--blue-500);
+  color: var(--white);
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 100px;
+}
+.story-step h4 {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--slate-900);
+  margin-bottom: 8px;
+  margin-top: 4px;
+}
+.story-step p {
+  font-size: 15px;
+  color: var(--slate-600);
+  line-height: 1.7;
+}
+.story-branch {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+.branch-card {
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  border: 1px solid;
+}
+.branch-card.negative {
+  background: #fef2f2;
+  border-color: #fecaca;
+}
+.branch-card.positive {
+  background: #f0fdf4;
+  border-color: #bbf7d0;
+}
+.branch-card h5 {
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.branch-card.negative h5 { color: #dc2626; }
+.branch-card.positive h5 { color: #16a34a; }
+.branch-card p {
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--slate-600);
+}
+.story-result {
+  background: linear-gradient(135deg, var(--emerald-100), var(--blue-50));
+  border-radius: var(--radius-lg);
+  padding: 28px 32px;
+  text-align: center;
+  border: 1px solid rgba(16,185,129,.2);
+}
+.story-result h4 {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--slate-900);
+  margin-bottom: 8px;
+}
+.story-result p {
+  font-size: 14px;
+  color: var(--slate-500);
+}
+
+@media (max-width: 640px) {
+  .story-branch { grid-template-columns: 1fr; }
+}
+
+/* ===== CORE QUALITIES (Slide 8) ===== */
+.qualities-section { background: var(--slate-50); }
+.qualities-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-top: 48px;
+}
+.quality-card {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  padding: 36px 28px;
+  text-align: center;
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--slate-200);
+  transition: all var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+.quality-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+}
+.quality-card.innovation::before { background: var(--purple-500); }
+.quality-card.efficiency::before { background: var(--emerald-500); }
+.quality-card.responsibility::before { background: var(--amber-500); }
+.quality-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+.quality-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+}
+.quality-card.innovation .quality-icon { background: var(--purple-100); color: var(--purple-500); }
+.quality-card.efficiency .quality-icon { background: var(--emerald-100); color: var(--emerald-500); }
+.quality-card.responsibility .quality-icon { background: var(--amber-100); color: var(--amber-500); }
+.quality-icon svg { width: 28px; height: 28px; }
+.quality-card h3 {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--slate-900);
+  margin-bottom: 10px;
+}
+.quality-card p {
+  font-size: 14px;
+  color: var(--slate-500);
+  line-height: 1.7;
+}
+
+@media (max-width: 768px) {
+  .qualities-grid { grid-template-columns: 1fr; }
+}
+
+/* ===== CLOSING ===== */
+.closing {
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+  text-align: center;
+  padding: 120px 24px;
+}
+.closing h2 {
+  font-size: clamp(28px, 4vw, 48px);
+  font-weight: 800;
+  color: var(--white);
+  letter-spacing: -.025em;
+  margin-bottom: 16px;
+}
+.closing p {
+  font-size: 17px;
+  color: rgba(255,255,255,.5);
+  max-width: 480px;
+  margin: 0 auto;
+  line-height: 1.7;
+}
+.closing .tagline {
+  display: inline-block;
+  margin-top: 32px;
+  padding: 10px 28px;
+  border: 1px solid rgba(255,255,255,.2);
+  border-radius: 100px;
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(255,255,255,.7);
+  letter-spacing: .02em;
+}
+
+/* ===== UTIL ===== */
+.mt-16 { margin-top: 16px; }
+.mt-24 { margin-top: 24px; }
+.text-sm { font-size: 14px; }
+.text-bold { font-weight: 600; }
+.text-blue { color: var(--blue-600); }
+.text-amber { color: #b45309; }
+</style>
+</head>
+<body>
+
+<!-- Navigation -->
+<nav id="mainNav">
+  <div class="nav-logo">解凯风</div>
+  <ul class="nav-links">
+    <li><a href="#about">关于我</a></li>
+    <li><a href="#journey">成长历程</a></li>
+    <li><a href="#philosophy">工作方法</a></li>
+    <li><a href="#qualities">核心素养</a></li>
+  </ul>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-content">
+    <div class="hero-tag"><span class="dot"></span> 个人成长分享</div>
+    <h1>从团队融入到价值体现</h1>
+    <p class="hero-sub">记录入职以来在 MaaS 平台推理服务领域的成长历程，<br>从快速融入到独立承担，从技术突破到方法论沉淀。</p>
+    <div class="hero-scroll">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>
+      向下滚动
+    </div>
+  </div>
+</section>
+
+<!-- About -->
+<section class="about" id="about">
+  <div class="container">
+    <div class="reveal">
+      <span class="section-label blue">About</span>
+      <h2 class="section-title">自我介绍</h2>
+    </div>
+    <div class="about-grid reveal reveal-delay-1">
+      <div class="about-photo">
+        <img src="assets/images/img_2_4.jpg" alt="解凯风">
+      </div>
+      <div class="about-info">
+        <h3>解凯风</h3>
+        <p class="position">FOA 通用软件开发工程师</p>
+        <p class="education">复旦大学 · 计算机硕士</p>
+        <p class="dept">算力事业部 · 算力研发部 · 云智融合开发部</p>
+        <div class="about-tags">
+          <span>MaaS 推理服务</span>
+          <span>模型广场</span>
+          <span>AI Coding</span>
+          <span>分布式系统</span>
+          <span>状态机设计</span>
+        </div>
+        <div class="about-detail-grid">
+          <div class="about-detail-item">
+            <div class="detail-label">工号</div>
+            <div class="detail-value">00051826</div>
+          </div>
+          <div class="about-detail-item">
+            <div class="detail-label">工作时长</div>
+            <div class="detail-value">超聚变 1 年</div>
+          </div>
+          <div class="about-detail-item">
+            <div class="detail-label">常驻地</div>
+            <div class="detail-value">郑州</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Work Highlights -->
+    <div class="about-highlights reveal reveal-delay-2">
+      <div class="highlight-card hc-blue">
+        <div class="hc-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+        </div>
+        <h4>MaaS 平台核心开发</h4>
+        <p>完成推理服务首版本全流程打通，在平台侧适配 Wings 推理加速特性，持续贡献核心代码。</p>
+        <div class="hc-stat">16,000+</div>
+        <div class="hc-stat-label">累计贡献代码行数</div>
+      </div>
+      <div class="highlight-card hc-amber">
+        <div class="hc-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        </div>
+        <h4>5 次超聚星荣誉</h4>
+        <p>先后获得模型广场、适配 XPU-Engine、KVCache 稀疏攻坚、GLM-5 0Day 适配等项目的超聚星奖励。</p>
+        <div class="hc-stat">5 次</div>
+        <div class="hc-stat-label">超聚星奖励</div>
+      </div>
+      <div class="highlight-card hc-emerald">
+        <div class="hc-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+        </div>
+        <h4>AI Coding 提效</h4>
+        <p>采用 AI 辅助开展文档设计与代码开发工作，优化研发流程，状态机重构等项目实现高效交付。</p>
+        <div class="hc-stat">50%+</div>
+        <div class="hc-stat-label">综合效率提升</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Journey Timeline -->
+<section id="journey">
+  <div class="container">
+    <div class="reveal">
+      <span class="section-label blue">Journey</span>
+      <h2 class="section-title">成长历程</h2>
+      <p class="section-desc">从入职第三周临危受命，到独立承担核心模块开发，每一步都在突破舒适区。</p>
+    </div>
+
+    <div class="timeline">
+
+      <!-- Slide 3: MaaS 大干一百天 -->
+      <div class="timeline-item reveal">
+        <div class="timeline-dot active"></div>
+        <div class="timeline-card">
+          <h3>团队融入 — MaaS 大干一百天</h3>
+          <p class="meta">入职第 3 周 · 推理服务开发</p>
+          <p><strong>背景：</strong>入职第三周从超融合管理服务开发转移到参与 MaaS 平台推理服务开发。面对不了解开发流程、不熟悉技术栈、不了解推理业务的三重挑战。</p>
+
+          <div class="card-images two-col">
+            <div>
+              <img src="assets/images/img_3_5.png" alt="大推理开发组成立">
+              <p class="text-sm mt-16" style="color:var(--slate-400);text-align:center;">大推理开发组正式成立</p>
+            </div>
+            <div>
+              <img src="assets/images/img_3_6.png" alt="推理服务能力全景图">
+              <p class="text-sm mt-16" style="color:var(--slate-400);text-align:center;">推理服务能力全景图</p>
+            </div>
+          </div>
+
+          <p class="mt-24"><strong>730 首版本</strong>成功实现推理服务全流程拉通、推理引擎参数层适配，实现分布式推理、PD 分离、灰度发布、KVCache 加速等核心能力。</p>
+
+          <p>后续版本持续适配推理服务加速特性：软 FP8、FP4、推测解码、KVCache 稀疏、小模型支持、多模态模型、API Key、模型评估、一键部署、一键体验等功能。</p>
+
+          <div class="flow-chain">
+            <span class="node">模型接入</span>
+            <span class="arrow">&rarr;</span>
+            <span class="node">鉴权编排</span>
+            <span class="arrow">&rarr;</span>
+            <span class="node">引擎承载</span>
+            <span class="arrow">&rarr;</span>
+            <span class="node">加速优化</span>
+            <span class="arrow">&rarr;</span>
+            <span class="node">硬件运行</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 4: 模型广场 -->
+      <div class="timeline-item reveal">
+        <div class="timeline-dot"></div>
+        <div class="timeline-card">
+          <h3>模型广场 — 主动承担、快速成长</h3>
+          <p class="meta">独立承担核心模块</p>
+          <p><strong>背景：</strong>提高 MaaS 平台模型易用性，降低模型选型与使用门槛，提供一键部署、体验等功能。</p>
+
+          <div class="challenge-box">
+            <div class="label">面临的挑战</div>
+            <ul>
+              <li>与已有权限体系不通，需要适配新的模型权限体系</li>
+              <li>表设计复杂导致开发工作困难</li>
+              <li>同事休假，大部分工作无法按时完成</li>
+            </ul>
+          </div>
+
+          <p class="mt-24">主动承担剩余工作量，干中学，困难重重但仍然坚持，每天都在接触新的知识。成功交付需求，虽然过程中存在很多问题，也修改了很多问题单，但自己的能力得到了大幅提升。</p>
+
+          <div class="card-images two-col">
+            <div>
+              <img src="assets/images/img_4_7.png" alt="模型广场界面">
+              <p class="text-sm mt-16" style="color:var(--slate-400);text-align:center;">模型广场产品界面</p>
+            </div>
+            <div>
+              <img src="assets/images/img_4_8.png" alt="项目推进链路">
+              <p class="text-sm mt-16" style="color:var(--slate-400);text-align:center;">项目工作推进链路</p>
+            </div>
+          </div>
+
+          <div class="quote-card">
+            <p>动用一切资源去解决问题，PL 也是自己的资源。所以遇到问题我就想办法解决，解决不了就找方案继续推，总之不拿困难当停下来的理由。</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 5: 状态机重构 -->
+      <div class="timeline-item reveal">
+        <div class="timeline-dot"></div>
+        <div class="timeline-card">
+          <h3>状态机重构 — AI Coding</h3>
+          <p class="meta">评估 4 人月，实际 1 个月完成</p>
+          <p><strong>背景：</strong>提高用户对服务的感知程度，推理服务状态机重构，解决<strong>状态抖动</strong>、<strong>状态永久卡滞</strong>、<strong>状态语义模糊</strong>的问题。</p>
+
+          <div class="challenge-box">
+            <div class="label">需求复杂度</div>
+            <ul>
+              <li>状态多源且多维交织</li>
+              <li>事件机制不可靠</li>
+              <li>异常根因诊断与状态转换保护要求严苛</li>
+              <li>评估人力为 4 人月，但只有 1 个月时间</li>
+            </ul>
+          </div>
+
+          <div class="card-images two-col mt-24">
+            <div>
+              <img src="assets/images/img_5_9.png" alt="状态机架构设计">
+              <p class="text-sm mt-16" style="color:var(--slate-400);text-align:center;">声明式状态管理架构</p>
+            </div>
+            <div>
+              <img src="assets/images/img_5_10.png" alt="AI辅助研发提效">
+              <p class="text-sm mt-16" style="color:var(--slate-400);text-align:center;">AI 辅助研发提效方案</p>
+            </div>
+          </div>
+
+          <p class="mt-24">基于 Snapshot + Reconciler 的声明式状态管理范式，实现全生命周期状态收敛与异常自愈。通过 AI Coding 大幅提升研发效率，整体研发效率提升 <strong>3 倍以上</strong>，实现高质量、短周期交付。</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- Philosophy -->
+<section id="philosophy" style="background: var(--white);">
+  <div class="container">
+    <div class="reveal">
+      <span class="section-label amber">Philosophy</span>
+      <h2 class="section-title">工作态度和方法</h2>
+    </div>
+
+    <div class="philosophy-grid">
+      <!-- 聚焦工作法 — 单卡居中 -->
+      <div class="philosophy-card reveal">
+        <div class="card-info">
+          <h3>聚焦工作法</h3>
+          <div class="card-subtitle">The Focused Working Method</div>
+          <div class="card-accent-line blue"></div>
+        </div>
+        <div class="card-img-wrap">
+          <img class="image_focused_work" src="assets/images/img_6_12.png" alt="聚焦工作法">
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Cognitive Story (Slide 7) -->
+<section class="story-section" id="story">
+  <div class="container">
+    <div class="reveal">
+      <span class="section-label emerald">Insight</span>
+      <h2 class="section-title">快乐工作，快乐生活</h2>
+      <p class="section-desc">面对压力时，认知评价决定了我们走向焦虑还是迎难而上。</p>
+    </div>
+
+    <div class="story-flow">
+      <div class="story-step reveal">
+        <span class="step-num">场景</span>
+        <h4>周五 17:00，线上出现紧急 Bug</h4>
+        <p>领导明确要求"这个 Bug 必须今天修好"。时间紧迫，任务棘手。</p>
+      </div>
+
+      <div class="story-step reveal reveal-delay-1">
+        <span class="step-num">反应</span>
+        <h4>即时生理反应</h4>
+        <p>心跳加速、手心出汗、呼吸急促——身体自动进入"战斗准备"状态（交感神经兴奋）。</p>
+      </div>
+
+      <div class="story-step reveal reveal-delay-2">
+        <span class="step-num">分叉</span>
+        <h4>关键分叉：认知评价</h4>
+        <p>两种路径，非共存——你的想法决定了接下来的状态。</p>
+
+        <div class="story-branch mt-24">
+          <div class="branch-card negative">
+            <h5>消极评价</h5>
+            <p><strong>想法：</strong>"完了，要被开了！"<br>
+            <strong>归因：</strong>向内归因，否定自我<br>
+            <strong>机制：</strong>杏仁核主导，触发战斗-逃跑反应，限制思维广度、消耗心理能量<br>
+            <strong>调节：</strong>外部归因（不可控因素）——"需求本来就复杂，时间又紧"</p>
+          </div>
+          <div class="branch-card positive">
+            <h5>积极评价</h5>
+            <p><strong>想法：</strong>"正好练练手！"<br>
+            <strong>归因：</strong>向外归因，肯定自我<br>
+            <strong>机制：</strong>多巴胺主导，进入拓展-建构模式，拓展思维视野、建构心理资源<br>
+            <strong>调节：</strong>内部归因（可控因素）——"只要我仔细排查，肯定能找到原因！"</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="story-result reveal reveal-delay-3">
+        <h4>Bug 完美解决，能力提升，快乐下班</h4>
+        <p>两种合理归因路径最终都会导向积极结果<br>情绪 = 生理 + 认知 | 归因理论（内部 / 外部归因）</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Core Qualities (Slide 8) -->
+<section class="qualities-section" id="qualities">
+  <div class="container">
+    <div class="reveal" style="text-align:center;">
+      <span class="section-label purple">Qualities</span>
+      <h2 class="section-title">核心品质</h2>
+      <p class="section-desc" style="margin:0 auto;">优秀职场新人的三大底层素养——用空杯心态学习，用主人翁意识担当，用利他之心协作。</p>
+    </div>
+
+    <div class="qualities-grid">
+      <div class="quality-card innovation reveal reveal-delay-1">
+        <div class="quality-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 18h6M10 22h4M12 2a7 7 0 0 1 4 12.9V17H8v-2.1A7 7 0 0 1 12 2z"/>
+          </svg>
+        </div>
+        <h3>创新</h3>
+        <p>敢于打破常规，用新思路解决老问题。在状态机重构中引入声明式管理范式，用 AI Coding 突破效率瓶颈。</p>
+      </div>
+
+      <div class="quality-card efficiency reveal reveal-delay-2">
+        <div class="quality-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+          </svg>
+        </div>
+        <h3>高效</h3>
+        <p>快速响应，精准执行。4 人月的工作量 1 个月完成，保持"一次做对"的工作习惯。</p>
+      </div>
+
+      <div class="quality-card responsibility reveal reveal-delay-3">
+        <div class="quality-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          </svg>
+        </div>
+        <h3>担当</h3>
+        <p>主动承担，不退缩不推诿。同事休假时主动扛起剩余工作量，干中学，坚持把事情做完做好。</p>
+      </div>
+    </div>
+
+    <div class="reveal reveal-delay-4" style="text-align:center;margin-top:48px;">
+      <div style="display:inline-block;padding:14px 32px;border-radius:100px;border:1px solid var(--rose-100);background:linear-gradient(135deg,var(--rose-100),var(--amber-100));">
+        <span style="font-size:17px;font-weight:700;color:var(--rose-500);">保持激情，奔赴山海</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Closing -->
+<section class="closing">
+  <div class="container reveal">
+    <h2>感谢聆听</h2>
+    <p>在努力为生活奔波的同时，也要学会适时停下脚步，忘却烦恼，顺应自然，享受生活的美好。</p>
+    <span class="tagline">快乐工作，快乐生活</span>
+  </div>
+</section>
+
+<script>
+// Scroll reveal
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// Nav scroll effect
+const nav = document.getElementById('mainNav');
+let lastScroll = 0;
+window.addEventListener('scroll', () => {
+  const y = window.scrollY;
+  if (y > 80) {
+    nav.classList.add('scrolled');
+  } else {
+    nav.classList.remove('scrolled');
+  }
+  lastScroll = y;
+}, { passive: true });
+
+// Smooth scroll for nav links
+document.querySelectorAll('.nav-links a').forEach(link => {
+  link.addEventListener('click', (e) => {
+    e.preventDefault();
+    const target = document.querySelector(link.getAttribute('href'));
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  });
+});
+</script>
+
+</body>
+</html>
