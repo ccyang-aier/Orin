@@ -30,7 +30,7 @@ description: vLLM 社区视角的 PD 分离演进调研，覆盖 GitHub RFC/issu
 
 ## 2 起源：RFC #5557（2024-06，KuntaiDu）
 
-这是整个方向的奠基讨论，比第一个实现 PR（#10502，2024-12）早了半年。
+这是整个方向的奠基讨论，比第一个实现 PR（#10502，2024-12）早了半年。19 条评论完整保留了方向的成型过程。
 
 **动机**：不止 PD 分离一个用例——还包括「固定长文档集合的 KV 持久化与按需加载」（GPU+CPU 内存装不下所有文档 KV 时存到外部存储）。这个双用例动机解释了为什么抽象里一直保留「KV 存储」而不仅是「KV 传输」。
 
@@ -50,7 +50,16 @@ vllm <--> communicator <--> KV database
 3. 传输期间如何防止 block 被 swap out（→ 后来的租约/延迟释放机制）；
 4. 传输中是否压缩 KV、谁来压缩。
 
-**社区反馈的取向**：最终落地实现（#10502）比 RFC 更保守——先做最小可用的 pipe/buffer/connector 三层，而不是上来就做 database 抽象；KV database 的理想后来由 LMCache/MooncakeStore/FlexKV 等外部系统承接。
+**讨论原文还原**（19 条评论中最关键的几段）：
+
+1. **KuntaiDu 次日收窄焦点并给出工作流草案**：「先聚焦 disaggregated prefilling」；草案为——请求以 max_tokens=1 发 prefill 实例 → decode 实例上以 preempt 方式占位预留 KV → prefill 每算完一层就 layer-wise 传输 → 完成后解除 preempt，decode 侧用 automatic prefix caching 取回 KV。这是后来全部协议的雏形；
+2. **cadedaniel（维护者）的路线质疑**：「担心先建 infra 而非从有影响力的特性倒推——没有窄用例的 infra 很难排定设计取舍；PD 分离对 KV 传输有极紧的性能约束，若最终实现用不上这些抽象将是巨大浪费」。这条意见直接导致初版实现比 RFC 更保守——先做最小可用的 pipe/buffer/connector 三层；
+3. **richardliaw 的抽象提议**：先做引擎级 `save/insert_state` 状态存取 API 再设计传输；KuntaiDu 同意方向，并定下粒度决策——**读写按 vLLM block 对齐**，因为 KV 读写时机由 block manager 的分配/换出决策触发；
+4. **传输介质之争**：社区提问「nccl 还是 rdma」，初版选了 NCCL（StatelessProcessGroup），RDMA 路线由后来 Mooncake/NIXL 连接器补足；
+5. **外部参照**：有用户引 Llumnix（arXiv 2406.03243）的 KV 迁移实现提问，社区辨析——Llumnix 是 decode 步间迁移，PD 分离是相位间迁移，两者的计算-传输重叠条件不同；
+6. **2024-06-30 基线方案**：4 进程（prefill/decode 实例 + proxy），请求先 padding 到 block_size 整数倍，max_tokens=1 发 prefill，KV block 流式搬运后再发 decode——与最终落地的 #10502 一致。
+
+**社区反馈的取向**：最终落地实现比 RFC 更保守——先做最小可用的 pipe/buffer/connector 三层，而不是上来就做 database 抽象；KV database 的理想后来由 LMCache/MooncakeStore/FlexKV 等外部系统承接。
 
 ## 3 路线图：RFC #10818（2024-12）
 
@@ -90,7 +99,7 @@ KV prefetching 与 layer-by-layer pipelining（#12523）被列为一等目标，
 
 ### 4.1 异步传输 RFC（#13020，2025-02）与 v1 API 诞生
 
-v0 同步传输把 KV 传输时间完整计入 TTFT，社区（含 NVIDIA、LMCache 团队）推动异步化。结论是：异步无法靠打补丁实现，必须让调度器理解「外部 token」概念，于是有了 #15960（KV Connector API V1，2025-04）。此后所有新能力（失败恢复、offloading、push）都长在 v1 API 上，v0 组件于 2025-08 起分两步删除（#21785、#29705）。
+v0 同步传输把 KV 传输时间完整计入 TTFT。RFC #13020 由 AWS Neuron 推理团队提出，是第一个系统性异步方案：LookupBuffer 层加 `async_drop_select`（入队即返回）与后台 `drop_select_requester` 线程；调度器层新增 `transfer queue` 与 `TRANSFERRING` 状态，把 `_schedule_prefills` 拆为 `_schedule_wait`（分配显存并触发异步传输）与 `_schedule_transferring`（传输完成移入 running queue）。这个方案证明：**异步化必须让调度器理解「传输中」状态与「外部 token」概念，在 v0 结构内只能打补丁**。结论导向 #15960（KV Connector API V1，2025-04）：把 disagg 实现埋在 v1 的 prefix caching 与 chunked prefill 语义之下，调度器算哪些 token 需要外部 KV，worker 只管执行；orchestration 留在 vLLM 之外。此后所有新能力（失败恢复、offloading、push）都长在 v1 API 上，v0 组件于 2025-08 起分两步删除（#21785、#29705）。
 
 ### 4.2 可靠性讨论（#19329，2025-06）
 
@@ -98,7 +107,7 @@ v0 同步传输把 KV 传输时间完整计入 TTFT，社区（含 NVIDIA、LMCa
 
 ### 4.3 push 模式 RFC（#36923，2026-03）
 
-pull 模式运行一年后，NVIDIA 团队提出 push 补充：动机是 P 侧 block 必须保留到 D 读完（租约占用显存）、以及某些拓扑下 P 主动写更优。讨论确认 push 作为 pull 的补充而非替代，实现为 NixlPushConnector（#35264），与 pull 共享握手与元数据路径，独立 writer 线程，不污染引擎主循环。
+pull 模式运行一年后，NVIDIA 团队（snadampal）提出 push 补充。RFC 的核心论证：pull 的时序严格串行（P 计算 → proxy 转发参数 → D 分配+握手+READ），**D 在 P 计算期间完全空闲**，大 prompt 高 TP 下代价显著。RFC 列六条优势：降 TTFT（D 在 P 计算期预注册 block，省去 proxy 参数往返）；天然适配 layer-wise 流水（P 知道每层何时算完可立即 WRITE）；fan-out 下 P 掌控网卡调度；proxy 退出传输关键路径（P/D 可同时派发，协调走 ZMQ 点对点）；P 侧 WRITE 完成即释放显存；长上下文 GB 级 KV 的传输准备被藏进计算时间。讨论确认 push 作为 pull 的补充而非替代，实现为 NixlPushConnector（#35264），与 pull 共享握手与元数据路径，独立 writer 线程，不污染引擎主循环。
 
 ### 4.4 前端/编排归属的持续讨论（2026）
 

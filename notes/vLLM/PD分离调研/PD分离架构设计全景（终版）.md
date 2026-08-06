@@ -44,32 +44,33 @@ PD 分离（Prefill/Decode disaggregation）的答案很直接：**把两个相�
 
 ### 2.1 第一阶段：概念提出（2023.11 – 2024.01）
 
-三篇几乎同期的论文从不同角度确立了范式：
+三篇几乎同期的论文从不同角度确立了范式（逐篇深入见 [[01 PD分离论文脉络调研]]）：
 
-1. **Splitwise**（Microsoft，ISCA 2024）：从硬件经济学切入，证明 decode 可用更低成本/低功耗硬件；关键论断是「KV 传输代价在高速互连下可忽略」；采用 layer-wise 传输让搬运与计算重叠；
-2. **DistServe**（PKU/UCSD，OSDI 2024）：第一个系统化 serving 实现，提出 goodput 目标函数；P/D 独立选择并行策略；placement 算法按集群带宽搜索 P:D 配比；它定义了此后所有工程实现的形态模板——P 实例 + D 实例 + KV 传输 + 外部编排；
-3. **TetriInfer**：面向混合下游负载，引入 chunk 级调度让 prefill GPU 保持计算饱和。
+1. **[Splitwise](https://arxiv.org/abs/2311.18677)**（Microsoft，ISCA 2024）：从硬件经济学切入，证明 decode 可用更低成本/低功耗硬件；关键论断是「KV 传输代价在高速互连下可忽略」；采用 layer-wise 传输让搬运与计算重叠；结果 1.4x 吞吐且成本低 20%，或同成本功耗下 2.35x 吞吐；
+2. **[DistServe](https://arxiv.org/abs/2401.09670)**（PKU/UCSD，OSDI 2024，[开源](https://github.com/LLMServe/DistServe)）：第一个系统化 serving 实现，提出 goodput 目标函数；P/D 独立选择并行策略；placement 算法按集群带宽搜索 P:D 配比；结果多服务 7.4x 请求或承受 12.6x 更紧 SLO；它定义了此后所有工程实现的形态模板——P 实例 + D 实例 + KV 传输 + 外部编排；
+3. **[TetriInfer](https://arxiv.org/abs/2401.11181)**：面向混合下游负载，固定大小 chunk 使加速器接近计算饱和，两级调度 + 资源预测避免 decode 热点；资源省 38% 同时平均 TTFT 降 97%。
 
-前置奠基：PagedAttention（SOSP 2023）把 KV cache 变成按 block 寻址的离散结构，是 KV 可搬运的物理基础；Sarathi 的 chunked prefill 则是长期并存的替代路线。
+前置奠基：[PagedAttention](https://arxiv.org/abs/2309.06180)（SOSP 2023）把 KV cache 变成按 block 寻址的离散结构，是 KV 可搬运的物理基础；[Sarathi-Serve](https://arxiv.org/abs/2403.02310)（OSDI 2024）的 chunked prefill + stall-free 调度则是长期并存的替代路线。
 
 ### 2.2 第二阶段：生产化与 KVCache-centric（2024 中 – 2024 末）
 
-**Mooncake**（Moonshot AI，FAST 2025 最佳论文）是标志性转折，思想从「相位分离」升级为 **KVCache-centric**：
+**[Mooncake](https://arxiv.org/abs/2407.00079)**（Moonshot AI，FAST 2025 最佳论文，[开源](https://github.com/kvcache-ai/Mooncake)）是标志性转折，思想从「相位分离」升级为 **KVCache-centric**：
 
 1. KV cache 从请求的附属状态升格为一等公民，与计算解耦；
 2. 利用集群闲置 CPU DRAM/SSD 构建全局 KV 池，前缀缓存从实例本地升级为跨实例共享资源；
 3. Conductor 调度器做 KV-locality 感知调度与过载 early rejection；
-4. Transfer Engine 独立成高性能传输组件（后开源，成为多家引擎的后端）。
+4. Transfer Engine 独立成高性能传输组件（后开源，成为多家引擎的后端）；
+5. chunked layer-wise prefill：prompt 切块 + 逐层发起传输，计算与传输全面重叠。
 
-同期 P/D-Serve、KVDirect、MemServe、DynamoLLM 各自在配比自适应、异构池、全局 MemPool、动态重组方向补充。DeepSeek 在万卡级生产中采用 PD 分离（P 大 TP、D 不同 DP/TP 组合，NVLink + IB + 3FS 分层传输），是最有影响力的公开生产样本。
+同期 [MemServe](https://arxiv.org/abs/2406.17565)（弹性 MemPool + 全局 prompt tree locality 调度）、[Llumnix](https://arxiv.org/abs/2406.03243)（请求与 KV 跨实例活迁移）、[LoongServe](https://arxiv.org/abs/2404.09526)（弹性序列并行，PD 分离的对照路线）各自补充。DeepSeek-V3 技术报告（[arXiv 2412.19437](https://arxiv.org/abs/2412.19437)）公开了万卡级生产部署（P 大 TP、D 不同 DP/TP 组合，NVLink + IB + 3FS 分层传输），是最有影响力的公开生产样本。
 
 ### 2.3 第三阶段：数据平面标准化与 Agentic 时代（2025 起）
 
 reasoning model 与 agent 负载带来 GB 级 KV 迁移与极高前缀复用率，催生：
 
-1. **NIXL**（NVIDIA Inference Xfer Library）：统一的 KV/张量传输数据平面，抽象多种内存类型与 backend（UCX、GDS、RDMA），成为跨引擎事实标准；
-2. **Dynamo**（NVIDIA，GTC 2025）：以 PD 分离为一等架构的框架——Smart Router（KV 命中 + 负载均衡）、GPU Planner（动态 P:D 配比）、KV Cache Manager，对接 vLLM/SGLang/TensorRT-LLM；
-3. 拆分粒度继续细化：Helix（多 SLO）、LayerServe（按层拆分）、DistAttention（decode 内再拆）。
+1. **[NIXL](https://github.com/ai-dynamo/nixl)**（NVIDIA Inference Xfer Library）：统一的 KV/张量传输数据平面，抽象多种内存类型与 backend（UCX、GDS、RDMA），成为跨引擎事实标准；
+2. **[Dynamo](https://github.com/ai-dynamo/dynamo)**（NVIDIA，GTC 2025）：以 PD 分离为一等架构的框架——Smart Router（KV 命中 + 负载均衡）、GPU Planner（动态 P:D 配比）、KV Cache Manager，对接 vLLM/SGLang/TensorRT-LLM；
+3. 拆分粒度继续细化：[EPD Disaggregation](https://arxiv.org/abs/2501.05460)（多模态三段分离，ICML 2025）、[MegaScale-Infer](https://arxiv.org/abs/2504.02263)（MoE 的 attention/FFN 模块分离）、[DOPD](https://arxiv.org/abs/2511.20982)（动态 P:D 配比解决生产者-消费者失衡）。
 
 ### 2.4 与 vLLM 实现史的对齐
 
@@ -164,16 +165,21 @@ sequenceDiagram
 
 ## 5 vLLM 实现深潜：从 v0 到 v1
 
+（逐阶段展开含讨论原文与 issue 清单，见 [[02 vLLM PD分离代码演进调研]]）
+
 ### 5.1 v0 时代（2024.12 – 2025.04）：最小可用
+
+源头是 [RFC #5557](https://github.com/vllm-project/vllm/issues/5557)（2024-06）：KuntaiDu 提案 communicator + KV database 抽象，维护者 cadedaniel 质疑「先建 infra 还是先做特性」，最终共识是保守起步、读写粒度按 vLLM block 对齐。落地为 [PR #10502](https://github.com/vllm-project/vllm/pull/10502)（前身 #8498，因 DCO 问题重开）：
 
 1. 三层抽象：**KV Pipe**（FIFO 张量管道，NCCL + 自研 StatelessProcessGroup）→ **KV LookupBuffer**（insert/drop_select，解决乱序）→ **KV Connector**（接进引擎）；
 2. 引擎耦合点在 model_runner：decode 侧收到完整 KV + hidden states 后**直接跳过整个 forward**，用收到的 hidden states 采样首 token——简单但要求 connector 感知模型结构；
 3. 同步传输、仅 1P1D、与 prefix caching 无法协同；
-4. 第三方连接器（Mooncake TE、LMCache、MooncakeStore、P2pNccl）绕过 pipe 层直接实现 connector，预示了抽象需要重做。
+4. [路线图 RFC #10818](https://github.com/vllm-project/vllm/issues/10818) 在此时定调：xPyD 走中心化 KV store（放弃 P2P 直连，后被 NIXL 单边 READ 复活）；兼容性、异步、编排层列为待办；
+5. 第三方连接器（Mooncake TE #10884、LMCache #12953、MooncakeStore #12957、P2pNccl）绕过 pipe 层直接实现 connector，预示抽象需要重做。
 
 ### 5.2 v1 Connector API（2025.04）：调度器一等公民
 
-重写的核心决策：
+直接动因是 [RFC #13020](https://github.com/vllm-project/vllm/issues/13020)（AWS Neuron 团队的异步传输方案）证明：异步化必须让调度器理解「传输中」状态与「外部 token」概念，v0 结构内只能打补丁。重写落地为 [PR #15960](https://github.com/vllm-project/vllm/pull/15960)，PR 原文的三条关键设计选择：把 disagg 埋在 v1 的 prefix caching 与 chunked prefill 语义之下；提供 layer-wise 异步 API；KV prefetching 与请求编排留在 vLLM 之外。
 
 1. **双角色单类**：同一 connector 类按 `KVConnectorRole` 实例化到调度器进程与 worker 进程；
 2. **scheduler 侧只做决策**：`get_num_new_matched_tokens`（外部有多少 token 可用，与本地 prefix cache 叠加）→ `update_state_after_alloc`（block 分配后登记）→ `build_connector_meta`（打包本步任务）→ `request_finished`（租约与参数生成）；
@@ -183,13 +189,13 @@ sequenceDiagram
 
 ### 5.3 NixlConnector：参考实现
 
-pull 模式的生产级形态，要点：
+[PR #17751](https://github.com/vllm-project/vllm/pull/17751)（2025-05）接入后成为主推路径；PR 声明的 follow-up（D→P 流、异构 TP、DP attention、失败鲁棒、边界场景）就是此后一年 NIXL 演进的实际路线图。pull 模式的生产级形态，要点：
 
 1. 数据面：paged block 粒度的 NIXL READ，P 的整个 KV cache 预注册为可远程访问区域，零拷贝；
 2. 控制面：ZMQ 侧信道 + 后台线程握手，交换 agent 元数据、兼容性哈希、TP size；心跳维持请求级租约；
 3. 异构能力：P:D 任意 TP 比例（KV head 按 GQA 复制/切分映射）、异构 block size（逻辑/物理换算）、KV 布局转换（NHD/HND）、MLA latent 传输、hybrid 模型（MLA + Mamba/GDN）按 cache group 分区；
 4. host buffer 降级路径：加速器不被 NIXL 直接支持时经 CPU 中转；
-5. 2026 年重构为 base/pull/push 三包结构，push 模式以 `NixlPushConnector` 落地（独立 writer 线程、PUSH_REG 注册匹配、双侧看门狗/租约）。
+5. 2026 年重构为 base/pull/push 三包结构，push 模式经 [RFC #36923](https://github.com/vllm-project/vllm/issues/36923)（论证 pull 串行时序下 D 在 P 计算期完全空闲，列六条优势）落地为 `NixlPushConnector`（#35264，独立 writer 线程、PUSH_REG 注册匹配、双侧看门狗/租约）。
 
 ### 5.4 连接器生态与泛化
 
